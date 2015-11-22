@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <link
+              rel="stylesheet"
+              type="text/css"
+              href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <div class="pane">
+        {% for v in otherViews %}
+            {% set otherUrls = makeUrls(v, 0) -%}
+            <a href="{{ otherUrls.listUrl }}">View {{v.title() + "s"}}</a>
+        {% endfor %}
+        {% set urls = makeUrls(viewType, 0) -%}
+            <a href="{{ urls.newUrl }}">Create a new {{urls.suffix}}</a>
+    {% for o in objects %}
+        {% set urls = makeUrls(viewType, o.id) -%}
+        {% if hasattr(o, 'name') %}
+            <h1>{{ o.name }}</h1>
+        {% else %}
+            <h1>{{ o.id }}</h1>
+        {% endif %}
+            <div class="viewprofilepane">
+                <a href="{{ urls.viewUrl }}">View {{urls.suffix}}</a>
+            </div>
+    {% endfor %}
+        </div>
+    </body>
+</html>

@@ -1,0 +1,159 @@
+body {
+    font-family: sans-serif;
+    background-image: url('img3.jpg');
+    background-color: cornsilk;
+}
+
+h1:nth-of-type(1),
+h2:nth-of-type(1),
+h3:nth-of-type(1),
+h4:nth-of-type(1)
+{
+    border-radius: 20px 20px 0px 0px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+    color: #FFFFFF;
+    padding-left: 15px;
+}
+
+h1,
+h2 {
+    font-family: 'Georgia', serif;
+    margin: 0;
+}
+
+h1 {
+    border-bottom: 2px solid #eee;
+    background-color: lightslategrey;
+}
+
+h2 {
+    font-size: 1.2em;
+}
+
+p,
+dd,
+dt {
+    color: #CCCCCC;
+}
+
+a {
+    text-decoration: none;
+    color: #FFFFCC;
+    font-size: .75em;
+}
+
+.pane {
+    border: 2px solid;
+    border-radius: 25px;
+    padding: 5px;
+    border-color: #999999;
+    background-color: #333333;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+.editPane table,
+.pane table{
+    width: 100%;
+}
+.header {
+    left: 50%;
+    text-align: center;
+}
+
+.picture img{
+  width: 100%;
+}
+
+.trait,
+{
+    text-align: left;
+    width: 100%;
+    float: right;
+    color:forestgreen;
+    background-color: #285252;
+}
+
+.trait td{
+  color:forestgreen;
+  background-color:#C5D0C7;
+}
+
+.trait td:nth-of-type(1){
+  text-align:center;
+  font-weight:bold;
+  width: 15%;
+}
+
+.trait td:nth-of-type(2){
+  padding-left:15px;
+}
+
+.editdeletepane, .viewprofilepane {
+    border-style: inset;
+    border-color: darkgrey;
+    border-width: 0px 0px 2px;
+    padding-left: 15px;
+}
+
+.editPane {
+    width: 20%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #90A79A;
+    border-radius: 20px 20px 0px 0px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+
+.editPane input[name|=name] {
+    width: 100%;
+}
+.editPane input[name|=weight] {
+    width: 15%;
+}
+.editPane textarea{
+    width: 100%;
+}
+.editPane h1 {
+    text-align: center;
+}
+
+.deletePane {
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #90A79A;
+    border-radius: 20px 20px 0px 0px;
+}
+
+.deletePane h1 {
+    text-align: center;
+}
+
+.deletePane input {
+    width: 50%;
+    font-size: larger;
+}
+
+.deletePane a {
+    /* width: 99%; */
+    font-size: larger;
+}
+
+.deletePane form {
+    width: 40%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.flash {
+    background: #cee5F5;
+}

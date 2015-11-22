@@ -1,0 +1,29 @@
+{% set urls = makeUrls(viewType, key) -%}
+{% set formName = "new" + urls.suffix + "Form" -%}
+{% set suffix = urls.suffix -%}
+<html>
+    <head>
+        <link
+              rel="stylesheet"
+              type="text/css"
+              href="{{ url_for('static', filename='styles.css') }}">
+    </head>
+    <body>
+        <div class='editPane'>
+            <h1>Edit {{urls.suffix}}</h1>
+            <form
+                  action="{{ urls.editUrl }}"
+                  method="POST"
+                  id="{{formName}}">
+            </form>
+            <table>
+{% for t in traits %}
+    {{ t.asInputElement(formName, True)|safe }}
+{% endfor %}
+            </table>
+
+            <input type="submit" value="Submit" form="{{formName}}">
+            <a href="{{ urls.viewUrl }}">Cancel</a>
+        </div>
+    </body>
+</html>
