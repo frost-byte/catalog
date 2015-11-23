@@ -42,6 +42,9 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
+# client_secret
+client_secret.json
+
 # Archives
 *.zip
 
