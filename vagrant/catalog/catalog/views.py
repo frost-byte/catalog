@@ -3,6 +3,7 @@ from random import randint
 import random, string
 import json
 
+from .auth import CLIENT_ID
 
 from flask import (
     render_template,
@@ -357,8 +358,8 @@ def showLogin():
     state = ''.join(
         random.choice(string.ascii_uppercase + string.digits) for x in range(32))
     login_session['state'] = state
-    print "login state = %s" % state
-    return render_template('login.html', state = state)
+
+    return render_template('login.html', client_id = CLIENT_ID, state = state)
 
 
 @app.route('/gconnect', methods=['POST'])
