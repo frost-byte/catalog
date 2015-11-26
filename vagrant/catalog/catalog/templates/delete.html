@@ -1,21 +1,19 @@
+{% extends "base.html" %}
 {% set urls = makeUrls(viewType, key) -%}
-<html>
-    <head>
-        <link
-              rel="stylesheet"
-              type="text/css"
-              href="{{ url_for('static', filename='styles.css') }}">
-    </head>
-    <body>
-        <div class="deletePane">
-            <h1>Delete {{ name }}?</h1>
-            <form action=
-                  "{{ urls.deleteUrl }}"
-                  method="POST">
-                <input type="submit" value="Delete">
-                <a href=
-                    "{{ urls.viewUrl }}">Cancel</a>
-            </form>
-        </div>
-    </body>
-</html>
+{% block head %}
+    {{ super() }}
+{% endblock head %}
+{% block content %}
+    {% include "partials/nav.html" %}
+
+    <div class="deletePane">
+        <h1>Delete {{ name }}?</h1>
+        <form action=
+              "{{ urls.deleteUrl }}"
+              method="POST">
+            <input type="submit" value="Delete">
+            <a href=
+                "{{ urls.viewUrl }}">Cancel</a>
+        </form>
+    </div>
+{% endblock content %}

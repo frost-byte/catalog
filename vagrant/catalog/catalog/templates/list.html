@@ -1,29 +1,17 @@
-<html>
-    <head>
-        <link
-              rel="stylesheet"
-              type="text/css"
-              href="{{ url_for('static', filename='styles.css') }}">
-    </head>
-    <body>
+{% extends "base.html" %}
+{% block head %}
+    {{ super() }}
+{% endblock head %}
+{% block content %}
+        {% include "partials/nav.html" %}
+
         <div class="pane">
-        {% for v in otherViews %}
-            {% set otherUrls = makeUrls(v, 0) -%}
-            <a href="{{ otherUrls.listUrl }}">View {{v.title() + "s"}}</a>
-        {% endfor %}
-        {% set urls = makeUrls(viewType, 0) -%}
-            <a href="{{ urls.newUrl }}">Create a new {{urls.suffix}}</a>
+        {% include "partials/addButton.html" %}
+            <div class="list-group">
     {% for o in objects %}
         {% set urls = makeUrls(viewType, o.id) -%}
-        {% if hasattr(o, 'name') %}
-            <h1>{{ o.name }}</h1>
-        {% else %}
-            <h1>{{ o.id }}</h1>
-        {% endif %}
-            <div class="viewprofilepane">
-                <a href="{{ urls.viewUrl }}">View {{urls.suffix}}</a>
-            </div>
+                <a href="{{ urls.viewUrl }}" class="list-group-item">{{ o.name }}</a>
     {% endfor %}
+            </div>
         </div>
-    </body>
-</html>
+{% endblock content %}

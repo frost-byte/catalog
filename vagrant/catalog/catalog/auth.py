@@ -1,7 +1,12 @@
 import random, string
 from flask import session as login_session
-from oauth2client.client import flow_from_clientsecrets
-from oauth2client.client import FlowExchangeError
+from oauth2client.client import (
+    flow_from_clientsecrets,
+    FlowExchangeError,
+    OAuth2Credentials as Creds,
+    TokenRevokeError
+)
+
 import httplib2
 import json
 import requests
@@ -12,12 +17,33 @@ CLIENT_ID = json.loads(
 
 credentials = None
 
+
+
+def isActiveSession():
+    if 'username' not in login_session:
+        return False
+    else:
+        return True
+
+
+def getLoginSessionState():
+    if 'state' not in login_session:
+        login_session['state'] = ''.join(
+            random.choice(
+                string.ascii_uppercase + string.digits
+            ) for x in range(32)
+        )
+
+    return login_session['state']
+
+
 def createResponse(res, status):
     response = make_response(json.dumps(res), status)
     response.headers['Content-Type'] = 'application/json'
     return response
 
-def UpgradeCode(request):
+
+def ConnectGoogle(request):
     if request.args.get('state') != login_session['state']:
         return createResponse('Invalid state parameter.', 401)
 
@@ -55,7 +81,7 @@ def UpgradeCode(request):
 
     if stored_credentials is not None and gplus_id == stored_gplus_id:
         return createResponse('Current User is already connected.', 200)
-
+    login_session['access_token'] = credentials.access_token
     login_session['credentials'] = credentials.to_json()
     login_session['gplus_id'] = gplus_id
 
@@ -80,3 +106,28 @@ def UpgradeCode(request):
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
+
+
+# Disconnect from Google
+def DisconnectGoogle():
+    credentials = Creds.from_json(login_session['credentials'])
+    access_token = credentials.get_access_token()[0]
+
+    print "access_token = %s" % access_token
+    print 'User name is: %s' % login_session['username']
+
+    try:
+        credentials.revoke(httplib2.Http())
+
+    except TokenRevokeError as e:
+        return createResponse("Unable to revoke Token %s" % e, 400)
+
+
+    # Successfully Disconnected from Google
+    del login_session['credentials']
+    del login_session['access_token']
+    del login_session['gplus_id']
+    del login_session['username']
+    del login_session['email']
+    del login_session['picture']
+    return createResponse('Successfully disconnected.', 200)

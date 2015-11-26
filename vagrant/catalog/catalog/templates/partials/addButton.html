@@ -1,0 +1,9 @@
+{% set urls = makeUrls(viewType, 0) -%}
+            <div class="input-group">
+                <span class="input-group-btn">
+                    <a class="btn btn-primary btn-lg"
+                       id="addButton"
+                       href="{{ urls.newUrl }}"
+                       role="button">Add {{urls.suffix}}</a>
+                </span>
+            </div>

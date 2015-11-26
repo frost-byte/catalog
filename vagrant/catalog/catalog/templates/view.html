@@ -1,51 +1,46 @@
+{% extends "base.html" %}
 {% set urls = makeUrls(viewType, key) -%}
-<html>
-    <head>
-        <link
-              rel="stylesheet"
-              type="text/css"
-              href="{{ url_for('static', filename='styles.css') }}">
-    </head>
-    <body>
-        <div class="pane">
-            <div class="header">
-                <h1>{{ name }}</h1>
-            </div>
+{% block head %}
+    {{ super() }}
+{% endblock head %}
+{% block content %}
+        {% include "partials/nav.html" %}
+        <div class='flash'>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li><strong> {{ message }} </strong></li>
+            {% endfor %}
+            </ul>
+            {% endif %}
+        {% endwith %}
+        </div>
 
-            <a href="{{ urls.listUrl }}">{{ urls.listString }}</a><br><br>
-
-            <div class='flash'>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                <ul>
-                {% for message in messages %}
-                    <li><strong> {{ message }} </strong></li>
-                {% endfor %}
-                </ul>
-                {% endif %}
-            {% endwith %}
-            </div>
-
+        <div class="container" id="panel-container">
+            <div class="col-md-8">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">{{ name }}</div>
+                    <div class="panel-content">
 {% for t in traits %}
     {% if t.isImage() %}
-            <div class='picture'>
-                <img src="{{ url_for('static', filename=t.url) }}">
-            </div>
+                        <div class='picture'>
+                            <img src="{{ url_for('static', filename=t.url) }}">
+                        </div>
     {% endif %}
 {% endfor %}
-            <table>
+                        <table>
 {% for t in traits %}
-    {% if t.isImage() == False %}
+    {% if t.isImage() == False and t.name != 'name' and t.name !='id' %}
     {{ t.asOutputElement()|safe }}
     {% endif %}
 {% endfor %}
-            </table>
-            <div class="editdeletepane">
-                <a href=
-                   "{{ urls.editUrl }}">Edit</a>
-                <a href=
-                   "{{ urls.deleteUrl }}">Delete</a>
-            </div>
-        </div>
-    </body>
-</html>
+                        </table>
+{% if isActiveSession() == True %}
+    {% include "partials/edit_delete.html" -%}
+{% endif %}
+                    </div><!-- /Panel Content -->
+                </div><!-- /Panel -->
+            </div><!-- /Column -->
+        </div><!-- /Panel Container -->'''
+{% endblock content %}

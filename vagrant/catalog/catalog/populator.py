@@ -54,7 +54,7 @@ item_descriptions = [
     "Aside from being named for a worthless State in the USA, jersey is a key "
     " part in representing your team.  No need to gesticulate with your fingers to "
     "indicate which side of town your gang is from.  Just don your jersey and everyone "
-    " of your hooligan fans will no who you represent.",
+    " of your hooligan fans will know who you represent.",
     "Cleats will keep you well grounded.  See an opposing player without shinguards? "
     " That poor sod!  The only downside is that you won't be able to use them for "
     "hockey.",

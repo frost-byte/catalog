@@ -1,6 +1,5 @@
 body {
     font-family: sans-serif;
-    background-image: url('img3.jpg');
     background-color: cornsilk;
 }
 
@@ -47,6 +46,11 @@ a {
     font-size: .75em;
 }
 
+a.list-group-item {
+    color: #555;
+    font-size: x-large;
+}
+
 .pane {
     border: 2px solid;
     border-radius: 25px;
@@ -55,7 +59,28 @@ a {
     background-color: #333333;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 50px;
     width: 30%;
+}
+
+.panel-content {
+    box-shadow: 10px 10px 12px #98B1B3;
+}
+
+.panel.panel-primary {
+    width: 70%;
+}
+#panel-container {
+    margin-left: 33%;
+}
+
+.input-group-btn>.btn {
+    position: relative;
+    width: 100%;
+}
+
+.navbar-inverse {
+    overflow-y: hidden;
 }
 
 .editPane table,
@@ -81,25 +106,49 @@ a {
 }
 
 .trait td{
-  color:forestgreen;
-  background-color:#C5D0C7;
+    color:forestgreen;
+    background-color:#C5D0C7;
+    border-bottom-style: outset;
+    border-right-style: ridge;
 }
 
 .trait td:nth-of-type(1){
-  text-align:center;
-  font-weight:bold;
-  width: 15%;
+    text-align:center;
+    font-weight:bold;
+    width: 15%;
 }
 
 .trait td:nth-of-type(2){
-  padding-left:15px;
+    padding-left:15px;
 }
 
-.editdeletepane, .viewprofilepane {
+.trait textarea {
+    height: 44px;
+    line-height: 24px;
+    min-height: 44px;
+    overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */
+    padding-top: 1.1em; /* fixes text jump on Enter keypress */
+}
+
+.editdeletepane, .viewobjectpane {
     border-style: inset;
     border-color: darkgrey;
     border-width: 0px 0px 2px;
     padding-left: 15px;
+}
+
+#signInButton{
+    margin-top: 8px;
+}
+#signInButton button{
+    background-color: inherit;
+    border-style: none;
+    margin-bottom: 0px;
+    padding: 0px;
+}
+
+#addButton {
+    border-radius: 20px 20px 0px 0px;
 }
 
 .editPane {

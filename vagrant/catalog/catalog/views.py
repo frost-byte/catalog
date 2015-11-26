@@ -3,7 +3,7 @@ from random import randint
 import random, string
 import json
 
-from .auth import CLIENT_ID
+from .auth import CLIENT_ID, isActiveSession
 
 from flask import (
     render_template,
@@ -23,7 +23,7 @@ from models import (
     User
 )
 
-from .auth import login_session, UpgradeCode
+from .auth import getLoginSessionState, ConnectGoogle, DisconnectGoogle
 from populator import item_images
 from urls import Urls
 from . import app
@@ -40,6 +40,22 @@ def makeurls_processor():
 @app.context_processor
 def hasattr_processor():
     return dict(hasattr=hasattr)
+
+
+@app.context_processor
+def isactivesession_processor():
+    return dict(isActiveSession=isActiveSession)
+
+
+@app.context_processor
+def getplural_processor():
+    def getPlural(singular):
+        if singular.lower() == 'category':
+            return 'Categories'
+
+        else:
+            return singular.title() + "s"
+    return dict(getPlural=getPlural)
 
 
 # Return Category name : Category id pairs for all categories
@@ -67,6 +83,10 @@ def viewUser(key):
 @app.route('/user/new', methods=['GET','POST'])
 @app.route('/user/new/', methods=['GET','POST'])
 def newUser():
+
+    if isActiveSession() == False:
+        return redirect(url_for('listUser'))
+
     if request.method == 'POST':
         newUser = User(
             name = request.form['name']
@@ -88,7 +108,9 @@ def newUser():
 
 @app.route('/user/<int:key>/edit/', methods=['GET','POST'])
 def editUser(key):
-    print "editUser: id = %s" % key
+    if isActiveSession() == False:
+        return redirect(url_for('listCategory'))
+
     edUser = User.query.filter_by(id = key).one()
 
     if request.method == 'POST':
@@ -110,6 +132,9 @@ def editUser(key):
 
 @app.route('/user/<int:key>/delete/', methods=['GET','POST'])
 def deleteUser(key):
+    if isActiveSession() == False:
+        return redirect(url_for('listUser'))
+
     delUser = User.query.filter_by(id = key).one()
 
     if request.method == 'POST':
@@ -134,8 +159,10 @@ def listUser():
     return render_template(
         'list.html',
         viewType = "user",
-        otherViews = ['category', 'item'],
-        objects = users)
+        objects = users,
+        client_id = CLIENT_ID,
+        state = getLoginSessionState()
+    )
 
 
 # Category Routes
@@ -155,6 +182,10 @@ def viewCategory(key):
 @app.route('/category/new',  methods=['GET','POST'])
 @app.route('/category/new/', methods=['GET','POST'])
 def newCategory():
+    if isActiveSession() == False:
+        return redirect(url_for('listCategory'))
+
+
     if request.method == 'POST':
         newCategory = Category(
             name = request.form['name']
@@ -178,6 +209,11 @@ def newCategory():
 @app.route('/category/<int:key>/edit/',
           methods=['GET','POST'])
 def editCategory(key):
+
+    if isActiveSession() == False:
+        return redirect(url_for('listCategory'))
+
+
     editCategory = Category.query.filter_by(id = key).one()
 
     if request.method == 'POST':
@@ -202,6 +238,9 @@ def editCategory(key):
 @app.route('/category/<int:key>/delete/',
            methods=['GET','POST'])
 def deleteCategory(key):
+    if isActiveSession() == False:
+        return redirect(url_for('listCategory'))
+
     deleteCategory = Category.query.filter_by(id = key).one()
 
     if request.method == 'POST':
@@ -228,8 +267,9 @@ def listCategory():
     return render_template(
         'list.html',
         viewType = "category",
-        otherViews = ['user','item'],
-        objects = categories
+        objects = categories,
+        client_id = CLIENT_ID,
+        state = getLoginSessionState()
     )
 
 
@@ -253,6 +293,9 @@ def viewItem(key):
 @app.route('/item/new',  methods=['GET','POST'])
 @app.route('/item/new/', methods=['GET','POST'])
 def newItem():
+    if isActiveSession() == False:
+        return redirect(url_for('listItem'))
+
     if request.method == 'POST':
         newItem = Item(
             name = request.form['name'],
@@ -279,8 +322,9 @@ def newItem():
 # Edit a Item
 @app.route('/item/<int:key>/edit/', methods=['GET','POST'])
 def editItem(key):
-    # TODO: add user validation, the current session's user id needs to match
-    # the user id of the Item.
+    if isActiveSession() == False:
+        return redirect(url_for('listItem'))
+
     editItem = Item.query.filter_by(id = key).one()
 
     if request.method == 'POST':
@@ -310,6 +354,9 @@ def editItem(key):
 @app.route('/item/<int:key>/delete/',
            methods=['GET','POST'])
 def deleteItem(key):
+    if isActiveSession() == False:
+        return redirect(url_for('listItem'))
+
     deleteItem = Item.query.filter_by(id = key).one()
 
     # TODO: add user validation, the current session's user id needs to match
@@ -340,8 +387,9 @@ def listItem():
     return render_template(
         'list.html',
         viewType = 'item',
-        otherViews = ['category','user'],
-        objects = items
+        objects = items,
+        client_id = CLIENT_ID,
+        state = getLoginSessionState()
     )
 
 
@@ -353,15 +401,13 @@ def itemJSON(key):
     return jsonify(Item=item.serialize)
 
 
-@app.route('/login')
-def showLogin():
-    state = ''.join(
-        random.choice(string.ascii_uppercase + string.digits) for x in range(32))
-    login_session['state'] = state
-
-    return render_template('login.html', client_id = CLIENT_ID, state = state)
-
-
+# Routes for Authentication with Google
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
-    return UpgradeCode(request)
+    return ConnectGoogle(request)
+
+
+# Disconnect From Google.
+@app.route('/gdisconnect')
+def gdisconnect():
+    return DisconnectGoogle()

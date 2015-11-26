@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    {% block head %}
+        <link
+              rel="stylesheet"
+              type="text/css"
+              href="{{ url_for('static', filename='styles.css') }}">
+
+        <!-- Bootstrap 3 -->
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap-theme.min.css">
+
+        <!-- jQuery 1.8.2 -->
+        <script src='//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js'>
+        </script>
+
+        <!-- Google Auth API -->
+        <script src='//apis.google.com/js/platform.js?onload=start' async defer></script>
+
+    {% endblock head %}
+    </head>
+    <body>
+        <header>
+        {% block header %}
+        {% endblock header %}
+        </header>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
