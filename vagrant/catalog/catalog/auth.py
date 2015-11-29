@@ -1,5 +1,8 @@
+import httplib2
+import json
+import requests
 import random, string
-from flask import session as login_session
+
 from oauth2client.client import (
     flow_from_clientsecrets,
     FlowExchangeError,
@@ -7,10 +10,10 @@ from oauth2client.client import (
     TokenRevokeError
 )
 
-import httplib2
-import json
-import requests
+from flask import session as login_session
 from flask import make_response, flash
+from .models import User
+from .database import session
 
 CLIENT_ID = json.loads(
     open('client_secret.json','r').read())['web']['client_id']
@@ -19,11 +22,57 @@ credentials = None
 
 
 
+def getUserInfo(user_id):
+    user = User.query.filter_by(id = user_id).one()
+    return user
+
+
+def getUserID(email):
+    try:
+        user = User.query.filter_by(email = email).one()
+        return user.id
+
+    except:
+        return None
+
+
+def createUser(login_session):
+    newUser = User(
+        name = login_session['username'],
+        email = login_session['email'],
+        picture = login_session['picture']
+    )
+
+    session.add(newUser)
+    session.commit()
+    user = User.query.filter_by(email = login_session['email']).one()
+
+    return user.id
+
+
 def isActiveSession():
     if 'username' not in login_session:
         return False
     else:
         return True
+
+
+def canAlter(userID):
+    if 'user_id' not in login_session:
+        return False
+
+    sessID = login_session['user_id']
+
+    print "(suID, uID) = ( {0}, {1} )".format(sessID, userID)
+
+    if sessID == userID:
+        return True
+    else:
+        return False
+
+
+def getSessionUserID():
+    return login_session['user_id']
 
 
 def getLoginSessionState():
@@ -95,6 +144,14 @@ def ConnectGoogle(request):
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+
+    # Check to see if the user exists
+    user_id = getUserID(data['email'])
+
+    if not user_id:
+        user_id = createUser(login_session)
+
+    login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '

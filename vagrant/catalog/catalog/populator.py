@@ -23,7 +23,7 @@ item_images = [
     "images/snowboard.png",
     "images/racing-bicycle.png",
     "images/ice-hockey-stick.png",
-    "images/shinguards.jpg",
+    "images/shinguards.png",
     "images/frisbee.png",
     "images/baseball-bat.png",
     "images/jersey.png",
@@ -45,9 +45,9 @@ item_descriptions = [
     " start a totally unnecessary fight, just hook an opposing player or trip them up."
     "Your missing teeth will thank you in no time!",
     "Shinguards are an integral part of maintaining your ability to walk.  After an "
-    "over aggressive day of attacking the enemies end of the pitch, your chins will"
+    "over aggressive day of attacking the enemies end of the pitch, your shins will"
     " greatly appreciate your concern for their well-being.",
-    "What flies through the air, and really don't care? Frisbee!  What bonks your dog "
+    "What flies through the air, and really doesn't care? Frisbee!  What bonks your dog "
     " in the beak and makes him incredibly weak? Frisbee!",
     "When your baseball career comes to an end, you'll still be able to rely upon your"
     " trusty bat.  In an unexpected riot? Bat is there when you need it.",
@@ -80,24 +80,21 @@ category_names = [
     "Skating"
 ]
 
-# Adopters
-user_names = [
+# Users
+user_male_names = [
     "George Tanaka",
-    "Bill Witherspoon",
-    "Johnny Football",
     "Johnny Utah",
-    "John Wick",
-    "Meryl Streep",
-    "Jacob Dylan",
     "Troy Armstong",
     "Tennessee Williams",
-    "Billy Bob McNugget",
-    "Kim Bigassian",
-    "Sarah Failin",
     "Garet Jax",
     "Gandalf the Grey",
     "Saruman the White",
-    "Nathan Barnes",
+]
+
+user_female_names = [
+    "Meryl Streep",
+    "Kim Bigassian",
+    "Sarah Failin",
     "Amy Adams",
     "Keira Knightley",
     "Jessica Chastain",
@@ -129,6 +126,12 @@ def CreateItem(name, category, user_id, description, picture):
     return new_item
 
 
+def generateEmail(name):
+    domain = "@gmail.com"
+    firstName = name.split(' ')[0].lower()
+    return firstName + domain
+
+
 class ItemPopulator(object):
 
     def __init__(self):
@@ -143,7 +146,7 @@ class ItemPopulator(object):
                 return c
 
 
-    def ChooseUser(self):
+    def chooseUser(self):
         user = random.choice(self.users)
         return user.id
 
@@ -154,26 +157,39 @@ class ItemPopulator(object):
 
     def populate(self):
 
+        # Add Users
+        for name in user_male_names:
+            user = User(
+                name = name,
+                email = generateEmail(name),
+                picture = "images/male_avatar.png"
+            )
+            session.add(user)
+            session.commit()
+            self.users.append(user)
+
+        for name in user_female_names:
+            user = User(
+                name = name,
+                email = generateEmail(name),
+                picture = "images/female_avatar.png"
+            )
+            session.add(user)
+            session.commit()
+            self.users.append(user)
+
         #Add Categories
         for name in category_names:
-            category = Category(name = name)
+            category = Category(name = name, user_id = self.chooseUser())
             session.add(category)
             session.commit()
             self.categories.append(category)
 
 
-        # Add Users
-        for name in user_names:
-            user = User(name = name)
-            session.add(user)
-            session.commit()
-            self.users.append(user)
-
-
         #Add Items
         snowboard = Item(
             cat_id = self.findCategoryByName("Snowboarding").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[0],
             name = item_names[0],
             description = item_descriptions[0],
@@ -184,7 +200,7 @@ class ItemPopulator(object):
 
         bicycle = Item(
             cat_id = self.findCategoryByName("Cycling").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[1],
             name = item_names[1],
             description = item_descriptions[1],
@@ -196,7 +212,7 @@ class ItemPopulator(object):
 
         stick = Item(
             cat_id = self.findCategoryByName("Hockey").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[2],
             name = item_names[2],
             description = item_descriptions[2],
@@ -208,7 +224,7 @@ class ItemPopulator(object):
 
         shinguards = Item(
             cat_id = self.findCategoryByName("Soccer").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[3],
             name = item_names[3],
             description = item_descriptions[3],
@@ -220,7 +236,7 @@ class ItemPopulator(object):
 
         frisbee = Item(
             cat_id = self.findCategoryByName("Frisbee").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[4],
             name = item_names[4],
             description = item_descriptions[4],
@@ -232,7 +248,7 @@ class ItemPopulator(object):
 
         bat = Item(
             cat_id = self.findCategoryByName("Baseball").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[5],
             name = item_names[5],
             description = item_descriptions[5],
@@ -244,7 +260,7 @@ class ItemPopulator(object):
 
         jersey = Item(
             cat_id = self.findCategoryByName("Soccer").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[6],
             name = item_names[6],
             description = item_descriptions[6],
@@ -255,7 +271,7 @@ class ItemPopulator(object):
 
         cleats = Item(
             cat_id = self.findCategoryByName("Soccer").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[7],
             name = item_names[7],
             description = item_descriptions[7],
@@ -266,7 +282,7 @@ class ItemPopulator(object):
 
         goggles = Item(
             cat_id = self.findCategoryByName("Snowboarding").id,
-            user_id = self.ChooseUser(),
+            user_id = self.chooseUser(),
             picture = item_images[8],
             name = item_names[8],
             description = item_descriptions[8],

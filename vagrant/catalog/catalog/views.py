@@ -2,8 +2,7 @@ from datetime import datetime
 from random import randint
 import random, string
 import json
-
-from .auth import CLIENT_ID, isActiveSession
+import os
 
 from flask import (
     render_template,
@@ -15,6 +14,7 @@ from flask import (
     make_response
 )
 
+from werkzeug import secure_filename
 
 from database import session, Base
 from models import (
@@ -23,11 +23,48 @@ from models import (
     User
 )
 
-from .auth import getLoginSessionState, ConnectGoogle, DisconnectGoogle
-from populator import item_images
+from .auth import (
+    CLIENT_ID,
+    isActiveSession,
+    getLoginSessionState,
+    ConnectGoogle,
+    DisconnectGoogle,
+    canAlter,
+    getSessionUserID
+)
+
 from urls import Urls
 from . import app
 
+# From flask docs, checks that uploaded images have specific file extensions
+# http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
+def allowed_image(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
+
+
+# Process an uploaded image.  If it's a valid file type, then save the file
+# and return the local url.
+def processImageUpload(image):
+
+    # Valid object and extension
+    if image and allowed_image(image.filename):
+        # Scrub filename
+        filename = secure_filename(image.filename)
+
+        # Save the file to the App's Images directory.
+        image.save(os.path.join(app.config['APP_IMAGES'], filename))
+
+        # Return the local url for the image.
+        return os.path.join("images", filename)
+
+
+# TODO
+# Add Latest Items View
+# Add Categories Sidebar
+# Limit Edit, Delete to Users who have privileges for an Item DONE
+# Add JSON endpoints for Items
+# Add Image Uploading for Items DONE
 
 # Allow templates to generate Urls for different Models
 @app.context_processor
@@ -42,11 +79,21 @@ def hasattr_processor():
     return dict(hasattr=hasattr)
 
 
+# Checks for a valid session
 @app.context_processor
 def isactivesession_processor():
     return dict(isActiveSession=isActiveSession)
 
 
+# Allow Templates to determine if a user can edit/delete a record
+@app.context_processor
+def canalter_processor():
+    return dict(canAlter=canAlter)
+
+
+# Returns the plural form of a word.
+# In this app it turns item and user into items, users.
+# and category into categories.  Allows for generic templates.
 @app.context_processor
 def getplural_processor():
     def getPlural(singular):
@@ -57,12 +104,6 @@ def getplural_processor():
             return singular.title() + "s"
     return dict(getPlural=getPlural)
 
-
-# Return Category name : Category id pairs for all categories
-def getCategories():
-    categories = Category.query.all().order_by(Category.name)
-    results = {c.name : c.id for c in categories}
-    return results
 
 
 # User Routes
@@ -75,8 +116,9 @@ def viewUser(key):
         'view.html',
         viewType="user",
         key = key,
-        traits = vUser.traits,
-        name = vUser.name
+        traits = vUser.traits(),
+        name = vUser.name,
+        allowAlter = canAlter(key)
     )
 
 
@@ -102,7 +144,7 @@ def newUser():
         return render_template(
             'new.html',
             viewType = "user",
-            traits = User.traits
+            traits = User.defaultTraits()
         )
 
 
@@ -126,7 +168,7 @@ def editUser(key):
             'edit.html',
             viewType = "user",
             key = key,
-            traits = edUser.traits
+            traits = edUser.traits()
         )
 
 
@@ -175,7 +217,8 @@ def viewCategory(key):
         viewType = "category",
         key = key,
         name = category.name,
-        traits = category.traits
+        traits = category.traits(),
+        allowAlter = canAlter(category.user_id)
     )
 
 
@@ -188,6 +231,7 @@ def newCategory():
 
     if request.method == 'POST':
         newCategory = Category(
+            user_id = getSessionUserID(),
             name = request.form['name']
         )
 
@@ -201,7 +245,7 @@ def newCategory():
         return render_template(
             'new.html',
             viewType = "category",
-            traits = Category.traits
+            traits = Category.defaultTraits()
         )
 
 
@@ -212,7 +256,6 @@ def editCategory(key):
 
     if isActiveSession() == False:
         return redirect(url_for('listCategory'))
-
 
     editCategory = Category.query.filter_by(id = key).one()
 
@@ -231,7 +274,7 @@ def editCategory(key):
             'edit.html',
             viewType = 'category',
             key = key,
-            traits = editCategory.traits
+            traits = editCategory.traits()
         )
 
 
@@ -277,7 +320,7 @@ def listCategory():
 # View a Item
 @app.route('/item/<int:key>/')
 def viewItem(key):
-
+    print "static folder: " + url_for('static', filename='images/teh_bob.png')
     item = Item.query.filter_by(id = key).one()
 
     return render_template(
@@ -285,7 +328,8 @@ def viewItem(key):
         viewType = "item",
         key = key,
         name = item.name,
-        traits = item.traits
+        traits = item.traits(),
+        allowAlter = canAlter(item.user_id)
     )
 
 
@@ -296,30 +340,39 @@ def newItem():
     if isActiveSession() == False:
         return redirect(url_for('listItem'))
 
+    print app.config['APP_IMAGES']
     if request.method == 'POST':
+
+        # Handle uploaded image
+        picture = request.files['picture']
+        pictureUrl = processImageUpload(picture)
+
         newItem = Item(
             name = request.form['name'],
             dateCreated = datetime.strptime(request.form['created'], "%Y-%m-%d"),
             category = Category.query.filter_by(name = request.form['category']).one(),
             description = request.form['description'],
-            #user = request.session.user
-            picture = request.form['picture']
+            user_id = getSessionUserID(),
+            picture = pictureUrl
         )
-
         session.add(newItem)
+        session.flush()
+        key = newItem.id
+        session.commit()
 
         flash("New item created!")
         return redirect(url_for('viewItem', key = newItem.id))
 
     else:
+
         return render_template(
             'new.html',
             viewType = "item",
-            traits = Item.traits
+            traits = Item.defaultTraits()
         )
 
 
-# Edit a Item
+# Edit an Item
 @app.route('/item/<int:key>/edit/', methods=['GET','POST'])
 def editItem(key):
     if isActiveSession() == False:
@@ -328,13 +381,16 @@ def editItem(key):
     editItem = Item.query.filter_by(id = key).one()
 
     if request.method == 'POST':
+
+        # New Image uploaded, Save and add url to Item record
+        if request.files['upload']:
+
+            editItem.picture = processImageUpload(request.files['upload'])
+
         editItem.name = request.form['name']
         editItem.dateCreated = datetime.strptime(request.form['created'], "%Y-%m-%d")
-        editItem.category = Category.query.filter_by(
-            name = request.form['category']).one()
+        editItem.category = Category.query.filter_by(name = request.form['category']).one()
         editItem.description = request.form['description']
-        editItem.picture = request.form['picture']
-        # editItem.user = request.session.user
 
         session.add(editItem)
         session.commit()
@@ -347,12 +403,12 @@ def editItem(key):
             'edit.html',
             viewType = 'item',
             key = key,
-            traits = editItem.traits
+            traits = editItem.traits(True)
         )
 
-# Delete a Item
-@app.route('/item/<int:key>/delete/',
-           methods=['GET','POST'])
+
+# Delete an Item
+@app.route('/item/<int:key>/delete/', methods=['GET','POST'])
 def deleteItem(key):
     if isActiveSession() == False:
         return redirect(url_for('listItem'))

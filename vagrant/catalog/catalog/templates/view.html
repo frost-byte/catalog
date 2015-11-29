@@ -25,7 +25,11 @@
 {% for t in traits %}
     {% if t.isImage() %}
                         <div class='picture'>
+                            {% if "http" in t.url %}
+                            <img src="{{t.url}}">
+                            {% else %}
                             <img src="{{ url_for('static', filename=t.url) }}">
+                            {% endif %}
                         </div>
     {% endif %}
 {% endfor %}
@@ -36,7 +40,7 @@
     {% endif %}
 {% endfor %}
                         </table>
-{% if isActiveSession() == True %}
+{% if allowAlter == True %}
     {% include "partials/edit_delete.html" -%}
 {% endif %}
                     </div><!-- /Panel Content -->

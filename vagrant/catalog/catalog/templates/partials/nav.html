@@ -38,6 +38,8 @@
                 {{ render_nav_listitem(url_for('listCategory'), 'category') }}
                 {{ render_nav_listitem(url_for('listUser'), 'user') }}
             </ul>
+
+            <!-- GOOGLE PLUS SIGN IN/SIGN OUT BUTTONS-->
             <div id="signInButton" class="pull-right">
                 <span class="g-signin"
                       data-scope="openid email"
@@ -54,7 +56,6 @@
                 id="signOutButton"
                 class="btn btn-danger navbar-btn pull-right">Sign Out
             </button>
-            <!-- GOOGLE PLUS SIGN IN BUTTON-->
              <!--END GOOGLE PLUS SIGN IN BUTTON -->
         </div>
     </div>
@@ -142,16 +143,4 @@
         $('.trait').find('textarea').keyup();
     });
 
-    // http://stackoverflow.com/a/21301752
-    // Make the navbar stay at the top of the window if you need to scroll the
-    // content of the window
-/*    $(document).scroll(function(e){
-        var scrollTop = $(document).scrollTop();
-        if(scrollTop > 0){
-            console.log(scrollTop);
-            $('.navbar').removeClass('navbar-static-top').addClass('navbar-fixed-top');
-        } else {
-            $('.navbar').removeClass('navbar-fixed-top').addClass('navbar-static-top');
-        }
-    });*/
 </script>

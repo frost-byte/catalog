@@ -9,8 +9,15 @@ from sqlalchemy import (
     UniqueConstraint
 )
 from sqlalchemy.orm import relationship
-
-from trait.Trait import DateTrait, ImageTrait, TextTrait, TextAreaTrait, SelectTrait
+from sqlalchemy.dialects.sqlite import BLOB
+from trait.Trait import (
+    DateTrait,
+    ImageTrait,
+    ImageUploadTrait,
+    TextTrait,
+    TextAreaTrait,
+    SelectTrait
+)
 from database import Base, session
 
 
@@ -21,13 +28,15 @@ class Category(Base):
 
     name = Column(String(80), unique = True, nullable = False)
     id = Column(Integer, primary_key = True)
+    user_id = Column(Integer, ForeignKey('user.id'))
+
     items = relationship(
         "Item",
         backref="category",
         cascade="save-update, delete, delete-orphan"
     )
 
-    # Need to add a way for a list of available categories to be added to a drop down list
+    # Find a Category by its name.
     @staticmethod
     def findByName(name):
         category = Category.query.filter_by(name = name).one()
@@ -40,10 +49,26 @@ class Category(Base):
         return [c.name for c in Category.query.all()]
 
 
+    @staticmethod
+    def defaultTraits():
+        return [TextTrait("name")]
+
+
+    @staticmethod
+    def findByID(id):
+        category = Category.query.filter_by(id = id).one()
+        return category
+
+
     @property
+    def creator(self):
+        user = User.query.filter_by(id = self.user_id).one()
+        return user.name
+
     def traits(self):
         return [
-            TextTrait( "name", self.name )
+            TextTrait( "name", self.name),
+            TextTrait( "creator", self.creator)
         ]
 
 
@@ -52,7 +77,8 @@ class Category(Base):
 
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'user_id': self.user_id
         }
 
 
@@ -61,30 +87,50 @@ class User(Base):
 
     id = Column(Integer, primary_key = True)
     name = Column(String(250), nullable = False)
+    email = Column(String(100), nullable = False)
+    picture = Column(String(255), nullable = False)
     items = relationship(
         "Item",
         backref="User",
-        cascade="save-update, delete, delete-orphan")
+        cascade="save-update, delete, delete-orphan"
+    )
+
+    categories = relationship(
+        "Category",
+        backref="User",
+        cascade="save-update, delete, delete-orphan"
+    )
+
+
+    @staticmethod
+    def defaultTraits():
+        return [
+            TextTrait( "name"),
+            TextTrait( "email"),
+            ImageTrait( "picture")
+        ]
 
 
     @property
     def serialize(self):
-        profileInfo = self.profile.serialize
-        adoptersInfo = [a.serialize for a in self.adopters]
+        itemsInfo = [i.serialize for i in self.items]
 
         # Returns object data in form that's easy to serialize.
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'email': self.email,
+            'picture': self.picture,
+            'items': itemsInfo
         }
 
 
-    @property
     def traits(self):
 
         return [
-            TextTrait( "id", self.id ),
-            TextTrait( "name", self.name ),
+            TextTrait("name", self.name),
+            TextTrait("email", self.email),
+            ImageTrait("picture", self.picture)
         ]
 
 
@@ -100,31 +146,65 @@ class Item(Base):
 
     query = session.query_property()
 
-    @property
-    def traits(self):
-        category = Category.query.filter_by(id = self.cat_id).one()
 
+    # Helps Generate a form for Creating a new Item: render a New Item template.
+    @staticmethod
+    def defaultTraits():
         return [
-            ImageTrait( "picture", self.picture),
-            TextTrait( "name", self.name ),
+            ImageUploadTrait( "picture"),
+            TextTrait( "name" ),
             SelectTrait(
                 "category",
-                category.name,
+                Category.categories()[0],
                 Category.categories()
             ),
-            DateTrait( "created", self.dateCreated ),
-            TextAreaTrait( "description", self.description )
+            DateTrait( "created"),
+            TextAreaTrait( "description" )
         ]
+
+    # Traits for generating a form for view and edit. An ImageUploadTrait
+    # is added for the edit view (specify isEdit as True).
+    def traits(self, isEdit=False):
+        category = Category.query.filter_by(id = self.cat_id).one()
+
+        # Rendering an Edit template.
+        if isEdit == True:
+            return [
+                ImageTrait( "picture", self.picture),
+                ImageUploadTrait("upload"),
+                TextTrait( "name", self.name ),
+                SelectTrait(
+                    "category",
+                    category.name,
+                    Category.categories()
+                ),
+                DateTrait( "created", str(self.dateCreated) ),
+                TextAreaTrait( "description", self.description )
+            ]
+        # Rendering a View Template.
+        else:
+            return [
+                ImageTrait( "picture", self.picture),
+                TextTrait( "name", self.name ),
+                SelectTrait(
+                    "category",
+                    category.name,
+                    Category.categories()
+                ),
+                DateTrait( "created", str(self.dateCreated) ),
+                TextAreaTrait( "description", self.description )
+            ]
 
 
     @property
     def serialize(self):
+        category  = Category.findByID(self.cat_id)
         return {
             'id': self.id,
             'user_id': self.user_id,
             'name': self.name,
             'picture': self.picture,
             'description': self.description,
-            'category': self.gender,
-            'dateCreated': str(self.dateOfBirth),
+            'category': category.serialize(),
+            'dateCreated': str(self.dateCreated),
         }

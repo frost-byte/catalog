@@ -69,6 +69,7 @@ a.list-group-item {
 
 .panel.panel-primary {
     width: 70%;
+    margin-top: 50px;
 }
 #panel-container {
     margin-left: 33%;
@@ -152,13 +153,11 @@ a.list-group-item {
 }
 
 .editPane {
-    width: 20%;
-    margin-left: auto;
-    margin-right: auto;
     background-color: #90A79A;
     border-radius: 20px 20px 0px 0px;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 52px;
     width: 50%;
 }
 
@@ -179,6 +178,7 @@ a.list-group-item {
     width: 30%;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 52px;
     background-color: #90A79A;
     border-radius: 20px 20px 0px 0px;
 }
