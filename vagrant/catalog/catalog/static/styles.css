@@ -6,8 +6,7 @@ body {
 h1:nth-of-type(1),
 h2:nth-of-type(1),
 h3:nth-of-type(1),
-h4:nth-of-type(1)
-{
+h4:nth-of-type(1) {
     border-radius: 20px 20px 0px 0px;
 }
 
@@ -57,7 +56,6 @@ a.list-group-item {
     padding: 5px;
     border-color: #999999;
     background-color: #333333;
-    margin-left: auto;
     margin-right: auto;
     margin-top: 50px;
     width: 30%;
@@ -68,11 +66,12 @@ a.list-group-item {
 }
 
 .panel.panel-primary {
-    width: 70%;
+    width: 40%;
     margin-top: 50px;
 }
+
 #panel-container {
-    margin-left: 33%;
+    margin-left:0px
 }
 
 .input-group-btn>.btn {
@@ -84,69 +83,151 @@ a.list-group-item {
     overflow-y: hidden;
 }
 
-.editPane table,
-.pane table{
-    width: 100%;
-}
 .header {
     left: 50%;
     text-align: center;
 }
 
-.picture img{
-  width: 100%;
+.picture img {
+    width: 100%;
+    padding: 1px;
 }
+
+#result.picture {
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 10%;
+    padding: 10px
+}
+
+/*
+    Sidebar
+*/
+
+.sidebar {
+    display: none;
+    border-right: darkgray;
+    border-style: inset;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 51px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        /* Scrollable contents if viewport is shorter than content. */
+        background-color: #f5f5f5;
+        border-right: 1px solid #eee;
+        padding-bottom: 0px;
+        padding-top: 0px;
+        border-right: darkgray;
+        border-style: inset;
+    }
+}
+
+
+/* Sidebar navigation */
+.nav-sidebar {
+    margin-right: -21px;
+    /* 20px padding + 1px border */
+    margin-bottom: 20px;
+    margin-left: -20px;
+}
+.nav-sidebar>li {
+    font-size: xx-large;
+    border-bottom: aquamarine;
+    border-style: outset;
+}
+
+.nav-sidebar > li > a {
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+.nav-sidebar > .active > a,
+.nav-sidebar > .active > a:hover,
+.nav-sidebar > .active > a:focus {
+    color: #fff;
+    background-color: #428bca;
+}
+
+
+/*
+    Traits for Form Presentation and Record Viewing
+*/
 
 .trait,
 {
     text-align: left;
     width: 100%;
     float: right;
-    color:forestgreen;
+    color: forestgreen;
     background-color: #285252;
 }
 
-.trait td{
-    color:forestgreen;
-    background-color:#C5D0C7;
+.trait td {
+    color: forestgreen;
+    background-color: #C5D0C7;
     border-bottom-style: outset;
     border-right-style: ridge;
 }
 
-.trait td:nth-of-type(1){
-    text-align:center;
-    font-weight:bold;
+.trait td:nth-of-type(1) {
+    text-align: center;
+    font-weight: bold;
     width: 15%;
 }
 
-.trait td:nth-of-type(2){
-    padding-left:15px;
+.trait td:nth-of-type(2) {
+    padding-left: 15px;
 }
 
 .trait textarea {
     height: 44px;
     line-height: 24px;
     min-height: 44px;
-    overflow-y: hidden; /* fixes scrollbar flash - kudos to @brettjonesdev */
-    padding-top: 1.1em; /* fixes text jump on Enter keypress */
+    overflow-y: hidden;
+    /* fixes scrollbar flash - kudos to @brettjonesdev */
+    padding-top: 1.1em;
+    /* fixes text jump on Enter keypress */
 }
 
-.editdeletepane, .viewobjectpane {
+.editdeletepane,
+.viewobjectpane {
     border-style: inset;
     border-color: darkgrey;
     border-width: 0px 0px 2px;
     padding-left: 15px;
 }
 
-#signInButton{
+
+/*
+    Google+ Sign In/Out
+*/
+
+#signInButton {
     margin-top: 8px;
 }
-#signInButton button{
+
+#signInButton button {
     background-color: inherit;
     border-style: none;
     margin-bottom: 0px;
     padding: 0px;
 }
+
+
+/*
+    Edit and Add Views
+*/
 
 #addButton {
     border-radius: 20px 20px 0px 0px;
@@ -161,18 +242,31 @@ a.list-group-item {
     width: 50%;
 }
 
+.editPane table,
+.pane table {
+    width: 100%;
+}
+
 .editPane input[name|=name] {
     width: 100%;
 }
+
 .editPane input[name|=weight] {
     width: 15%;
 }
-.editPane textarea{
+
+.editPane textarea {
     width: 100%;
 }
+
 .editPane h1 {
     text-align: center;
 }
+
+
+/*
+    Delete View
+*/
 
 .deletePane {
     width: 30%;

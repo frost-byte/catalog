@@ -1,0 +1,12 @@
+{% set urls = makeUrls(modelType, key) -%}
+        <div class="container" id="panel-container">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Delete {{name}}</div>
+                <div class="panel-content">
+                    <form action="{{ urls.deleteUrl }}" method="POST">
+                        <input type="submit" value="Delete">
+                        <a href="{{ urls.viewUrl }}">Cancel</a>
+                    </form>
+                </div><!-- /Panel Content -->
+            </div><!-- /Panel -->
+        </div><!-- /Panel Container -->

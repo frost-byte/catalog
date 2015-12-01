@@ -1,0 +1,36 @@
+{% set urls = makeUrls(modelType, key) -%}
+{% set formName = "new" + urls.suffix + "Form" -%}
+        <div class="container" id="panel-container">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Edit {{name}}</div>
+                <div class="panel-content">
+                    <form
+                          action="{{ urls.editUrl }}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                          id="{{formName}}">
+                    </form>
+{% for t in traits %}
+    {% if t.isImage() %}
+                    <div class='picture'>
+                        {% if "http" in t.url %}
+                        <img src="{{t.url}}">
+                        {% else %}
+                        <img src="{{ url_for('static', filename=t.url) }}">
+                        {% endif %}
+                    </div>
+    {% endif %}
+{% endfor %}
+                    <table>
+{% for t in traits %}
+    {% if t.isImage() == False %}
+    {{ t.asInputElement(formName, True)|safe }}
+    {% endif %}
+{% endfor %}
+                    </table>
+
+                    <input type="submit" value="Submit" form="{{formName}}">
+                    <a href="{{ urls.viewUrl }}">Cancel</a>
+                </div><!-- /Panel Content -->
+            </div><!-- /Panel -->
+        </div><!-- /Panel Container -->

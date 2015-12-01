@@ -2,6 +2,8 @@ import httplib2
 import json
 import requests
 import random, string
+import simplejson
+from apiclient import errors
 
 from oauth2client.client import (
     flow_from_clientsecrets,
@@ -11,7 +13,7 @@ from oauth2client.client import (
 )
 
 from flask import session as login_session
-from flask import make_response, flash
+from flask import make_response, flash, redirect, url_for
 from .models import User
 from .database import session
 
@@ -103,6 +105,22 @@ def ConnectGoogle(request):
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
 
+        '''
+        oauth_flow = flow_from_clientsecrets(
+            'client_secret.json',
+            scope='https://www.googleapis.com/auth/plus.login'
+        )
+
+        if 'code' not in request.args:
+            auth_uri = oauth_flow.step1_get_authorize_url()
+
+            return redirect(auth_uri)
+        else:
+            code = request.args.get('code')
+            credentials = oauth_flow.step2_exchange(code)
+            oauth_flow.redirect_uri = 'postmessage'
+        '''
+
     except FlowExchangeError:
         return createResponse('Failed to upgrade the authorization code.', 401)
 
@@ -117,9 +135,11 @@ def ConnectGoogle(request):
 
     gplus_id = credentials.id_token['sub']
 
+    # Check for User ID mismatch.
     if result['user_id'] != gplus_id:
         return createResponse("Token's User ID doesn't match given user ID.", 401)
 
+    # Validate Client ID
     if result['issued_to'] != CLIENT_ID:
         print "Token's Client ID does not match app's."
         return createResponse("Token's Client ID does not match app's.")
@@ -130,14 +150,19 @@ def ConnectGoogle(request):
 
     if stored_credentials is not None and gplus_id == stored_gplus_id:
         return createResponse('Current User is already connected.', 200)
+
+    # This is a new Login, so store all pertinent info.
     login_session['access_token'] = credentials.access_token
     login_session['credentials'] = credentials.to_json()
     login_session['gplus_id'] = gplus_id
 
     # Get User info
+    #userinfo_url = "https://www.googleapis.com/plus/v1/people/me/openIdConnect"
+    #answer = requests.get(userinfo_url)
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
+
 
     data = answer.json()
 
@@ -159,7 +184,7 @@ def ConnectGoogle(request):
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    output += ' " style = "width: 80px; height: 80px;border-radius: 40px;-webkit-border-radius: 40px;-moz-border-radius: 40px;"> '
     flash("you are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -167,17 +192,34 @@ def ConnectGoogle(request):
 
 # Disconnect from Google
 def DisconnectGoogle():
+    if 'credentials' not in login_session:
+        print "Invalid Credentials"
+        return redirect(url_for('listItem'))
+
     credentials = Creds.from_json(login_session['credentials'])
-    access_token = credentials.get_access_token()[0]
+    access_token = credentials.access_token
 
     print "access_token = %s" % access_token
     print 'User name is: %s' % login_session['username']
 
+    http = httplib2.Http()
+    http = credentials.authorize(http)
+
     try:
-        credentials.revoke(httplib2.Http())
+        credentials.revoke(http)
 
     except TokenRevokeError as e:
-        return createResponse("Unable to revoke Token %s" % e, 400)
+        print "Unable to revoke Token %s" % e
+        # Clear login_session
+        del login_session['credentials']
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        print "login_session cleared after invalid token.."
+
+        return createResponse("Unable to revoke Token %s" % e, 200)
 
 
     # Successfully Disconnected from Google
@@ -187,4 +229,5 @@ def DisconnectGoogle():
     del login_session['username']
     del login_session['email']
     del login_session['picture']
+    print "login_session deleted."
     return createResponse('Successfully disconnected.', 200)

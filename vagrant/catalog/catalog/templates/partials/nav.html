@@ -30,14 +30,9 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="{{ url_for('listCategory') }}">Catalog</a>
+            <a class="navbar-brand" href="{{ url_for('listItem') }}">Catalog</a>
         </div>
         <div class="collapse navbar-collapse" id="catNavbar">
-            <ul class="nav navbar-nav">
-                {{ render_nav_listitem(url_for('listItem'), 'item') }}
-                {{ render_nav_listitem(url_for('listCategory'), 'category') }}
-                {{ render_nav_listitem(url_for('listUser'), 'user') }}
-            </ul>
 
             <!-- GOOGLE PLUS SIGN IN/SIGN OUT BUTTONS-->
             <div id="signInButton" class="pull-right">
@@ -60,6 +55,7 @@
         </div>
     </div>
 </nav>
+{% include 'partials/sidebar.html' %}
 <div id="result"></div>
 <script>
     function signInCallback(authResult){
@@ -115,7 +111,7 @@
                     setTimeout(
                         function(){
                             window.location.href =
-                                "{{url_for('listCategory')}}";
+                                "{{url_for('listItem')}}";
                         },
                         4000
                     );

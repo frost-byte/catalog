@@ -72,7 +72,7 @@ class TextTrait(Trait):
 
 class ImageTrait(Trait):
     inputTemplate = '''<input type="{0}" name="{1}" form="{2}" value="{3}">'''
-    outputTemplate = '''<img src="{0}">'''
+    outputTemplate = '''<img src="{0}" class="img-responsive">'''
 
 
     def __init__(self, name, url=""):
@@ -110,7 +110,7 @@ class ImageUploadTrait(Trait):
         self.name = name
 
     def isImage(self):
-        return True
+        return False
 
 
     def asInputElement(self, formName, withValue = False):

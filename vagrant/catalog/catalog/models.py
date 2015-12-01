@@ -1,3 +1,5 @@
+from flask import jsonify
+
 from sqlalchemy import (
     Column,
     ForeignKey,
@@ -74,12 +76,16 @@ class Category(Base):
 
     @property
     def serialize(self):
-
-        return {
-            'id': self.id,
-            'name': self.name,
-            'user_id': self.user_id
+        cat = {
+          'Category':{
+                'id': self.id,
+                'name': self.name,
+                'creator': User.nameByID(self.user_id),
+                'Items':[i.serialize for i in self.items]
+            }
         }
+
+        return cat
 
 
 class User(Base):
@@ -103,6 +109,11 @@ class User(Base):
 
 
     @staticmethod
+    def nameByID(user_id):
+        return User.query.filter_by(id = user_id).one().name
+
+
+    @staticmethod
     def defaultTraits():
         return [
             TextTrait( "name"),
@@ -113,16 +124,20 @@ class User(Base):
 
     @property
     def serialize(self):
-        itemsInfo = [i.serialize for i in self.items]
+
+        user = {
+            'User':{
+                'id': self.id,
+                'name': self.name,
+                'email': self.email,
+                'picture': self.picture,
+                'Items':  {[i.serialize for i in self.items]}
+            }
+        }
+
 
         # Returns object data in form that's easy to serialize.
-        return {
-            'id': self.id,
-            'name': self.name,
-            'email': self.email,
-            'picture': self.picture,
-            'items': itemsInfo
-        }
+        return user
 
 
     def traits(self):
@@ -162,6 +177,14 @@ class Item(Base):
             TextAreaTrait( "description" )
         ]
 
+
+    # Get the name of the user that created this item record
+    @property
+    def creator(self):
+        user = User.query.filter_by(id = self.user_id).one()
+        return user.name
+
+
     # Traits for generating a form for view and edit. An ImageUploadTrait
     # is added for the edit view (specify isEdit as True).
     def traits(self, isEdit=False):
@@ -198,13 +221,16 @@ class Item(Base):
 
     @property
     def serialize(self):
-        category  = Category.findByID(self.cat_id)
-        return {
-            'id': self.id,
-            'user_id': self.user_id,
-            'name': self.name,
-            'picture': self.picture,
-            'description': self.description,
-            'category': category.serialize(),
-            'dateCreated': str(self.dateCreated),
+        item = {
+            'Item':{
+                'id': self.id,
+                'creator': self.creator,
+                'name': self.name,
+                'picture': self.picture,
+                'description': self.description,
+                'cat_id': self.cat_id,
+                'dateCreated': str(self.dateCreated)
+            }
         }
+
+        return item
