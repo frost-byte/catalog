@@ -2,9 +2,11 @@
 {% if isActiveSession() == True %}
     #signInButton { display: none; }
     #signOutButton { display: block;}
+    #ginfo { display: block;}
 {% else %}
     #signInButton { display: block; }
     #signOutButton { display: none;}
+    #ginfo { display: none;}
 {% endif %}
 </style>
 
@@ -32,8 +34,14 @@
             </button>
             <a class="navbar-brand" href="{{ url_for('listItem') }}">Catalog</a>
         </div>
-        <div class="collapse navbar-collapse" id="catNavbar">
-
+        <div class="collapse navbar-collapse navbar-right" id="catNavbar">
+            <div id="signOutButton" class="btn btn-danger navbar-btn pull-right">
+                Sign Out
+            </div>
+            <ul class="nav navbar-nav" id="ginfo" style='display: none;'>
+                <li id="gname"><a href="#"></a></li>
+                <li id="gphoto"><a href="#"></a></li>
+            </ul>
             <!-- GOOGLE PLUS SIGN IN/SIGN OUT BUTTONS-->
             <div id="signInButton" class="pull-right">
                 <span class="g-signin"
@@ -45,23 +53,30 @@
                       data-callback="signInCallback"
                       data-approvalprompt="force">
                 </span>
-            </div>
-            <button
-                type="button"
-                id="signOutButton"
-                class="btn btn-danger navbar-btn pull-right">Sign Out
-            </button>
-             <!--END GOOGLE PLUS SIGN IN BUTTON -->
+            </div><!--END GOOGLE PLUS SIGN IN BUTTON -->
         </div>
     </div>
 </nav>
 {% include 'partials/sidebar.html' %}
 <div id="result"></div>
 <script>
+
+    // Display The user's Google+ username and photo by the signout button.
+    function setProfile(name, photo){
+        $('#gname a').html(name);
+        $('#gphoto a').attr(
+            "style",
+            "background-image: url('" + photo + "');"
+        );
+        $('#ginfo').attr("style", "display: block;");
+    }
+
     function signInCallback(authResult){
         if (authResult['code']){
             $('#signInButton').attr('style', 'display: none');
             $('#signOutButton').attr('style', 'display: block');
+            $('#ginfo').attr('style', 'display: block');
+
             console.log('{{state}}');
             $.ajax({
                 type: 'POST',
@@ -69,17 +84,19 @@
                 processData: false,
                 contentType: 'application/octet-stream; charset=utf-8',
                 data: authResult['code'],
+                dataType:"json",
                 success: function(result){
                     if(result) {
                         $('#result').html(
                             'Login Successful!<br>' + result +
                             '<br>Redirecting...'
                         )
+                        console.log(result);
+                        setProfile(result.name, result.picture);
 
                         setTimeout(
                             function(){
-                                window.location.href =
-                                    "{{url_for('listItem')}}";
+                                $('#result').html("");
                             },
                             4000
                         );
@@ -126,6 +143,10 @@
         // Assign callback for when the Sign Out button is clicked.
         $('#signOutButton').click(signOut);
 
+    {% if isActiveSession() == True %}
+        {% set userInfo = getSessionUserInfo() -%}
+        setProfile("{{userInfo.name}}", "{{userInfo.photo}}");
+    {% endif %}
         // Size textarea elemnts, css class 'trait' to their scrollheight
         $('.trait textarea').height($(this).scrollHeight);
 

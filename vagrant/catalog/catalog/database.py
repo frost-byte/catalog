@@ -1,6 +1,9 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+from sqlalchemy.orm import (
+    scoped_session,
+    sessionmaker
+)
 
 engine = create_engine("sqlite:///catalog.db")
 
@@ -15,7 +18,7 @@ session = scoped_session(DBSession)
 Base = declarative_base()
 Base.query = session.query_property()
 
+
 def init_db():
 
-    from models import Category, Item, User
     Base.metadata.create_all(bind=engine)

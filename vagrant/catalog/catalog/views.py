@@ -1,7 +1,4 @@
 from datetime import datetime
-from random import randint
-import random, string
-import json
 import os
 
 from flask import (
@@ -11,13 +8,13 @@ from flask import (
     redirect,
     flash,
     jsonify,
-    make_response,
     Response
 )
+
 from sqlalchemy import desc
 from werkzeug import secure_filename
+from database import session
 
-from database import session, Base
 from models import (
     Category,
     Item,
@@ -31,11 +28,12 @@ from .auth import (
     ConnectGoogle,
     DisconnectGoogle,
     canAlter,
-    getSessionUserID
+    getSessionUserInfo
 )
 
 from urls import Urls
 from . import app
+
 
 # From flask docs, checks that uploaded images have specific file extensions
 # http://flask.pocoo.org/docs/0.10/patterns/fileuploads/
@@ -60,14 +58,6 @@ def processImageUpload(image):
         return os.path.join("images", filename)
 
 
-# TODO
-# Flash html element needs to be sized properly for when a user logs in.
-# Add Latest Items View DONE - sort of, category names needed and "latest items"
-# Add Categories Sidebar DONE
-# Add JSON endpoint for entire Catalog DONE
-# Add XML endpoint (optional)
-
-
 # http://flask.pocoo.org/docs/0.10/templating/#context-processors
 # Allow templates to generate Urls for different Models
 @app.context_processor
@@ -86,6 +76,12 @@ def hasattr_processor():
 @app.context_processor
 def isactivesession_processor():
     return dict(isActiveSession=isActiveSession)
+
+
+# Gets Session User Info
+@app.context_processor
+def getsessionuserinfo_processor():
+    return dict(getSessionUserInfo=getSessionUserInfo)
 
 
 # Allow Templates to determine if a user can edit/delete a record
@@ -116,53 +112,59 @@ def getcategories_processor():
 
 
 # User Routes
-@app.route('/user/<int:key>/')
+@app.route('/catalog/user/<int:key>/')
 def viewUser(key):
 
-    vUser = User.query.filter_by(id = key).one()
+    vUser = User.query.filter_by(id=key).one()
 
     return render_template(
         'generic.html',
         modelType="user",
-        viewType = os.path.join("partials","view.html"),
-        key = key,
-        traits = vUser.traits(),
-        name = vUser.name,
-        allowAlter = canAlter(key)
+        viewType=os.path.join("partials", "view.html"),
+        key=key,
+        traits=vUser.traits(),
+        name=vUser.name,
+        allowAlter=canAlter(key)
     )
 
-@app.route('/user/new', methods=['GET','POST'])
-@app.route('/user/new/', methods=['GET','POST'])
+
+@app.route('/catalog/user/new', methods=['GET', 'POST'])
+@app.route('/catalog/user/new/', methods=['GET', 'POST'])
 def newUser():
 
-    if isActiveSession() == False:
+    if isActiveSession() is False:
         return redirect(url_for('listUser'))
 
     if request.method == 'POST':
         newUser = User(
-            name = request.form['name']
+            name=request.form['name']
         )
 
         session.add(newUser)
         session.commit()
 
         flash("New User created!")
-        return redirect( url_for("viewUser", key = newUser.id) )
+        return redirect(url_for("viewUser", key=newUser.id))
 
     else:
         return render_template(
-            'new.html',
-            modelType = "user",
-            traits = User.defaultTraits()
+            'generic.html',
+            modelType="user",
+            viewType=os.path.join("partials", 'new.html'),
+            traits=User.defaultTraits()
         )
 
 
-@app.route('/user/<int:key>/edit/', methods=['GET','POST'])
+@app.route('/catalog/user/<int:key>/edit/', methods=['GET', 'POST'])
 def editUser(key):
-    if isActiveSession() == False:
+    if isActiveSession() is False:
         return redirect(url_for('listCategory'))
 
-    edUser = User.query.filter_by(id = key).one()
+    edUser = User.query.filter_by(id=key).one()
+
+    # Don't allow a user to change other user records
+    if canAlter(edUser.id) is False:
+        return redirect(url_for('listItem'))
 
     if request.method == 'POST':
         edUser.name = request.form['name']
@@ -170,104 +172,115 @@ def editUser(key):
         session.add(edUser)
         session.commit()
 
-        return redirect( url_for('viewUser', key = edUser.id) )
+        return redirect(url_for('viewUser', key=edUser.id))
 
     else:
         return render_template(
-            'edit.html',
-            modelType = "user",
-            key = key,
-            traits = edUser.traits()
+            'generic.html',
+            modelType="user",
+            viewType=os.path.join("partials", 'edit.html'),
+            key=key,
+            traits=edUser.traits()
         )
 
 
-@app.route('/user/<int:key>/delete/', methods=['GET','POST'])
+@app.route('/catalog/user/<int:key>/delete/', methods=['GET', 'POST'])
 def deleteUser(key):
-    if isActiveSession() == False:
+    if isActiveSession() is False:
         return redirect(url_for('listUser'))
 
-    delUser = User.query.filter_by(id = key).one()
+    delUser = User.query.filter_by(id=key).one()
+
+    # Don't allow a user to change other user records
+    if canAlter(delUser.id) is False:
+        return redirect(url_for('listItem'))
 
     if request.method == 'POST':
         session.delete(delUser)
         session.commit()
 
-        return redirect( url_for('listUser') )
+        return redirect(url_for('listUser'))
 
     else:
         return render_template(
-            'delete.html',
-            modelType = "user",
-            key = key,
-            name = delUser.name
+            'generic.html',
+            modelType="user",
+            viewType=os.path.join("partials", 'delete.html'),
+            key=key,
+            name=delUser.name
         )
 
 
-@app.route('/user/')
-@app.route('/user')
+@app.route('/catalog/user/')
+@app.route('/catalog/user')
 def listUser():
     users = User.query.all()
     return render_template(
-        'list.html',
-        modelType = "user",
-        objects = users,
-        client_id = CLIENT_ID,
-        state = getLoginSessionState()
+        'generic.html',
+        modelType="user",
+        viewType=os.path.join("partials", 'list.html'),
+        objects=users,
+        client_id=CLIENT_ID,
+        state=getLoginSessionState()
     )
 
 
 # Category Routes
-@app.route('/category/<int:key>/')
+@app.route('/catalog/category/<int:key>/')
 def viewCategory(key):
-    category = Category.query.filter_by(id = key).one()
+    category = Category.query.filter_by(id=key).one()
 
     return render_template(
         'generic.html',
-        modelType = "category",
-        viewType = os.path.join("partials","view.html"),
-        key = key,
-        name = category.name,
-        traits = category.traits(),
-        allowAlter = canAlter(category.user_id)
+        modelType="category",
+        viewType=os.path.join("partials", "view.html"),
+        key=key,
+        name=category.name,
+        traits=category.traits(),
+        allowAlter=canAlter(category.user_id)
     )
 
 
-@app.route('/category/new',  methods=['GET','POST'])
-@app.route('/category/new/', methods=['GET','POST'])
+@app.route('/catalog/category/new',  methods=['GET', 'POST'])
+@app.route('/catalog/category/new/', methods=['GET', 'POST'])
 def newCategory():
-    if isActiveSession() == False:
+    if isActiveSession() is False:
         return redirect(url_for('listCategory'))
-
 
     if request.method == 'POST':
         newCategory = Category(
-            user_id = getSessionUserID(),
-            name = request.form['name']
+            user_id=getSessionUserInfo()['id'],
+            name=request.form['name']
         )
 
         session.add(newCategory)
         session.commit()
 
         flash("New Category created!")
-        return redirect(url_for('viewCategory', key = newCategory.id))
+        return redirect(url_for('viewCategory', key=newCategory.id))
 
     else:
         return render_template(
-            'new.html',
-            modelType = "category",
-            traits = Category.defaultTraits()
+            'generic.html',
+            modelType="category",
+            viewType=os.path.join("partials", 'new.html'),
+            traits=Category.defaultTraits()
         )
 
 
 # Edit a Category
-@app.route('/category/<int:key>/edit/',
-          methods=['GET','POST'])
+@app.route('/catalog/category/<int:key>/edit/', methods=['GET', 'POST'])
 def editCategory(key):
 
-    if isActiveSession() == False:
-        return redirect(url_for('listCategory'))
+    if isActiveSession() is False:
+        return redirect(url_for('listItem'))
 
-    editCategory = Category.query.filter_by(id = key).one()
+    editCategory = Category.query.filter_by(id=key).one()
+
+    # Don't allow a user to change a category they don't 'own'
+    if canAlter(editCategory.user_id) is False:
+        return redirect(url_for('listItem'))
+
 
     if request.method == 'POST':
 
@@ -277,24 +290,29 @@ def editCategory(key):
         session.commit()
 
         flash("Category edited!")
-        return redirect(url_for('viewCategory', key = key))
+        return redirect(url_for('viewCategory', key=key))
 
     else:
         return render_template(
-            'edit.html',
-            modelType = 'category',
-            key = key,
-            traits = editCategory.traits()
+            'generic.html',
+            modelType="category",
+            viewType=os.path.join("partials", 'edit.html'),
+            key=key,
+            traits=editCategory.traits(),
+            allowAlter=canAlter(editCategory.user_id)
         )
 
 
-@app.route('/category/<int:key>/delete/',
-           methods=['GET','POST'])
+@app.route('/catalog/category/<int:key>/delete/', methods=['GET', 'POST'])
 def deleteCategory(key):
-    if isActiveSession() == False:
+    if isActiveSession() is False:
         return redirect(url_for('listCategory'))
 
-    deleteCategory = Category.query.filter_by(id = key).one()
+    deleteCategory = Category.query.filter_by(id=key).one()
+
+    # Don't allow a user to change a category they don't 'own'
+    if canAlter(deleteCategory.user_id) is False:
+        return redirect(url_for('listItem'))
 
     if request.method == 'POST':
         session.delete(deleteCategory)
@@ -304,24 +322,26 @@ def deleteCategory(key):
         return redirect(url_for('listCategory'))
     else:
         return render_template(
-            'delete.html',
-            modelType = "category",
-            key = key,
-            name = deleteCategory.name
+            'generic.html',
+            modelType="category",
+            viewType=os.path.join("partials", 'delete.html'),
+            key=key,
+            name=deleteCategory.name
         )
 
 
 # List all Categorys
-@app.route('/category/')
-@app.route('/category')
+@app.route('/catalog/category/')
+@app.route('/catalog/category')
 def listCategory():
     categories = Category.query.all()
     return render_template(
-        'list.html',
-        modelType = "category",
-        objects = categories,
-        client_id = CLIENT_ID,
-        state = getLoginSessionState()
+        'generic.html',
+        modelType="category",
+        viewType=os.path.join("partials", "list.html"),
+        objects=categories,
+        client_id=CLIENT_ID,
+        state=getLoginSessionState()
     )
 
 
@@ -329,36 +349,40 @@ def listCategory():
 # View a Item - This route provides a beautified url in the browser
 @app.route('/catalog/<string:category_name>/<string:item_name>/')
 def viewCatItem(category_name, item_name):
-    category = Category.query.filter_by(name = category_name).one()
-    item = Item.query.filter_by(name = item_name, cat_id = category.id).one()
+    category = Category.query.filter_by(name=category_name).one()
+    item = Item.query.filter_by(name=item_name, cat_id=category.id).one()
 
     return render_template(
         'generic.html',
-        modelType = 'item',
-        viewType = os.path.join("partials","view.html"),
-        category = category_name,
-        key = item.id,
-        name = item.name,
-        traits = item.traits(),
-        allowAlter = canAlter(item.user_id)
+        modelType='item',
+        viewType=os.path.join("partials", "view.html"),
+        category=category_name,
+        key=item.id,
+        name=item.name,
+        traits=item.traits(),
+        allowAlter=canAlter(item.user_id)
     )
 
 
 # Redirect to viewCatItem
-@app.route('/item/<int:key>/')
+@app.route('/catalog/item/<int:key>/')
 def viewItem(key):
-    item = Item.query.filter_by(id = key).one()
-    category = Category.query.filter_by(id = item.cat_id).one()
+    item = Item.query.filter_by(id=key).one()
+    category = Category.query.filter_by(id=item.cat_id).one()
 
     return redirect(
-        url_for('viewCatItem', category_name=category.name, item_name = item.name)
+        url_for(
+            'viewCatItem',
+            category_name=category.name,
+            item_name=item.name
+        )
     )
 
 
 # Create a Item - could change route to /catalog/<category>/item/add
-@app.route('/catalog/item/add', methods=['GET','POST'])
+@app.route('/catalog/item/add', methods=['GET', 'POST'])
 def newItem():
-    if isActiveSession() == False:
+    if isActiveSession() is False:
         return redirect(url_for('listItem'))
 
     print app.config['APP_IMAGES']
@@ -369,57 +393,56 @@ def newItem():
         pictureUrl = processImageUpload(picture)
 
         newItem = Item(
-            name = request.form['name'],
-            dateCreated = datetime.strptime(request.form['created'], "%Y-%m-%d"),
-            category = Category.query.filter_by(name = request.form['category']).one(),
-            description = request.form['description'],
-            user_id = getSessionUserID(),
-            picture = pictureUrl
+            name=request.form['name'],
+            dateCreated=datetime.strptime(request.form['created'], "%Y-%m-%d"),
+            category=Category.query.filter_by(
+                name=request.form['category']).one(),
+            description=request.form['description'],
+            user_id=getSessionUserInfo()['id'],
+            picture=pictureUrl
         )
         session.add(newItem)
         session.flush()
-        key = newItem.id
         session.commit()
 
         flash("New item created!")
-        return redirect(url_for('viewItem', key = newItem.id))
+        return redirect(url_for('viewItem', key=newItem.id))
 
     else:
 
         return render_template(
             'generic.html',
-            modelType = "item",
-            viewType = os.path.join("partials","new.html"),
-            traits = Item.defaultTraits()
+            modelType="item",
+            viewType=os.path.join("partials", "new.html"),
+            traits=Item.defaultTraits()
         )
 
 
 # Edit an Item - Descriptive URL
 @app.route('/catalog/<string:category_name>/<string:item_name>/edit')
 def editCatItem(category_name, item_name):
-    category = Category.query.filter_by(name = category_name).one()
-    item = Item.query.filter_by(name = item_name, cat_id = category.id).one()
-
+    category = Category.query.filter_by(name=category_name).one()
+    item = Item.query.filter_by(name=item_name, cat_id=category.id).one()
 
     return render_template(
         'generic.html',
-        modelType = 'item',
-        viewType = os.path.join("partials","edit.html"),
-        category = category_name,
-        key = item.id,
-        name = item.name,
-        traits = item.traits(True),
-        allowAlter = canAlter(item.user_id)
+        modelType='item',
+        viewType=os.path.join("partials", "edit.html"),
+        category=category_name,
+        key=item.id,
+        name=item.name,
+        traits=item.traits(True),
+        allowAlter=canAlter(item.user_id)
     )
 
 
 # Edit an Item
-@app.route('/item/<int:key>/edit/', methods=['GET','POST'])
+@app.route('/catalog/item/<int:key>/edit/', methods=['GET', 'POST'])
 def editItem(key):
-    if isActiveSession() == False:
+    if isActiveSession() is False:
         return redirect(url_for('listItem'))
     else:
-        item = Item.query.filter_by(id = key).one()
+        item = Item.query.filter_by(id=key).one()
 
         if request.method == 'POST':
 
@@ -429,7 +452,7 @@ def editItem(key):
                 item.picture = processImageUpload(request.files['upload'])
 
             category = Category.query.filter_by(
-                name = request.form['category']).one()
+                name=request.form['category']).one()
 
             item.name = str(request.form['name'])
             item.dateCreated = datetime.strptime(
@@ -446,94 +469,103 @@ def editItem(key):
             return redirect(
                 url_for(
                     'viewCatItem',
-                    category_name = category.name,
-                    item_name = item.name
+                    category_name=category.name,
+                    item_name=item.name
                 )
             )
 
-
         else:
-            category = Category.query.filter_by(id = item.cat_id).one()
+            category = Category.query.filter_by(id=item.cat_id).one()
 
             return redirect(
                 url_for(
                     'editCatItem',
-                    category_name = category.name,
-                    item_name = item.name
+                    category_name=category.name,
+                    item_name=item.name
                 )
             )
+
 
 @app.route('/catalog/<string:item_name>/delete', methods=['GET'])
 def delItem(item_name):
 
-    deleteItem = Item.query.filter_by(name = item_name).one()
+    deleteItem = Item.query.filter_by(name=item_name).one()
 
     return render_template(
         'generic.html',
-        viewType = os.path.join("partials","delete.html"),
-        modelType = "item",
-        key = deleteItem.id,
-        name = item_name
+        viewType=os.path.join("partials", "delete.html"),
+        modelType="item",
+        key=deleteItem.id,
+        name=item_name
     )
 
 
 # Delete an Item
-@app.route('/item/<int:key>/delete/', methods=['GET','POST'])
+@app.route('/catalog/item/<int:key>/delete/', methods=['GET', 'POST'])
 def deleteItem(key):
-    if isActiveSession() == False:
+    if isActiveSession() is False:
         return redirect(url_for('listItem'))
 
-    deleteItem = Item.query.filter_by(id = key).one()
-
+    deleteItem = Item.query.filter_by(id=key).one()
 
     if request.method == 'POST':
         session.delete(deleteItem)
         session.commit()
 
         flash("Item deleted!")
-        return redirect( url_for('listItem') )
+        return redirect(url_for('listItem'))
 
     else:
         return redirect(
-            url_for('delItem', item_name = deleteItem.name)
+            url_for('delItem', item_name=deleteItem.name)
         )
+
 
 @app.route('/catalog/<string:category_name>/items')
 def listCategoryItem(category_name):
-    category = Category.query.filter_by(name = category_name).one()
-    items = Item.query.filter_by(cat_id = category.id).all()
+    category = Category.query.filter_by(name=category_name).one()
+    items = Item.query.filter_by(cat_id=category.id).all()
 
     return render_template(
         'generic.html',
-        viewType = os.path.join("partials","list.html"),
-        modelType = 'item',
-        objects = items,
-        client_id = CLIENT_ID,
-        state = getLoginSessionState()
+        viewType=os.path.join("partials", "list.html"),
+        modelType='item',
+        objects=items,
+        client_id=CLIENT_ID,
+        state=getLoginSessionState()
     )
 
 
 # List all Items
-@app.route('/item/')
-@app.route('/item')
+@app.route('/catalog/item/')
+@app.route('/catalog/item')
 @app.route('/')
 def listItem():
     items = Item.query.order_by(desc(Item.dateCreated)).all()
 
+    results = [ (Category.findByID(i.cat_id).name, i.name) for i in items ]
+    objects = []
+
+    for category, item in results:
+        objects.append({'category': category, 'item': item})
+
+    for o in objects:
+        print o['item'] + " (" + o['category'] + ")"
+
     return render_template(
         'generic.html',
-        viewType = os.path.join("partials","list.html"),
-        modelType = 'item',
-        objects = items,
-        client_id = CLIENT_ID,
-        state = getLoginSessionState()
+        viewType=os.path.join("partials", "list.html"),
+        modelType='item',
+        objects=items,
+        client_id=CLIENT_ID,
+        state=getLoginSessionState()
     )
 
 
 # An API endpoint to a Item in JSON format
-@app.route('/item/<int:key>/JSON')
+@app.route('/catalog/item/<int:key>/JSON')
 def itemJSON(key):
-    item = Item.query.filter_by(id = key).one()
+    item = Item.query.filter_by(id=key).one()
 
     return jsonify(Item=item.serialize)
 
@@ -553,19 +585,11 @@ def catalogXML():
     cats = [c.serialize for c in categories]
 
     from dicttoxml import dicttoxml as d2xml
-    js = jsonify(Catalog=cats)
     xmlCatalog = d2xml(cats)
     print xmlCatalog
 
     return Response(xmlCatalog, mimetype="text/xml")
-    '''
-    import xml.etree.ElementTree as ET
-    root = ET.Element('Catalog')
 
-#    response = make_response(ET.dump(root))
-#    response.headers["Content-Type"] = "text/xml"
-
-    return Response(ET.dump(root), mimetype="text/xml")'''
 
 # Routes for Authentication with Google
 @app.route('/gconnect', methods=['POST'])

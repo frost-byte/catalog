@@ -1,9 +1,9 @@
 import httplib2
 import json
 import requests
-import random, string
-import simplejson
-from apiclient import errors
+import random
+import string
+
 
 from oauth2client.client import (
     flow_from_clientsecrets,
@@ -13,25 +13,31 @@ from oauth2client.client import (
 )
 
 from flask import session as login_session
-from flask import make_response, flash, redirect, url_for
+from flask import (
+    make_response,
+    flash,
+    redirect,
+    url_for,
+    Response,
+    jsonify
+)
 from .models import User
 from .database import session
 
 CLIENT_ID = json.loads(
-    open('client_secret.json','r').read())['web']['client_id']
+    open('client_secret.json', 'r').read())['web']['client_id']
 
 credentials = None
 
 
-
 def getUserInfo(user_id):
-    user = User.query.filter_by(id = user_id).one()
+    user = User.query.filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
     try:
-        user = User.query.filter_by(email = email).one()
+        user = User.query.filter_by(email=email).one()
         return user.id
 
     except:
@@ -40,14 +46,14 @@ def getUserID(email):
 
 def createUser(login_session):
     newUser = User(
-        name = login_session['username'],
-        email = login_session['email'],
-        picture = login_session['picture']
+        name=login_session['username'],
+        email=login_session['email'],
+        picture=login_session['picture']
     )
 
     session.add(newUser)
     session.commit()
-    user = User.query.filter_by(email = login_session['email']).one()
+    user = User.query.filter_by(email=login_session['email']).one()
 
     return user.id
 
@@ -73,8 +79,13 @@ def canAlter(userID):
         return False
 
 
-def getSessionUserID():
-    return login_session['user_id']
+def getSessionUserInfo():
+    info = {
+        'id': login_session['user_id'],
+        'name': login_session['username'],
+        'photo': login_session['picture']
+    }
+    return info
 
 
 def getLoginSessionState():
@@ -101,25 +112,9 @@ def ConnectGoogle(request):
     code = request.data
 
     try:
-        oauth_flow = flow_from_clientsecrets('client_secret.json',scope='')
+        oauth_flow = flow_from_clientsecrets('client_secret.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
-
-        '''
-        oauth_flow = flow_from_clientsecrets(
-            'client_secret.json',
-            scope='https://www.googleapis.com/auth/plus.login'
-        )
-
-        if 'code' not in request.args:
-            auth_uri = oauth_flow.step1_get_authorize_url()
-
-            return redirect(auth_uri)
-        else:
-            code = request.args.get('code')
-            credentials = oauth_flow.step2_exchange(code)
-            oauth_flow.redirect_uri = 'postmessage'
-        '''
 
     except FlowExchangeError:
         return createResponse('Failed to upgrade the authorization code.', 401)
@@ -137,7 +132,10 @@ def ConnectGoogle(request):
 
     # Check for User ID mismatch.
     if result['user_id'] != gplus_id:
-        return createResponse("Token's User ID doesn't match given user ID.", 401)
+        return createResponse(
+            "Token's User ID doesn't match given user ID.",
+            401
+        )
 
     # Validate Client ID
     if result['issued_to'] != CLIENT_ID:
@@ -157,12 +155,9 @@ def ConnectGoogle(request):
     login_session['gplus_id'] = gplus_id
 
     # Get User info
-    #userinfo_url = "https://www.googleapis.com/plus/v1/people/me/openIdConnect"
-    #answer = requests.get(userinfo_url)
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
-
 
     data = answer.json()
 
@@ -184,10 +179,16 @@ def ConnectGoogle(request):
     output += '!</h1>'
     output += '<img src="'
     output += login_session['picture']
-    output += ' " style = "width: 80px; height: 80px;border-radius: 40px;-webkit-border-radius: 40px;-moz-border-radius: 40px;"> '
+    output += ' " class="gplus_img"> '
     flash("you are now logged in as %s" % login_session['username'])
+
+    data = {
+        'name': login_session['username'],
+        'picture': login_session['picture']
+    }
+
     print "done!"
-    return output
+    return jsonify(data)
 
 
 # Disconnect from Google
@@ -220,7 +221,6 @@ def DisconnectGoogle():
         print "login_session cleared after invalid token.."
 
         return createResponse("Unable to revoke Token %s" % e, 200)
-
 
     # Successfully Disconnected from Google
     del login_session['credentials']

@@ -61,6 +61,9 @@ a.list-group-item {
     width: 30%;
 }
 
+/*
+    Primary Panel for View Contents
+*/
 .panel-content {
     box-shadow: 10px 10px 12px #98B1B3;
 }
@@ -88,6 +91,13 @@ a.list-group-item {
     text-align: center;
 }
 
+#gphoto a{
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-top: 10px;
+    margin-right: 15px;
+}
+
 .picture img {
     width: 100%;
     padding: 1px;
@@ -98,6 +108,15 @@ a.list-group-item {
     margin-left: auto;
     margin-top: 10%;
     padding: 10px
+}
+
+/* Google+ User Profile Image */
+.gplus_img {
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
 }
 
 /*

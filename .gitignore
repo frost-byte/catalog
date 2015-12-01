@@ -51,3 +51,4 @@ client_secret.json
 # Python
 *.pyc
 vagrant/auth.json
+*.db
