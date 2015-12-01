@@ -106,6 +106,7 @@ __XML__<br>
 
 #### The Catalog APP
 Without logging in, you should be able to only view records, these include:
+
 1. All __Items__.
 + __Items__ in each __Category__.
 
