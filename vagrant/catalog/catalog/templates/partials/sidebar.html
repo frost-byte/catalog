@@ -1,0 +1,23 @@
+<div class="container-fluid">
+    <div class="row">
+        <!-- The sidebar should contain the list of categories -->
+        <div class="col-sm-3 col-md-2 sidebar">
+            <ul class="nav nav-sidebar">
+            {% set categories = getCategoryNames() %}
+            {% for c in categories %}
+                <li><a href="{{url_for('listCategoryItem', category_name=c)}}">{{c}}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div class="col-sm-9 col-md-10">
+{% if viewType -%}
+        {% include viewType -%}
+{% endif -%}
+        </div>
+    </div><!-- /Row -->
+    <div class="row">
+        <div class="col-sm-4 col-sm-offset-3 col-md-offset-2 col-md-3">
+            <div id="result" class="picture"></div>
+        </div>
+    </div>
+</div><!-- /Container-fluid -->

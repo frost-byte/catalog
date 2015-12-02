@@ -1,0 +1,21 @@
+{% set urls = makeUrls(modelType, key) -%}
+{% set type = getPlural(urls.suffix) -%}
+        <div class="pane">
+        {% if isActiveSession() -%}
+            {% include "partials/addButton.html" %}
+        {% endif %}
+            <div class="list-group">
+        {% for o in objects %}
+            {% set urls = makeUrls(modelType, o.id) -%}
+            {% if hasattr(o, "describe") -%}
+                <a
+                   href="{{ urls.viewUrl }}"
+                   class="list-group-item">{{ o.describe }}</a>
+            {% else %}
+                <a
+                   href="{{ urls.viewUrl }}"
+                   class="list-group-item">{{ o.name }}</a>
+            {% endif %}
+        {% endfor %}
+            </div>
+        </div><!-- /Pane -->

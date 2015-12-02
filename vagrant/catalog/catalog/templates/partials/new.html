@@ -1,0 +1,23 @@
+{% set urls = makeUrls(modelType, key) -%}
+{% set formName = "new" + urls.suffix + "Form" -%}
+        <div class="container" id="panel-container">
+            <div class="panel panel-primary">
+                <div class="panel-heading">New {{urls.suffix}}</div>
+                <div class="panel-content">
+                    <form
+                          action="{{ urls.newUrl }}"
+                          method="POST"
+                          enctype="multipart/form-data"
+                          id="{{formName}}">
+                    </form>
+                    <table>
+                    {% for t in traits %}
+                        {{ t.asInputElement(formName)|safe }}
+                    {% endfor %}
+                    </table>
+
+                    <input type="submit" value="Submit" form="{{formName}}">
+                    <a href="{{ urls.listUrl }}">Cancel</a>
+                </div><!-- /Panel Content -->
+            </div><!-- /Panel -->
+        </div><!-- /Panel Container -->

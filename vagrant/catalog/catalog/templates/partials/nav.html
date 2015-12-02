@@ -1,0 +1,163 @@
+<style>
+{% if isActiveSession() == True %}
+    #signInButton { display: none; }
+    #signOutButton { display: block;}
+    #ginfo { display: block;}
+{% else %}
+    #signInButton { display: block; }
+    #signOutButton { display: none;}
+    #ginfo { display: none;}
+{% endif %}
+</style>
+
+{% macro render_nav_listitem(url, value) -%}
+    {% if viewType == value %}
+    <li class="active">
+    {% else %}
+    <li>
+    {% endif %}
+        <a href="{{ url }}">{{ getPlural(value) }}</a>
+    </li>
+{%- endmacro %}
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button
+                    type="button"
+                    class="navbar-toggle"
+                    data-toggle="collapse"
+                    data-target="#catNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('listItem') }}">Catalog</a>
+        </div>
+        <div class="collapse navbar-collapse navbar-right" id="catNavbar">
+            <div id="signOutButton" class="btn btn-danger navbar-btn pull-right">
+                Sign Out
+            </div>
+            <ul class="nav navbar-nav" id="ginfo" style='display: none;'>
+                <li id="gname"><a href="#"></a></li>
+                <li id="gphoto"><a href="#"></a></li>
+            </ul>
+            <!-- GOOGLE PLUS SIGN IN/SIGN OUT BUTTONS-->
+            <div id="signInButton" class="pull-right">
+                <span class="g-signin"
+                      data-scope="openid email"
+                      data-clientid="{{client_id}}"
+                      data-redirecturi="postmessage"
+                      data-accesstype="offline"
+                      data-cookiepolicy="single_host_origin"
+                      data-callback="signInCallback"
+                      data-approvalprompt="force">
+                </span>
+            </div><!--END GOOGLE PLUS SIGN IN BUTTON -->
+        </div>
+    </div>
+</nav>
+{% include 'partials/sidebar.html' %}
+<div id="result"></div>
+<script>
+
+    // Display The user's Google+ username and photo by the signout button.
+    function setProfile(name, photo){
+        $('#gname a').html(name);
+        $('#gphoto a').attr(
+            "style",
+            "background-image: url('" + photo + "');"
+        );
+        $('#ginfo').attr("style", "display: block;");
+    }
+
+    function signInCallback(authResult){
+        if (authResult['code']){
+            $('#signInButton').attr('style', 'display: none');
+            $('#signOutButton').attr('style', 'display: block');
+            $('#ginfo').attr('style', 'display: block');
+
+            console.log('{{state}}');
+            $.ajax({
+                type: 'POST',
+                url: '/gconnect?state={{state}}',
+                processData: false,
+                contentType: 'application/octet-stream; charset=utf-8',
+                data: authResult['code'],
+                dataType:"json",
+                success: function(result){
+                    if(result) {
+                        $('#result').html(
+                            'Login Successful!<br>' + result +
+                            '<br>Redirecting...'
+                        )
+                        console.log(result);
+                        setProfile(result.name, result.picture);
+
+                        setTimeout(
+                            function(){
+                                $('#result').html("");
+                            },
+                            4000
+                        );
+
+                    } else if(authResult['error']) {
+                        console.log('There was an error: ' +
+                                    authResult['error']);
+
+                    } else {
+                        $('#result').html(
+                            'Failed to make a server-side call.  ' +
+                            'Check your configuration and console.'
+                        );
+                    }
+                }
+            });
+        }
+    }
+
+    function signOut(){
+        console.log('Google Sign out...')
+        $.ajax({
+            type: 'GET',
+            url: "{{ url_for('gdisconnect') }}",
+            success: function(result){
+                console.log("Google Sign out: success");
+                if(result){
+                    $('#result').html(result + '<br>Redirecting...');
+                    setTimeout(
+                        function(){
+                            window.location.href =
+                                "{{url_for('listItem')}}";
+                        },
+                        4000
+                    );
+                } else {
+                    console.log("There was an error!");
+                    $('#result').html('Disconnect failed.');
+                }
+            }
+        })
+    }
+    $(document).ready(function(){
+        // Assign callback for when the Sign Out button is clicked.
+        $('#signOutButton').click(signOut);
+
+    {% if isActiveSession() == True %}
+        {% set userInfo = getSessionUserInfo() -%}
+        setProfile("{{userInfo.name}}", "{{userInfo.photo}}");
+    {% endif %}
+        // Size textarea elemnts, css class 'trait' to their scrollheight
+        $('.trait textarea').height($(this).scrollHeight);
+
+        // Auto resize textarea elements with the css class of trait, to fit the size
+        // of their contents. After a key is released.
+        $('.trait').on('keyup','textarea', function(){
+            $(this).height(0);
+            $(this).height(this.scrollHeight);
+        });
+
+        $('.trait').find('textarea').keyup();
+    });
+
+</script>
