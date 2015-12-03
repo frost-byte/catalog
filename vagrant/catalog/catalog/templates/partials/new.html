@@ -14,8 +14,14 @@
                     {% for t in traits %}
                         {{ t.asInputElement(formName)|safe }}
                     {% endfor %}
+
                     </table>
 
+                    <input
+                           name=_csrf_token
+                           type=hidden
+                           value="{{ csrf_token() }}"
+                           form="{{formName}}">
                     <input type="submit" value="Submit" form="{{formName}}">
                     <a href="{{ urls.listUrl }}">Cancel</a>
                 </div><!-- /Panel Content -->

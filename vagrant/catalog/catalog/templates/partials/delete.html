@@ -4,6 +4,10 @@
                 <div class="panel-heading">Delete {{name}}</div>
                 <div class="panel-content">
                     <form action="{{ urls.deleteUrl }}" method="POST">
+                        <input
+                               name=_csrf_token
+                               type=hidden
+                               value="{{ csrf_token() }}">
                         <input type="submit" value="Delete">
                         <a href="{{ urls.viewUrl }}">Cancel</a>
                     </form>

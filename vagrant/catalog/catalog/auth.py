@@ -16,6 +16,8 @@ import json
 import requests
 import random
 import string
+from binascii import hexlify
+from os import urandom
 
 
 from oauth2client.client import (
@@ -31,6 +33,7 @@ from flask import (
     flash,
     redirect,
     url_for,
+    request,
     Response,
     jsonify
 )
@@ -45,6 +48,71 @@ CLIENT_ID = json.loads(
     open(app.config['APP_CLIENT_SECRET'], 'r').read())['web']['client_id']
 
 credentials = None
+
+@app.before_request
+def csrf_protect():
+    '''Protect form submissions using a CSRF token.
+
+    If the token is found and validated, then the request will proceed.
+
+    Notes:
+        This function is applied to a POST request before it is processed by
+        any of the routes that would receive a POST.
+
+        The only POST request that can be made for an unauthenticated user is
+        to connect to their Google+ profile.
+
+    Returns:
+        In the event that a token is invalid the user will be sent a notice.
+    '''
+    if request.method == 'POST':
+
+        rule = request.url_rule
+        print "csrf_protect: rule = " + rule.rule
+
+        if 'gconnect' in rule.rule:
+            # Don't check for a CSRF token when connecting to Google for
+            # user authorization.
+            return
+
+        token = login_session.pop("_csrf_token", None)
+
+        # Validate the token and make sure it's contained in the form.
+        if not token or token != request.form.get('_csrf_token'):
+            flash("Invalid form submission!")
+            return redirect(url_for('listItem'))
+    else:
+        return
+
+
+def generate_random_string():
+    '''Create a 16 character long string containing randomly generated
+    characters.
+
+    Returns:
+        string: The Randomized string.
+
+    '''
+    result = hexlify(urandom(16))
+    return result
+
+def generate_csrf_token():
+    """Generate A CSRF token for the User's login session
+
+
+    Returns:
+        string: Returns a the csrf_token for the currently logged in user.
+
+    """
+
+    if '_csrf_token' not in login_session:
+        # Add a new token to the login session.
+        login_session['_csrf_token'] = generate_random_string()
+
+    return login_session['_csrf_token']
+
+# Make token generation available to the templating engine.
+app.jinja_env.globals['csrf_token'] = generate_csrf_token
 
 
 def getUserInfo(user_id):
@@ -162,8 +230,6 @@ def canAlter(userID):
         return False
 
     sessID = login_session['user_id']
-
-    print "(suID, uID) = ( {0}, {1} )".format(sessID, userID)
 
     if sessID == userID:
         return True
@@ -386,8 +452,6 @@ def DisconnectGoogle():
     credentials = Creds.from_json(login_session['credentials'])
     access_token = credentials.access_token
 
-    print "access_token = %s" % access_token
-    print 'User name is: %s' % login_session['username']
 
     # Authorize an HTTP Request using the Credentials and then attempt to
     # revoke the app's connection.

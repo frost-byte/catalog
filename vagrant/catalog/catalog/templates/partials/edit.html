@@ -29,6 +29,11 @@
 {% endfor %}
                     </table>
 
+                    <input
+                           name=_csrf_token
+                           type=hidden
+                           value="{{ csrf_token() }}"
+                           form="{{formName}}">
                     <input type="submit" value="Submit" form="{{formName}}">
                     <a href="{{ urls.viewUrl }}">Cancel</a>
                 </div><!-- /Panel Content -->
