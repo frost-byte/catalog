@@ -1,4 +1,4 @@
-from catalog import app
+from catalog.app import app
 from catalog.database import session, init_db
 
 

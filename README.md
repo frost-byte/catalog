@@ -98,7 +98,7 @@ Open a browser page to ```localhost:5000```
 The following api endpoints have been provided for the Catalog app.
 
 __JSON__<br>
-     [localhost:5000/catalog/JSON](localhost:5000/catalog/XML)<br>
+[localhost:5000/catalog/JSON](localhost:5000/catalog/JSON)<br>
 
 __XML__<br>
 [localhost:5000/catalog/XML](localhost:5000/catalog/XML)
@@ -127,6 +127,9 @@ The Add and Edit forms allow you to upload an image for an Item.
 + [dicttoxml](https://pypi.python.org/pypi/dicttoxml)
 
 ##References
+
+###Documentation
+The docs for this project can be viewed [here](http://frost-byte.github.io/catalog/).
 
 ###Code Formatting
 [Pep8 Online](http://pep8online.com/)<br>

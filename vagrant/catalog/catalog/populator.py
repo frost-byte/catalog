@@ -1,3 +1,28 @@
+'''
+A module for populating the database for the Catalog app.
+
+Creates a variety of Items, Users and Category records and associates them.
+Random creation dates from the last 18 months are assigned to Categories and Items.
+
+
+Attributes:
+    item_names (strings):           Names of items.
+    item_images (strings):          Local Urls to images for each item.
+    item_descriptions (strings):    Descriptions of each item.
+    category_names (strings):       Names of each Category.
+    user_male_names (strings):      Male User Names.
+    user_female_names (strings):    Female User Names.
+
+    parser (Parser):                The command-line parser that populates the
+                                    database when give the -r option.
+
+    args (list):                    The list of arguments passed to the parser.
+
+'''
+if __name__ == '__main__' and '__package__' is None:
+    from os import sys, path
+    sys.path.append(path.dirname(path.abspath(__file__)))
+
 from random import randint
 import datetime
 import random
@@ -31,7 +56,7 @@ item_images = [
     "images/goggles.jpg"
 ]
 
-# Descriptions
+
 item_descriptions = [
     '''Best for any terrain and conditions.  All-mountain snowboards perform
     anywhere on a mountain - groomed runs, backcountry, or even park and pipe.
@@ -104,12 +129,16 @@ user_female_names = [
     "Jennifer Lawrence"
 ]
 
-'''
-This method will make the creation date for an item somewhere in the last 0-18
-months(approx.) from the day the algorithm was run.'''
-
 
 def randomCreationDate():
+    '''Randomly choose a date for an Item or Category's creation from within
+    the last 18 months at the time the module is executed.
+
+    Returns:
+        datetime: A random date from the previous 540 days at the time
+            the function was executed.
+    '''
+
     today = datetime.date.today()
     days_old = randint(0, 540)
     created = today - datetime.timedelta(days=days_old)
@@ -117,6 +146,21 @@ def randomCreationDate():
 
 
 def CreateItem(name, category, user_id, description, picture):
+    '''Create an Item.
+
+    Notes:
+        Doesn't add or commit the Item to the database.
+
+    Args:
+        name (string):          The Item's name.
+        category (Category):    The Category record of the item.
+        user_id (int):          The user_id of the person who created the item.
+        description (string):   The Description of the Item.
+        picture (string):       Local Url to the Image of the item.
+
+    Returns:
+        A new Item instance.
+    '''
     new_item = Item(
         name=name,
         cat_id=category,
@@ -129,33 +173,71 @@ def CreateItem(name, category, user_id, description, picture):
 
 
 def generateEmail(name):
+    '''Create an email address with the gmail.com Domain from a user name.
+
+    Args:
+        name (string):  The User's name.
+
+    Returns:
+        string: The User's gmail address.
+    '''
     domain = "@gmail.com"
     firstName = name.split(' ')[0].lower()
     return firstName + domain
 
 
 class ItemPopulator(object):
+    '''Populates Item records into the Catalog Database.
+
+    Attributes:
+        users (list):       The users generated and added to the database.
+        categories (list):  The categories generated and added to the database.
+    '''
 
     def __init__(self):
+        '''Initialize the Database connection.'''
         init_db()
         self.users = []
         self.categories = []
 
+
     def findCategoryByName(self, name):
+        '''Find a Category by its name.
+
+        Notes:
+            Doesn't refer directly to Categories in the database.
+
+        Args:
+            name (string): The Category name to find.
+
+        Returns:
+            A Category in this instance that has the specified name.
+
+        '''
         for c in self.categories:
             if c.name == name:
                 return c
 
     def chooseUser(self):
+        '''Randomly choose a User from the list of users.
+
+        Notes:
+            Doesn't refer directly to users in the database.
+
+        Returns:
+            int: The id of a User from the list in this instance.
+
+        '''
         user = random.choice(self.users)
         return user.id
 
     def numCategorys(self):
+        '''The Number of Categories in the database.'''
         return len(Category.query.all())
 
     def populate(self):
-
-        # Add Users
+        '''Populate the Database with Users, Categories and Items.'''
+        # Add Male Users
         for name in user_male_names:
             user = User(
                 name=name,
@@ -166,6 +248,7 @@ class ItemPopulator(object):
             session.commit()
             self.users.append(user)
 
+        # Add Female Users
         for name in user_female_names:
             user = User(
                 name=name,
@@ -297,13 +380,14 @@ parser.add_argument(
     default='store_false',
     help='Run the population funcitons.'
 )
+
 args = parser.parse_args()
 
 '''
 The run argument was specified, so we populate the database.
-This is done so that when other moodules import this one, it doesn't
+This is done so that when other modules import this one, it doesn't
 populate the database again.
-(The tables of strings are used in other modules.)
+(The tables of strings can be used in other modules.)
 '''
 if args.populate is True:
     init_db()
