@@ -92,13 +92,14 @@ perform the following steps.
 From the project's root directory - __/vagrant/catalog__<br>
 ```python runserver.py```
 
-Open a browser page to ```localhost:5000```
+## Client
+Open a browser page to [localhost:5000](localhost:5000)
 
 #### Endpoints
 The following api endpoints have been provided for the Catalog app.
 
 __JSON__<br>
-[localhost:5000/catalog/JSON](localhost:5000/catalog/JSON)<br>
+[localhost:5000/catalog/JSON](localhost:5000/catalog/JSON)
 
 __XML__<br>
 [localhost:5000/catalog/XML](localhost:5000/catalog/XML)
