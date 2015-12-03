@@ -1,0 +1,610 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>catalog.auth &mdash; catalog  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="catalog  documentation" href="../../index.html"/>
+        <link rel="up" title="catalog" href="../catalog.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> catalog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../catalog.html">catalog package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">catalog</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../catalog.html">catalog</a> &raquo;</li>
+      
+    <li>catalog.auth</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for catalog.auth</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This is the auth, or Authorization module for the Catalog app.</span>
+<span class="sd">The module provides methods for Authorizing the app to connect/disconnect</span>
+<span class="sd">to/from a user&#39;s Google+ profile.</span>
+
+<span class="sd">Attributes:</span>
+<span class="sd">    CLIENT_ID:  The Client Secret for the Catalog App.  This file is</span>
+<span class="sd">        generated from the app&#39;s credentials using the Google Development Console.</span>
+<span class="sd">        It is not included with the repository for the purpose of security.</span>
+<span class="sd">        Running the app will require the creation of the client secret using the</span>
+<span class="sd">        previously mentioned Development Console.  The client_secret.json file</span>
+<span class="sd">        needs to be in the same directory as this module.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">import</span> <span class="nn">httplib2</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">string</span>
+
+
+<span class="kn">from</span> <span class="nn">oauth2client.client</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">flow_from_clientsecrets</span><span class="p">,</span>
+    <span class="n">FlowExchangeError</span><span class="p">,</span>
+    <span class="n">OAuth2Credentials</span> <span class="k">as</span> <span class="n">Creds</span><span class="p">,</span>
+    <span class="n">TokenRevokeError</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">session</span> <span class="k">as</span> <span class="n">login_session</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">make_response</span><span class="p">,</span>
+    <span class="n">flash</span><span class="p">,</span>
+    <span class="n">redirect</span><span class="p">,</span>
+    <span class="n">url_for</span><span class="p">,</span>
+    <span class="n">Response</span><span class="p">,</span>
+    <span class="n">jsonify</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm.exc</span> <span class="kn">import</span> <span class="n">NoResultFound</span>
+
+<span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">app</span>
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">database</span> <span class="kn">import</span> <span class="n">session</span>
+
+
+<span class="n">CLIENT_ID</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+    <span class="nb">open</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;APP_CLIENT_SECRET&#39;</span><span class="p">],</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())[</span><span class="s">&#39;web&#39;</span><span class="p">][</span><span class="s">&#39;client_id&#39;</span><span class="p">]</span>
+
+<span class="n">credentials</span> <span class="o">=</span> <span class="bp">None</span>
+
+
+<div class="viewcode-block" id="getUserInfo"><a class="viewcode-back" href="../../catalog.html#catalog.auth.getUserInfo">[docs]</a><span class="k">def</span> <span class="nf">getUserInfo</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve a User record from the Database via their User id.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Any information regarding usage or something the caller of the function</span>
+<span class="sd">        should know when using it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user_id (int): The key/primary key in the User table</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        User: returns an instance of the models.User class populated with</span>
+<span class="sd">            the user&#39;s information.</span>
+
+<span class="sd">        If no user is found, None is returned.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NoResultFound: No user was found with the given user id.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="n">NoResultFound</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">e</span>
+
+    <span class="k">return</span> <span class="n">user</span></div>
+
+
+<div class="viewcode-block" id="getUserID"><a class="viewcode-back" href="../../catalog.html#catalog.auth.getUserID">[docs]</a><span class="k">def</span> <span class="nf">getUserID</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve a User record from the Database via their User id.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        Any information regarding usage or something the caller of the function</span>
+<span class="sd">        should know when using it.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        user_id (int): The key/primary key in the User table</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        User: returns an instance of the models.User class populated with</span>
+<span class="sd">            the user&#39;s information.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        NoResultFound: No user was found with the given email.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">email</span><span class="o">=</span><span class="n">email</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="n">NoResultFound</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;No Result Found&quot;</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+    <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span></div>
+
+
+<div class="viewcode-block" id="createUser"><a class="viewcode-back" href="../../catalog.html#catalog.auth.createUser">[docs]</a><span class="k">def</span> <span class="nf">createUser</span><span class="p">(</span><span class="n">login_session</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Add a User to the database using the current information stored in the</span>
+<span class="sd">    login session.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        login_session (dict): Dictionary containing information about the current</span>
+<span class="sd">        login session, including the user&#39;s profile information from Google+</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        int: The user_id from the newly created record in the User table in</span>
+<span class="sd">            the database.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">print</span> <span class="s">&quot;Creating User&quot;</span>
+    <span class="n">newUser</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">],</span>
+        <span class="n">email</span><span class="o">=</span><span class="n">login_session</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">],</span>
+        <span class="n">picture</span><span class="o">=</span><span class="n">login_session</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span>
+    <span class="p">)</span>
+
+    <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">newUser</span><span class="p">)</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">newUser</span><span class="o">.</span><span class="n">id</span></div>
+
+
+<div class="viewcode-block" id="isActiveSession"><a class="viewcode-back" href="../../catalog.html#catalog.auth.isActiveSession">[docs]</a><span class="k">def</span> <span class="nf">isActiveSession</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Determine if the current session is active by checking if a username is</span>
+<span class="sd">    associated with the session.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the session is active, otherwise False for an inactive session.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s">&#39;username&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">login_session</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span></div>
+
+
+<div class="viewcode-block" id="canAlter"><a class="viewcode-back" href="../../catalog.html#catalog.auth.canAlter">[docs]</a><span class="k">def</span> <span class="nf">canAlter</span><span class="p">(</span><span class="n">userID</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Confirms that the user specified by the given user id is the one currently</span>
+<span class="sd">    in the login_session.</span>
+
+
+<span class="sd">    Args:</span>
+<span class="sd">        userID (int): An ID corresponding to a User record in the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the specified user is also the currently authorized user in the</span>
+<span class="sd">        login_session.  False if it is a different user.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s">&#39;user_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">login_session</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="n">sessID</span> <span class="o">=</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;user_id&#39;</span><span class="p">]</span>
+
+    <span class="k">print</span> <span class="s">&quot;(suID, uID) = ( {0}, {1} )&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">sessID</span><span class="p">,</span> <span class="n">userID</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">sessID</span> <span class="o">==</span> <span class="n">userID</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span></div>
+
+
+<div class="viewcode-block" id="getSessionUserInfo"><a class="viewcode-back" href="../../catalog.html#catalog.auth.getSessionUserInfo">[docs]</a><span class="k">def</span> <span class="nf">getSessionUserInfo</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Return profile information for the user currently logged in.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        The profiles for the User records generated using the populator module</span>
+<span class="sd">        obviously won&#39;t have valid information related to Google+.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: Basic profile information for the login_session user.</span>
+<span class="sd">            Including:</span>
+<span class="sd">            user_id: Their User record in the database.</span>
+<span class="sd">            name: Their name (from their Google+ Profile)</span>
+<span class="sd">            email: Their email (also taken from their Google+ Profile)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;user_id&#39;</span><span class="p">],</span>
+        <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">],</span>
+        <span class="s">&#39;photo&#39;</span><span class="p">:</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">info</span></div>
+
+
+<div class="viewcode-block" id="getLoginSessionState"><a class="viewcode-back" href="../../catalog.html#catalog.auth.getLoginSessionState">[docs]</a><span class="k">def</span> <span class="nf">getLoginSessionState</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Retrieve the Login Session&#39;s state.</span>
+
+<span class="sd">    The State is assigned to the Login Session when a user logs in to the App.</span>
+<span class="sd">    This is a specific string used to validate the session.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        string: The state is generated upon user login and added to the login</span>
+<span class="sd">            session and returned.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s">&#39;state&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">login_session</span><span class="p">:</span>
+        <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+                <span class="n">string</span><span class="o">.</span><span class="n">ascii_uppercase</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span>
+            <span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+        <span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;state&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="createResponse"><a class="viewcode-back" href="../../catalog.html#catalog.auth.createResponse">[docs]</a><span class="k">def</span> <span class="nf">createResponse</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">status</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create a response to a Request to one of the App&#39;s endpoints.</span>
+
+<span class="sd">    When the routes for connecting/disconnecting to Google+ are called,</span>
+<span class="sd">    this function will be used to send various responses to those requests.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        res (object): A response with information pertinent to a request for</span>
+<span class="sd">            Connect and Disconnect to and from Google+</span>
+
+<span class="sd">        status (int): Depending upon the result of processing the request, this</span>
+<span class="sd">            will indicate whether or not the request was successful.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: A response in json format containing the data passed in via</span>
+<span class="sd">        the res and status arguments.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">make_response</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">res</span><span class="p">),</span> <span class="n">status</span><span class="p">)</span>
+    <span class="n">response</span><span class="o">.</span><span class="n">headers</span><span class="p">[</span><span class="s">&#39;Content-Type&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;application/json&#39;</span>
+
+    <span class="k">return</span> <span class="n">response</span></div>
+
+
+<div class="viewcode-block" id="ConnectGoogle"><a class="viewcode-back" href="../../catalog.html#catalog.auth.ConnectGoogle">[docs]</a><span class="k">def</span> <span class="nf">ConnectGoogle</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Process the Request to the App for logging in to Google+.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        request (Request): Contains the information for requesting login</span>
+<span class="sd">            to Google+</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: returnValues</span>
+
+<span class="sd">        Detailed Description of the possible values of the returned variable.</span>
+<span class="sd">        Describe contents and format of returned values.</span>
+<span class="sd">        Describe Usage.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FlowExchangeError:  The flow exchange setup establishing authorization</span>
+<span class="sd">        with the Google+ failed.</span>
+
+<span class="sd">    Examples:</span>
+<span class="sd">        (optional) Describe how the function is used by providing examples here.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c"># Make sure that the session state in the request matches the current state</span>
+    <span class="c"># for this login session.</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;state&#39;</span><span class="p">)</span> <span class="o">!=</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;state&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">createResponse</span><span class="p">(</span><span class="s">&#39;Invalid state parameter.&#39;</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+
+    <span class="c"># Code required for obtaining credentials via OAuth</span>
+    <span class="n">code</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">data</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c"># Establish the OAuth Flow Exchange</span>
+        <span class="n">oauth_flow</span> <span class="o">=</span> <span class="n">flow_from_clientsecrets</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;APP_CLIENT_SECRET&#39;</span><span class="p">],</span> <span class="n">scope</span><span class="o">=</span><span class="s">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">oauth_flow</span><span class="o">.</span><span class="n">redirect_uri</span> <span class="o">=</span> <span class="s">&#39;postmessage&#39;</span>
+        <span class="n">credentials</span> <span class="o">=</span> <span class="n">oauth_flow</span><span class="o">.</span><span class="n">step2_exchange</span><span class="p">(</span><span class="n">code</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">FlowExchangeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">createResponse</span><span class="p">(</span><span class="s">&#39;Failed to upgrade the authorization code.&#39;</span><span class="p">,</span> <span class="mi">401</span><span class="p">)</span>
+
+    <span class="c"># Authorize access to Google+ via Oauth2</span>
+    <span class="n">access_token</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">access_token</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=</span><span class="si">%s</span><span class="s">&#39;</span>
+           <span class="o">%</span> <span class="n">access_token</span><span class="p">)</span>
+
+    <span class="c"># Request Authorization</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">httplib2</span><span class="o">.</span><span class="n">Http</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">request</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="s">&#39;GET&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c"># Authorization Request Error occurred.</span>
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error&#39;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">createResponse</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;error&#39;</span><span class="p">),</span> <span class="mi">50</span><span class="p">)</span>
+
+    <span class="c"># Authorization via OAuth2 succeeded, now confirm that the user for this session</span>
+    <span class="c"># matches the specified user_id</span>
+    <span class="n">gplus_id</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">id_token</span><span class="p">[</span><span class="s">&#39;sub&#39;</span><span class="p">]</span>
+
+    <span class="c"># Check for User ID mismatch.</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">gplus_id</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">createResponse</span><span class="p">(</span>
+            <span class="s">&quot;Token&#39;s User ID doesn&#39;t match given user ID.&quot;</span><span class="p">,</span>
+            <span class="mi">401</span>
+        <span class="p">)</span>
+
+    <span class="c"># Validate Client ID</span>
+    <span class="k">if</span> <span class="n">result</span><span class="p">[</span><span class="s">&#39;issued_to&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">CLIENT_ID</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;Token&#39;s Client ID does not match app&#39;s.&quot;</span>
+        <span class="k">return</span> <span class="n">createResponse</span><span class="p">(</span><span class="s">&quot;Token&#39;s Client ID does not match app&#39;s.&quot;</span><span class="p">)</span>
+
+    <span class="c"># Is the user already logged in?</span>
+    <span class="n">stored_credentials</span> <span class="o">=</span> <span class="n">login_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;credentials&#39;</span><span class="p">)</span>
+    <span class="n">stored_gplus_id</span> <span class="o">=</span> <span class="n">login_session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;gplus_id&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">stored_credentials</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">gplus_id</span> <span class="o">==</span> <span class="n">stored_gplus_id</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;Already connected!&quot;</span>
+        <span class="k">return</span> <span class="n">createResponse</span><span class="p">(</span><span class="s">&#39;Current User is already connected.&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+    <span class="c"># This is a new Login, so store all pertinent info.</span>
+    <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;access_token&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">access_token</span>
+    <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;credentials&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+    <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;gplus_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gplus_id</span>
+
+    <span class="c"># Get User info</span>
+    <span class="n">userinfo_url</span> <span class="o">=</span> <span class="s">&quot;https://www.googleapis.com/oauth2/v1/userinfo&quot;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s">&#39;access_token&#39;</span><span class="p">:</span> <span class="n">credentials</span><span class="o">.</span><span class="n">access_token</span><span class="p">,</span> <span class="s">&#39;alt&#39;</span><span class="p">:</span> <span class="s">&#39;json&#39;</span><span class="p">}</span>
+    <span class="n">answer</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">userinfo_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">)</span>
+
+    <span class="c"># Convert the response data to a usable form.</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">answer</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+    <span class="c"># Store the User&#39;s Google profile information in the current login session</span>
+    <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+    <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span>
+    <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">]</span>
+
+    <span class="c"># Check to see if the user exists</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">getUserID</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">])</span>
+
+    <span class="c"># This is a new user, so add them to the Database.</span>
+    <span class="k">if</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="n">createUser</span><span class="p">(</span><span class="n">login_session</span><span class="p">)</span>
+
+    <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;user_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">user_id</span>
+
+    <span class="c"># Create the welcome message to be displayed in the Client User&#39;s browser.</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="s">&#39;&#39;</span>
+    <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;&lt;h1&gt;Welcome, &#39;</span>
+    <span class="n">output</span> <span class="o">+=</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span>
+    <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;!&lt;/h1&gt;&#39;</span>
+    <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39;&lt;img src=&quot;&#39;</span>
+    <span class="n">output</span> <span class="o">+=</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span>
+    <span class="n">output</span> <span class="o">+=</span> <span class="s">&#39; &quot; class=&quot;gplus_img&quot;&gt; &#39;</span>
+    <span class="n">flash</span><span class="p">(</span><span class="s">&quot;You are now logged in as </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">])</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">],</span>
+        <span class="s">&#39;picture&#39;</span><span class="p">:</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span>
+    <span class="p">}</span>
+
+    <span class="k">print</span> <span class="s">&quot;done!&quot;</span>
+    <span class="c"># Return some of the user information to be displayed in the Navbar</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="DisconnectGoogle"><a class="viewcode-back" href="../../catalog.html#catalog.auth.DisconnectGoogle">[docs]</a><span class="k">def</span> <span class="nf">DisconnectGoogle</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Disconnect from Google by Revoking access to a User&#39;s Google Profile</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Response: A varying response depending upon the success or failure in</span>
+<span class="sd">            revoking the app&#39;s usage of the logged in user&#39;s Google Profile.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        TokenRevokeError: Google was unable to revoke the connection between this</span>
+<span class="sd">            app and their Google profile.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Credentials must be in the login session in order for the Revocation</span>
+    <span class="c"># to succeed.</span>
+    <span class="k">if</span> <span class="s">&#39;credentials&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">login_session</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;Invalid Credentials&quot;</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+    <span class="c"># Retrieve the OAuth2 credentials and Access Token from the Login Session.</span>
+    <span class="n">credentials</span> <span class="o">=</span> <span class="n">Creds</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="n">login_session</span><span class="p">[</span><span class="s">&#39;credentials&#39;</span><span class="p">])</span>
+    <span class="n">access_token</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">access_token</span>
+
+    <span class="k">print</span> <span class="s">&quot;access_token = </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">access_token</span>
+    <span class="k">print</span> <span class="s">&#39;User name is: </span><span class="si">%s</span><span class="s">&#39;</span> <span class="o">%</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span>
+
+    <span class="c"># Authorize an HTTP Request using the Credentials and then attempt to</span>
+    <span class="c"># revoke the app&#39;s connection.</span>
+    <span class="n">http</span> <span class="o">=</span> <span class="n">httplib2</span><span class="o">.</span><span class="n">Http</span><span class="p">()</span>
+    <span class="n">http</span> <span class="o">=</span> <span class="n">credentials</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="n">http</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">credentials</span><span class="o">.</span><span class="n">revoke</span><span class="p">(</span><span class="n">http</span><span class="p">)</span>
+
+    <span class="k">except</span> <span class="n">TokenRevokeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span> <span class="s">&quot;Unable to revoke Token </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">e</span>
+        <span class="c"># Clear login_session</span>
+        <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;credentials&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;access_token&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;gplus_id&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span>
+        <span class="k">print</span> <span class="s">&quot;login_session cleared after invalid token..&quot;</span>
+
+        <span class="k">return</span> <span class="n">createResponse</span><span class="p">(</span><span class="s">&quot;Unable to revoke Token </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+
+
+    <span class="c"># Successfully Disconnected from Google</span>
+    <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;credentials&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;access_token&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;gplus_id&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;username&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;email&#39;</span><span class="p">]</span>
+    <span class="k">del</span> <span class="n">login_session</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span>
+    <span class="k">print</span> <span class="s">&quot;login_session deleted.&quot;</span>
+    <span class="k">return</span> <span class="n">createResponse</span><span class="p">(</span><span class="s">&#39;Successfully disconnected.&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -1,0 +1,1245 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>catalog.views &mdash; catalog  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="catalog  documentation" href="../../index.html"/>
+        <link rel="up" title="catalog" href="../catalog.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> catalog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../catalog.html">catalog package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">catalog</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../catalog.html">catalog</a> &raquo;</li>
+      
+    <li>catalog.views</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for catalog.views</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This is the views module for the Catalog app.</span>
+<span class="sd">The module provides routes to create a RESTful api to create, read,</span>
+<span class="sd">update and delete records for the following elements in the Catalog:</span>
+
+<span class="sd">User, Category and Item</span>
+
+<span class="sd">There are routes to authorize a user using the OAuth2 api provided by Google</span>
+<span class="sd">to connect and disconnect a user via their Google+ profile.</span>
+
+<span class="sd">There are two endpoints provided to return the entirety of the Catalog</span>
+<span class="sd">in JSON or XML.</span>
+
+<span class="sd">The module also includes a handful of context processor&#39;s for its flask app.</span>
+<span class="sd">These functions allow the jinja2 templates, which provide the views to the</span>
+<span class="sd">web client, with means of accessing variables and functions in the Python</span>
+<span class="sd">modules and code.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">render_template</span><span class="p">,</span>
+    <span class="n">url_for</span><span class="p">,</span>
+    <span class="n">request</span><span class="p">,</span>
+    <span class="n">redirect</span><span class="p">,</span>
+    <span class="n">flash</span><span class="p">,</span>
+    <span class="n">jsonify</span><span class="p">,</span>
+    <span class="n">Response</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">desc</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm.exc</span> <span class="kn">import</span> <span class="n">MultipleResultsFound</span><span class="p">,</span> <span class="n">NoResultFound</span>
+<span class="kn">from</span> <span class="nn">werkzeug</span> <span class="kn">import</span> <span class="n">secure_filename</span>
+<span class="kn">from</span> <span class="nn">database</span> <span class="kn">import</span> <span class="n">session</span>
+
+<span class="kn">from</span> <span class="nn">models</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Category</span><span class="p">,</span>
+    <span class="n">Item</span><span class="p">,</span>
+    <span class="n">User</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">auth</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CLIENT_ID</span><span class="p">,</span>
+    <span class="n">isActiveSession</span><span class="p">,</span>
+    <span class="n">getLoginSessionState</span><span class="p">,</span>
+    <span class="n">ConnectGoogle</span><span class="p">,</span>
+    <span class="n">DisconnectGoogle</span><span class="p">,</span>
+    <span class="n">canAlter</span><span class="p">,</span>
+    <span class="n">getSessionUserInfo</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">urls</span> <span class="kn">import</span> <span class="n">Urls</span>
+<span class="kn">from</span> <span class="nn">app</span> <span class="kn">import</span> <span class="n">app</span>
+
+
+<div class="viewcode-block" id="allowed_image"><a class="viewcode-back" href="../../catalog.html#catalog.views.allowed_image">[docs]</a><span class="k">def</span> <span class="nf">allowed_image</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determine if the specified file has the proper extension to be classified</span>
+<span class="sd">    as an image.</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        From flask docs, checks that uploaded images have specific file extensions</span>
+<span class="sd">        http://flask.pocoo.org/docs/0.10/patterns/fileuploads/</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        filename (string): The filename to be validated as an acceptable image type.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if the file is a proper image file, based upon its extension.</span>
+<span class="sd">        False if it is not considered a valid image type.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s">&#39;.&#39;</span> <span class="ow">in</span> <span class="n">filename</span> <span class="ow">and</span> \
+        <span class="n">filename</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s">&#39;.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;ALLOWED_EXTENSIONS&#39;</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="processImageUpload"><a class="viewcode-back" href="../../catalog.html#catalog.views.processImageUpload">[docs]</a><span class="k">def</span> <span class="nf">processImageUpload</span><span class="p">(</span><span class="n">image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Process an uploaded image.  If it&#39;s a valid file type, then save the file</span>
+<span class="sd">    and return the local url.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        image (file): A file passed via a request that was submitted via a Web Form.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The local path to the file for the image, this provides a url that can</span>
+<span class="sd">        be referred to in a database record.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Valid object and extension</span>
+    <span class="k">if</span> <span class="n">image</span> <span class="ow">and</span> <span class="n">allowed_image</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+
+        <span class="c"># Scrub filename - removes and path information and results in just a</span>
+        <span class="c"># name with a file extension.</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">secure_filename</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+
+        <span class="c"># Save the file to the App&#39;s Images directory.</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s">&#39;APP_IMAGES&#39;</span><span class="p">],</span> <span class="n">filename</span><span class="p">))</span>
+
+        <span class="c"># Return the local url for the image.</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;images&quot;</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span></div>
+
+
+<span class="nd">@app.context_processor</span>
+<div class="viewcode-block" id="makeurls_processor"><a class="viewcode-back" href="../../catalog.html#catalog.views.makeurls_processor">[docs]</a><span class="k">def</span> <span class="nf">makeurls_processor</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">makeUrls</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Refer to :py:class:`~urls.Urls`&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Urls</span><span class="p">(</span><span class="n">suffix</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">makeUrls</span><span class="o">=</span><span class="n">makeUrls</span><span class="p">)</span></div>
+
+
+<span class="nd">@app.context_processor</span>
+<div class="viewcode-block" id="hasattr_processor"><a class="viewcode-back" href="../../catalog.html#catalog.views.hasattr_processor">[docs]</a><span class="k">def</span> <span class="nf">hasattr_processor</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Provide templates with the ability to check if a python object contains</span>
+<span class="sd">    the specified attribute</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        o (object): The object to check.</span>
+<span class="sd">        attr (string): The name of the attribute to look for in object, o.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        True if object o has the attribute.</span>
+<span class="sd">        False if there is no attribute with the value of attr in object o.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">hasattr</span><span class="o">=</span><span class="nb">hasattr</span><span class="p">)</span></div>
+
+
+<span class="c"># Checks for a valid session</span>
+<span class="nd">@app.context_processor</span>
+<div class="viewcode-block" id="isactivesession_processor"><a class="viewcode-back" href="../../catalog.html#catalog.views.isactivesession_processor">[docs]</a><span class="k">def</span> <span class="nf">isactivesession_processor</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Refer to :py:func:`~auth.isActiveSession`&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">isActiveSession</span><span class="o">=</span><span class="n">isActiveSession</span><span class="p">)</span></div>
+
+
+<span class="c"># Gets Session User Info</span>
+<span class="nd">@app.context_processor</span>
+<div class="viewcode-block" id="getsessionuserinfo_processor"><a class="viewcode-back" href="../../catalog.html#catalog.views.getsessionuserinfo_processor">[docs]</a><span class="k">def</span> <span class="nf">getsessionuserinfo_processor</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Refer to :py:func:`~auth.getSessionUserInfo`&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">getSessionUserInfo</span><span class="o">=</span><span class="n">getSessionUserInfo</span><span class="p">)</span></div>
+
+
+<span class="c"># Allow Templates to determine if a user can edit/delete a record</span>
+<span class="nd">@app.context_processor</span>
+<div class="viewcode-block" id="canalter_processor"><a class="viewcode-back" href="../../catalog.html#catalog.views.canalter_processor">[docs]</a><span class="k">def</span> <span class="nf">canalter_processor</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Refer to :py:func:`~auth.canAlter`&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">canAlter</span><span class="o">=</span><span class="n">canAlter</span><span class="p">)</span></div>
+
+
+
+<span class="nd">@app.context_processor</span>
+<div class="viewcode-block" id="getplural_processor"><a class="viewcode-back" href="../../catalog.html#catalog.views.getplural_processor">[docs]</a><span class="k">def</span> <span class="nf">getplural_processor</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">getPlural</span><span class="p">(</span><span class="n">singular</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts the form of the word in singular to its plural form.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            In this app it turns item and user into items, users.</span>
+<span class="sd">            and category into categories.  Allows for generic templates.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            singular (string): The word to pluralize</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            The pluralized form of the word in the singular argument.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">singular</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&#39;category&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">&#39;Categories&#39;</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">singular</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="o">+</span> <span class="s">&quot;s&quot;</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">getPlural</span><span class="o">=</span><span class="n">getPlural</span><span class="p">)</span></div>
+
+
+<span class="nd">@app.context_processor</span>
+<div class="viewcode-block" id="getcategories_processor"><a class="viewcode-back" href="../../catalog.html#catalog.views.getcategories_processor">[docs]</a><span class="k">def</span> <span class="nf">getcategories_processor</span><span class="p">():</span>
+    <span class="k">def</span> <span class="nf">getCategoryNames</span><span class="p">():</span>
+        <span class="sd">&#39;&#39;&#39;Refer to :py:method:`~Category.categories`&#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">Category</span><span class="o">.</span><span class="n">categories</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">getCategoryNames</span><span class="o">=</span><span class="n">getCategoryNames</span><span class="p">)</span></div>
+
+
+<span class="c"># User Routes</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/user/&lt;int:key&gt;/&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="viewUser"><a class="viewcode-back" href="../../catalog.html#catalog.views.viewUser">[docs]</a><span class="k">def</span> <span class="nf">viewUser</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Present the Web User with a View for the Item with the id equal to key.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): An ID corresponding to a User record in the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The updated View in the User&#39;s browser that corresponds to the</span>
+<span class="sd">        requested user.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">vUser</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;user&quot;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;view.html&quot;</span><span class="p">),</span>
+        <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+        <span class="n">traits</span><span class="o">=</span><span class="n">vUser</span><span class="o">.</span><span class="n">traits</span><span class="p">(),</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">vUser</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">allowAlter</span><span class="o">=</span><span class="n">canAlter</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/user/new&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/user/new/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="newUser"><a class="viewcode-back" href="../../catalog.html#catalog.views.newUser">[docs]</a><span class="k">def</span> <span class="nf">newUser</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Present an Authorized Web User with a View for adding a new user.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        For a GET operation returns a Web View containing a form for entering</span>
+<span class="sd">        data for the new user.</span>
+
+<span class="sd">        A successful POST request directs presents a View of the new Record.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listUser&#39;</span><span class="p">))</span>
+
+    <span class="c"># Process New User Form Submission</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="c"># Add the new user record to the database</span>
+        <span class="n">newUser</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">newUser</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;New User created!&quot;</span><span class="p">)</span>
+
+        <span class="c"># Redirect to the User View</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&quot;viewUser&quot;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">newUser</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="c"># Present the New User Form</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+            <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+            <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;user&quot;</span><span class="p">,</span>
+            <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&#39;new.html&#39;</span><span class="p">),</span>
+            <span class="n">traits</span><span class="o">=</span><span class="n">User</span><span class="o">.</span><span class="n">defaultTraits</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/user/&lt;int:key&gt;/edit/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="editUser"><a class="viewcode-back" href="../../catalog.html#catalog.views.editUser">[docs]</a><span class="k">def</span> <span class="nf">editUser</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Present the Web User with an Edit View for the their User account.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): An ID corresponding to a User record in the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        For a GET operation returns a Web View containing a form for editing</span>
+<span class="sd">        data for the user.</span>
+
+<span class="sd">        A successful POST request directs presents the updated Record view.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Require Authentication to Edit Users</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listCategory&#39;</span><span class="p">))</span>
+
+    <span class="n">edUser</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="c"># Don&#39;t allow a user to change other user records</span>
+    <span class="k">if</span> <span class="n">canAlter</span><span class="p">(</span><span class="n">edUser</span><span class="o">.</span><span class="n">id</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+    <span class="c"># Process the Edit User form when submitted.</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">edUser</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+
+        <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">edUser</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewUser&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">edUser</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Present the Edit User Form</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+            <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+            <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;user&quot;</span><span class="p">,</span>
+            <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&#39;edit.html&#39;</span><span class="p">),</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+            <span class="n">traits</span><span class="o">=</span><span class="n">edUser</span><span class="o">.</span><span class="n">traits</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/user/&lt;int:key&gt;/delete/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="deleteUser"><a class="viewcode-back" href="../../catalog.html#catalog.views.deleteUser">[docs]</a><span class="k">def</span> <span class="nf">deleteUser</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Present the Web User with a Delete View for the their User account.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): An ID corresponding to a User record in the database.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        For a GET operation returns a Web View containing buttons for</span>
+<span class="sd">        canceling or submitting the delete user request.</span>
+
+<span class="sd">        A successful POST request would delete the User&#39;s record, sign them out</span>
+<span class="sd">        and revoke the app&#39;s authorization to use their Google profile</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listUser&#39;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewUser&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">))</span></div>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    # This functionality is Disabled because there is nothing in place to</span>
+<span class="sd">    # close out the user&#39;s session and disconnect them from Google before </span>
+<span class="sd">    # they&#39;re deleted.</span>
+<span class="sd">    delUser = User.query.filter_by(id=key).one()</span>
+
+<span class="sd">    # Don&#39;t allow a user to change other user records</span>
+<span class="sd">    if canAlter(delUser.id) is False:</span>
+<span class="sd">        return redirect(url_for(&#39;listItem&#39;))</span>
+
+<span class="sd">    if request.method == &#39;POST&#39;:</span>
+<span class="sd">        session.delete(delUser)</span>
+<span class="sd">        session.commit()</span>
+
+<span class="sd">        return redirect(url_for(&#39;listUser&#39;))</span>
+
+<span class="sd">    else:</span>
+<span class="sd">        return render_template(</span>
+<span class="sd">            &#39;generic.html&#39;,</span>
+<span class="sd">            modelType=&quot;user&quot;,</span>
+<span class="sd">            viewType=os.path.join(&quot;partials&quot;, &#39;delete.html&#39;),</span>
+<span class="sd">            key=key,</span>
+<span class="sd">            name=delUser.name</span>
+<span class="sd">        )</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/user/&#39;</span><span class="p">)</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/user&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="listUser"><a class="viewcode-back" href="../../catalog.html#catalog.views.listUser">[docs]</a><span class="k">def</span> <span class="nf">listUser</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Present the Web User with an Edit View for the their User account.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Presents the user with a list of all user Names</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;user&quot;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&#39;list.html&#39;</span><span class="p">),</span>
+        <span class="n">objects</span><span class="o">=</span><span class="n">users</span><span class="p">,</span>
+        <span class="n">client_id</span><span class="o">=</span><span class="n">CLIENT_ID</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">getLoginSessionState</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+
+<span class="c"># Category Routes</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/category/&lt;int:key&gt;/&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="viewCategory"><a class="viewcode-back" href="../../catalog.html#catalog.views.viewCategory">[docs]</a><span class="k">def</span> <span class="nf">viewCategory</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;A View of a specific Category&#39;s record.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): The primary key of the category.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Presents the user with a list of all Categories</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;category&quot;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;view.html&quot;</span><span class="p">),</span>
+        <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">traits</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">traits</span><span class="p">(),</span>
+        <span class="n">allowAlter</span><span class="o">=</span><span class="n">canAlter</span><span class="p">(</span><span class="n">category</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/category/new&#39;</span><span class="p">,</span>  <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/category/new/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="newCategory"><a class="viewcode-back" href="../../catalog.html#catalog.views.newCategory">[docs]</a><span class="k">def</span> <span class="nf">newCategory</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Allow an Authorized User to add a new Category or Process the form for</span>
+<span class="sd">    adding a new Category.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        For a GET operation returns a Web View containing a form for entering</span>
+<span class="sd">        data for the new user.</span>
+
+<span class="sd">        A successful POST request directs presents a View of the new Category.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Only an Authenticated User can add New Categories</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listCategory&#39;</span><span class="p">))</span>
+
+    <span class="c"># Process the New Category Form and add it to the Database</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">newCategory</span> <span class="o">=</span> <span class="n">Category</span><span class="p">(</span>
+            <span class="n">user_id</span><span class="o">=</span><span class="n">getSessionUserInfo</span><span class="p">()[</span><span class="s">&#39;id&#39;</span><span class="p">],</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+        <span class="p">)</span>
+
+        <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">newCategory</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;New Category created!&quot;</span><span class="p">)</span>
+        <span class="c"># Display the Information for the new Category</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewCategory&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">newCategory</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+            <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+            <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;category&quot;</span><span class="p">,</span>
+            <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&#39;new.html&#39;</span><span class="p">),</span>
+            <span class="n">traits</span><span class="o">=</span><span class="n">Category</span><span class="o">.</span><span class="n">defaultTraits</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+<span class="c"># Edit a Category</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/category/&lt;int:key&gt;/edit/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="editCategory"><a class="viewcode-back" href="../../catalog.html#catalog.views.editCategory">[docs]</a><span class="k">def</span> <span class="nf">editCategory</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Allow an Authorized User to edit a new Category or Process the form for</span>
+<span class="sd">    editing a Category.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): The primary key of the category.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        For a GET operation returns a Web View containing a form for altering</span>
+<span class="sd">        data for the category.</span>
+
+<span class="sd">        A successful POST request directs presents a View of the new Category.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Only an Authenticated User can add edit a category.</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+    <span class="n">editCategory</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="c"># Don&#39;t allow a user to change a category they don&#39;t &#39;own&#39;</span>
+    <span class="k">if</span> <span class="n">canAlter</span><span class="p">(</span><span class="n">editCategory</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewCategory&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">editCategory</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="c"># Process the Edit Form when it is Submitted.</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span>
+
+        <span class="n">editCategory</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+
+        <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">editCategory</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;Category edited!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewCategory&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+            <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+            <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;category&quot;</span><span class="p">,</span>
+            <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&#39;edit.html&#39;</span><span class="p">),</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+            <span class="n">traits</span><span class="o">=</span><span class="n">editCategory</span><span class="o">.</span><span class="n">traits</span><span class="p">(),</span>
+            <span class="n">allowAlter</span><span class="o">=</span><span class="n">canAlter</span><span class="p">(</span><span class="n">editCategory</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/category/&lt;int:key&gt;/delete/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="deleteCategory"><a class="viewcode-back" href="../../catalog.html#catalog.views.deleteCategory">[docs]</a><span class="k">def</span> <span class="nf">deleteCategory</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Allow an Authorized User to delete a new Category or Process the</span>
+<span class="sd">    deletion of a Category.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): The primary key of the category.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        For a GET operation returns a View querying whether the user wants to</span>
+<span class="sd">        delete the Category or cancel and go back to viewing it.</span>
+
+<span class="sd">        A successful POST request deletes the Category and redirects to the</span>
+<span class="sd">        list of Categories.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Only an Authenticated User can add delete a category.</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listCategory&#39;</span><span class="p">))</span>
+
+    <span class="n">deleteCategory</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="c"># If the logged in user did not create this Category then redirect.</span>
+    <span class="k">if</span> <span class="n">canAlter</span><span class="p">(</span><span class="n">deleteCategory</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewCategory&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">deleteCategory</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="c"># Remove the Category from the Database</span>
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">deleteCategory</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;Category deleted!&quot;</span><span class="p">)</span>
+        <span class="c"># Back to the List of Categories</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listCategory&#39;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Present options to Delete the Category or Cancel.</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+            <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+            <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;category&quot;</span><span class="p">,</span>
+            <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&#39;delete.html&#39;</span><span class="p">),</span>
+            <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">deleteCategory</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span></div>
+
+
+<span class="c"># List all Categorys</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/category/&#39;</span><span class="p">)</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/category&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="listCategory"><a class="viewcode-back" href="../../catalog.html#catalog.views.listCategory">[docs]</a><span class="k">def</span> <span class="nf">listCategory</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;A View containing the list of Categories.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        Presents the user with a list of all user Categories</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;category&quot;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;list.html&quot;</span><span class="p">),</span>
+        <span class="n">objects</span><span class="o">=</span><span class="n">categories</span><span class="p">,</span>
+        <span class="n">client_id</span><span class="o">=</span><span class="n">CLIENT_ID</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">getLoginSessionState</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/&lt;string:category_name&gt;/&lt;string:item_name&gt;/&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="viewCatItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.viewCatItem">[docs]</a><span class="k">def</span> <span class="nf">viewCatItem</span><span class="p">(</span><span class="n">category_name</span><span class="p">,</span> <span class="n">item_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Present a view of an item that belongs to a specific Category</span>
+
+<span class="sd">    Note:</span>
+<span class="sd">        This route is typically redirected to behind the scenes.  Which</span>
+<span class="sd">        allows for a legible URL to be seen by the user.  The item record</span>
+<span class="sd">        already contains it&#39;s category id.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A Web view containing information about an item, including its Category</span>
+<span class="sd">        in the URL displayed in the browser.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Determine the Category of the item, based upon it&#39;s name.</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">category_name</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">item_name</span><span class="p">,</span> <span class="n">cat_id</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&#39;item&#39;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;view.html&quot;</span><span class="p">),</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">category_name</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">traits</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">traits</span><span class="p">(),</span>
+        <span class="n">allowAlter</span><span class="o">=</span><span class="n">canAlter</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/item/&lt;int:key&gt;/&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="viewItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.viewItem">[docs]</a><span class="k">def</span> <span class="nf">viewItem</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This route is used behind the scenes to view an item.  It forwards</span>
+<span class="sd">    the request on to viewCatItem.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): The primary key of the item.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        The result returned from viewCatItem</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">cat_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="c"># Have the other view Render the results, provides a clearer url to the user</span>
+    <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span>
+        <span class="n">url_for</span><span class="p">(</span>
+            <span class="s">&#39;viewCatItem&#39;</span><span class="p">,</span>
+            <span class="n">category_name</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">item_name</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">name</span>
+        <span class="p">)</span>
+    <span class="p">)</span></div>
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/item/add&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="newItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.newItem">[docs]</a><span class="k">def</span> <span class="nf">newItem</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;This route is used behind the scenes to view an item.  It forwards</span>
+<span class="sd">    the request on to viewCatItem.  Requires a user to be authenticated.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        This route could be changed to reflect which category it will be in.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request presents the user with a form for creating a new Item.</span>
+
+<span class="sd">        A POST request processes the user&#39;s input from the form and adds the</span>
+<span class="sd">        new item.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># A user session must exist to add an item.</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="c"># Process the new Item from the submitted form.</span>
+        <span class="c"># Make sure that an item associated with this category doesn&#39;t already have</span>
+        <span class="c"># the name of the one submitted in the form.</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;category&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+        <span class="n">newItemName</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">]</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c"># We should find either zero or one item in a category with a given</span>
+            <span class="c"># name.</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span>
+                <span class="n">cat_id</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">newItemName</span><span class="p">)</span><span class="o">.</span><span class="n">one_or_none</span><span class="p">()</span>
+            <span class="k">print</span> <span class="s">&quot;newItem: items = {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="n">MultipleResultsFound</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="c"># We more than one item with the newItemName in it&#39;s category.</span>
+            <span class="k">print</span> <span class="s">&quot;Multiple &quot;</span> <span class="o">+</span> <span class="n">e</span>
+            <span class="n">flash</span><span class="p">(</span>
+                <span class="s">&quot;{0} items named {1} in {2} already.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span>
+                    <span class="n">newItemName</span><span class="p">,</span>
+                    <span class="n">category</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">))</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewCategory&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">id</span> <span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="c"># This is a new Item for this category and it&#39;s name is unique</span>
+            <span class="c"># in the category.</span>
+
+            <span class="c"># Handle uploaded image</span>
+            <span class="n">picture</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;picture&#39;</span><span class="p">]</span>
+            <span class="n">pictureUrl</span> <span class="o">=</span> <span class="n">processImageUpload</span><span class="p">(</span><span class="n">picture</span><span class="p">)</span>
+
+            <span class="c"># Create the New Item and add it to the Database</span>
+            <span class="n">newItem</span> <span class="o">=</span> <span class="n">Item</span><span class="p">(</span>
+                <span class="n">name</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">],</span>
+                <span class="n">dateCreated</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;created&#39;</span><span class="p">],</span> <span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s">&quot;</span><span class="p">),</span>
+                <span class="n">cat_id</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="n">description</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;description&#39;</span><span class="p">],</span>
+                <span class="n">user_id</span><span class="o">=</span><span class="n">getSessionUserInfo</span><span class="p">()[</span><span class="s">&#39;id&#39;</span><span class="p">],</span>
+                <span class="n">picture</span><span class="o">=</span><span class="n">pictureUrl</span>
+            <span class="p">)</span>
+
+            <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">newItem</span><span class="p">)</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+            <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+            <span class="n">flash</span><span class="p">(</span><span class="s">&quot;New item created!&quot;</span><span class="p">)</span>
+            <span class="c"># Present the user with a view of the new item</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewItem&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">newItem</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c"># Alert the user to an already exisiting item with the specified name.</span>
+            <span class="n">flash</span><span class="p">(</span>
+                <span class="s">&quot;An item with the name {0} already exists in {1}.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">newItemName</span><span class="p">,</span>
+                    <span class="n">category</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="c"># Send the user back to the newItem Form.</span>
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;newItem&#39;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Present the User with the New Item Form</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+            <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+            <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;item&quot;</span><span class="p">,</span>
+            <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;new.html&quot;</span><span class="p">),</span>
+            <span class="n">traits</span><span class="o">=</span><span class="n">Item</span><span class="o">.</span><span class="n">defaultTraits</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+<span class="c"># Edit an Item - Descriptive URL</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/&lt;string:category_name&gt;/&lt;string:item_name&gt;/edit&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="editCatItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.editCatItem">[docs]</a><span class="k">def</span> <span class="nf">editCatItem</span><span class="p">(</span><span class="n">category_name</span><span class="p">,</span> <span class="n">item_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Edit an Item in a Category.</span>
+
+<span class="sd">    Requires a user to be authenticated and to have created the item.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        category_name (string): The Category of the Item to edit.</span>
+
+<span class="sd">        item_name (string): The name of the Item to Edit.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request presents the user with a form for editing an Item.</span>
+
+<span class="sd">        A POST request processes the user&#39;s input from the form and updates the</span>
+<span class="sd">        item.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># User has been authenticated and the login_session is valid.</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;Please log in to edit an item.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+    <span class="c"># Find the Item&#39;s category by the category&#39;s name in the database</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">category_name</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="c"># Find the item using its name and its category&#39;s id</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">item_name</span><span class="p">,</span> <span class="n">cat_id</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="c"># The active user for the session must be the creator of the item being</span>
+    <span class="c"># editted.</span>
+    <span class="k">if</span> <span class="n">canAlter</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;You are not authorized to alter that item.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewItem&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="c"># This is the right user, so show them the edit form.</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&#39;item&#39;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;edit.html&quot;</span><span class="p">),</span>
+        <span class="n">category</span><span class="o">=</span><span class="n">category_name</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+        <span class="n">traits</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">traits</span><span class="p">(</span><span class="bp">True</span><span class="p">),</span>
+        <span class="n">allowAlter</span><span class="o">=</span><span class="n">canAlter</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/item/&lt;int:key&gt;/edit/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="editItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.editItem">[docs]</a><span class="k">def</span> <span class="nf">editItem</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Edit an Item in a Category.</span>
+
+<span class="sd">    Requires a user to be authenticated and to have created the item.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): The primary key of the Item to Edit.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request presents the user with a form for editing an Item.</span>
+
+<span class="sd">        A POST request processes the user&#39;s input from the form and updates the</span>
+<span class="sd">        item.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># User has been authenticated and the login_session is valid.</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;You need to log in to edit items.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Find the item to edit using its id.</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span>
+            <span class="c"># Make sure that an item associated with this category doesn&#39;t already have</span>
+            <span class="c"># the name of the one submitted in the form.</span>
+            <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;category&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+            <span class="n">itemName</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;name&#39;</span><span class="p">])</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c"># We should find either zero or one item in a category with a given</span>
+                <span class="c"># name.</span>
+                <span class="n">items</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span>
+                    <span class="n">cat_id</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">itemName</span><span class="p">)</span><span class="o">.</span><span class="n">one_or_none</span><span class="p">()</span>
+                <span class="k">print</span> <span class="s">&quot;editItem: items = {0}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
+
+            <span class="k">except</span> <span class="n">MultipleResultsFound</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="c"># We found more than one item with the form&#39;s item name for</span>
+                <span class="c"># this category.</span>
+                <span class="k">print</span> <span class="s">&quot;Multiple &quot;</span> <span class="o">+</span> <span class="n">e</span>
+                <span class="n">flash</span><span class="p">(</span>
+                    <span class="s">&quot;{0} items named {1} in category {2} already.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                        <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">),</span>
+                        <span class="n">itemName</span><span class="p">,</span>
+                        <span class="n">category</span><span class="o">.</span><span class="n">name</span>
+                    <span class="p">))</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;editItem&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span> <span class="p">))</span>
+
+
+            <span class="k">if</span> <span class="n">items</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">items</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">key</span><span class="p">:</span>
+                <span class="c"># User can edit the item already in the category but can&#39;t move it</span>
+                <span class="c"># to another category that already has an item with the same name.</span>
+
+                <span class="c"># Different Image uploaded, Save and add url to Item record</span>
+                <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;upload&#39;</span><span class="p">]:</span>
+
+                    <span class="n">item</span><span class="o">.</span><span class="n">picture</span> <span class="o">=</span> <span class="n">processImageUpload</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s">&#39;upload&#39;</span><span class="p">])</span>
+
+                <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">itemName</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">dateCreated</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span>
+                    <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;created&#39;</span><span class="p">],</span> <span class="s">&quot;%Y-%m-</span><span class="si">%d</span><span class="s">&quot;</span><span class="p">)</span>
+
+                <span class="n">item</span><span class="o">.</span><span class="n">cat_id</span> <span class="o">=</span> <span class="n">category</span><span class="o">.</span><span class="n">id</span>
+                <span class="n">item</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s">&#39;description&#39;</span><span class="p">]</span>
+
+                <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+                <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+                <span class="n">flash</span><span class="p">(</span><span class="s">&quot;Item edited!&quot;</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span>
+                    <span class="n">url_for</span><span class="p">(</span>
+                        <span class="s">&#39;viewCatItem&#39;</span><span class="p">,</span>
+                        <span class="n">category_name</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                        <span class="n">item_name</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">name</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">flash</span><span class="p">(</span>
+                    <span class="sd">&#39;&#39;&#39;A different item named {0} already exists in the</span>
+<span class="sd">                    category called {1}.&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">itemName</span><span class="p">,</span> <span class="n">category</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;editItem&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">))</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">cat_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+            <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span>
+                <span class="n">url_for</span><span class="p">(</span>
+                    <span class="s">&#39;editCatItem&#39;</span><span class="p">,</span>
+                    <span class="n">category_name</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">item_name</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">)</span>
+            <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/&lt;string:category_name&gt;/&lt;string:item_name&gt;/delete&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="delItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.delItem">[docs]</a><span class="k">def</span> <span class="nf">delItem</span><span class="p">(</span><span class="n">item_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Retrieve the view for Deleting an Item in a Category.</span>
+
+<span class="sd">    Requires a user to be authenticated and to have created the item.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        The actual deletion operation, when a POST request is sent, is</span>
+<span class="sd">        performed by the deleteItem function.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        category_name (string): The Category name of the Item to delete.</span>
+
+<span class="sd">        item_name (string):     The name of the Item to delete.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request presents the user with choices for deleting the Item or</span>
+<span class="sd">        canceling the operation.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;Please log in to delete an item.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+    <span class="c"># Find the item&#39;s category by name</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">category_name</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="c"># Find the item by matching it&#39;s name and category id to the above category.</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">deleteItem</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">item_name</span><span class="p">,</span>
+            <span class="n">cat_id</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">id</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="k">except</span> <span class="n">NoResultFound</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span>
+            <span class="sd">&#39;&#39;&#39;No item named {0} was found in the {1} category.&#39;&#39;&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">item_name</span><span class="p">,</span>
+                <span class="n">category_name</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+
+    <span class="k">if</span> <span class="n">canAlter</span><span class="p">(</span><span class="n">deleteItem</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;You are not authorized to delete that item.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewItem&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">deleteItem</span><span class="o">.</span><span class="n">id</span><span class="p">))</span>
+
+    <span class="c"># Forward the request to the Delete view.</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;delete.html&quot;</span><span class="p">),</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&quot;item&quot;</span><span class="p">,</span>
+        <span class="n">key</span><span class="o">=</span><span class="n">deleteItem</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="n">item_name</span>
+    <span class="p">)</span></div>
+
+
+<span class="c"># Delete an Item</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/item/&lt;int:key&gt;/delete/&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">,</span> <span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="deleteItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.deleteItem">[docs]</a><span class="k">def</span> <span class="nf">deleteItem</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Delete an Item selected by its primary key/id.</span>
+
+<span class="sd">    Requires a user to be authenticated and to have created the item.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): The primary key of the Item to delete.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request presents the user with choices for deleting the Item or</span>
+<span class="sd">        canceling the operation.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">isActiveSession</span><span class="p">()</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;Please log in to delete an item.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+    <span class="n">deleteItem</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">canAlter</span><span class="p">(</span><span class="n">deleteItem</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="c"># The active user did not create the item.</span>
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;You are not authorized to delete this item.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;viewItem&#39;</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">))</span>
+
+
+    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s">&#39;POST&#39;</span><span class="p">:</span>
+        <span class="c"># The user submitted this item for deletion.</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">deleteItem</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+        <span class="n">flash</span><span class="p">(</span><span class="s">&quot;Item deleted!&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span><span class="n">url_for</span><span class="p">(</span><span class="s">&#39;listItem&#39;</span><span class="p">))</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c"># Present the Deletion View to the User for the given Item/Category</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">deleteItem</span><span class="o">.</span><span class="n">cat_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">redirect</span><span class="p">(</span>
+            <span class="n">url_for</span><span class="p">(</span>
+                <span class="s">&#39;delItem&#39;</span><span class="p">,</span>
+                <span class="n">category_name</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="n">item_name</span><span class="o">=</span><span class="n">deleteItem</span><span class="o">.</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/&lt;string:category_name&gt;/items&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="listCategoryItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.listCategoryItem">[docs]</a><span class="k">def</span> <span class="nf">listCategoryItem</span><span class="p">(</span><span class="n">category_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;List all Items in a category.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        category_name (string): The category of items to be viewed.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request presents the user with the list of all items belonging to</span>
+<span class="sd">        the specified category.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Find the category by its name, and all Items with that category&#39;s id.</span>
+    <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">category_name</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">cat_id</span><span class="o">=</span><span class="n">category</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="c"># Present the List of Items in the main view.</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;list.html&quot;</span><span class="p">),</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&#39;item&#39;</span><span class="p">,</span>
+        <span class="n">objects</span><span class="o">=</span><span class="n">items</span><span class="p">,</span>
+        <span class="n">client_id</span><span class="o">=</span><span class="n">CLIENT_ID</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">getLoginSessionState</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+
+<span class="c"># List all Items</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/item/&#39;</span><span class="p">)</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/item&#39;</span><span class="p">)</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="listItem"><a class="viewcode-back" href="../../catalog.html#catalog.views.listItem">[docs]</a><span class="k">def</span> <span class="nf">listItem</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;List all Items in the catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request presents the user with the list of all catalog items.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c"># Retrieve the list of items and order them by their creation date.</span>
+    <span class="c"># Starting with the newest and ending with the oldest.</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">desc</span><span class="p">(</span><span class="n">Item</span><span class="o">.</span><span class="n">dateCreated</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+    <span class="c"># Generate a list of ( Category Name, Item Name) tuples?</span>
+    <span class="c"># This lets the view display each item with its respective category</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span> <span class="p">(</span><span class="n">Category</span><span class="o">.</span><span class="n">findByID</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">cat_id</span><span class="p">)</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">i</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span> <span class="p">]</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c"># Convert the list to contain a dictionary for each item/category combo.</span>
+    <span class="k">for</span> <span class="n">category</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">results</span><span class="p">:</span>
+        <span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s">&#39;category&#39;</span><span class="p">:</span> <span class="n">category</span><span class="p">,</span> <span class="s">&#39;item&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">})</span>
+
+
+    <span class="c"># Present the list of all items and their categories in the main view.</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span>
+        <span class="s">&#39;generic.html&#39;</span><span class="p">,</span>
+        <span class="n">viewType</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s">&quot;partials&quot;</span><span class="p">,</span> <span class="s">&quot;list.html&quot;</span><span class="p">),</span>
+        <span class="n">modelType</span><span class="o">=</span><span class="s">&#39;item&#39;</span><span class="p">,</span>
+        <span class="n">objects</span><span class="o">=</span><span class="n">items</span><span class="p">,</span>
+        <span class="n">client_id</span><span class="o">=</span><span class="n">CLIENT_ID</span><span class="p">,</span>
+        <span class="n">state</span><span class="o">=</span><span class="n">getLoginSessionState</span><span class="p">()</span>
+    <span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/item/&lt;int:key&gt;/JSON&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="itemJSON"><a class="viewcode-back" href="../../catalog.html#catalog.views.itemJSON">[docs]</a><span class="k">def</span> <span class="nf">itemJSON</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Return information about a Catalog Item in JSON.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        key (int): The primary key of the item to retrieve.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request returns information about an item in JSON</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">Item</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">key</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">Item</span><span class="o">=</span><span class="n">item</span><span class="o">.</span><span class="n">serialize</span><span class="p">)</span></div>
+
+
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/JSON&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="catalogJSON"><a class="viewcode-back" href="../../catalog.html#catalog.views.catalogJSON">[docs]</a><span class="k">def</span> <span class="nf">catalogJSON</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;JSON endpoint that returns information about the entire Catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request returns the Catalog&#39;s information in JSON</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">cats</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">serialize</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">Catalog</span><span class="o">=</span><span class="n">cats</span><span class="p">)</span></div>
+
+
+<span class="c"># An XML endpoint for the entire catalog</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/catalog/XML&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="catalogXML"><a class="viewcode-back" href="../../catalog.html#catalog.views.catalogXML">[docs]</a><span class="k">def</span> <span class="nf">catalogXML</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;XML endpoint that returns information about the entire Catalog.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        A GET request returns the Catalog&#39;s information in XML</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">cats</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">serialize</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">categories</span><span class="p">]</span>
+
+    <span class="kn">from</span> <span class="nn">dicttoxml</span> <span class="kn">import</span> <span class="n">dicttoxml</span> <span class="k">as</span> <span class="n">d2xml</span>
+    <span class="n">xmlCatalog</span> <span class="o">=</span> <span class="n">d2xml</span><span class="p">(</span><span class="n">cats</span><span class="p">)</span>
+    <span class="k">print</span> <span class="n">xmlCatalog</span>
+
+    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">xmlCatalog</span><span class="p">,</span> <span class="n">mimetype</span><span class="o">=</span><span class="s">&quot;text/xml&quot;</span><span class="p">)</span></div>
+
+
+<span class="c"># Routes for Authentication with Google</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/gconnect&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;POST&#39;</span><span class="p">])</span>
+<div class="viewcode-block" id="gconnect"><a class="viewcode-back" href="../../catalog.html#catalog.views.gconnect">[docs]</a><span class="k">def</span> <span class="nf">gconnect</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Refer to :py:func:`~auth.ConnectGoogle`&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">ConnectGoogle</span><span class="p">(</span><span class="n">request</span><span class="p">)</span></div>
+
+
+<span class="c"># Disconnect From Google.</span>
+<span class="nd">@app.route</span><span class="p">(</span><span class="s">&#39;/gdisconnect&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="gdisconnect"><a class="viewcode-back" href="../../catalog.html#catalog.views.gdisconnect">[docs]</a><span class="k">def</span> <span class="nf">gdisconnect</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;Refer to :py:func:`~auth.DisconnectGoogle`&quot;&quot;&quot;</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">DisconnectGoogle</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

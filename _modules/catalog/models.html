@@ -1,0 +1,601 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>catalog.models &mdash; catalog  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="catalog  documentation" href="../../index.html"/>
+        <link rel="up" title="catalog" href="../catalog.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> catalog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../catalog.html">catalog package</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../../index.html">catalog</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../index.html">Docs</a> &raquo;</li>
+      
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      
+          <li><a href="../catalog.html">catalog</a> &raquo;</li>
+      
+    <li>catalog.models</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for catalog.models</h1><div class="highlight"><pre>
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">This is the models module for the Catalog app.</span>
+<span class="sd">The module creates the ORM model connecting classes to tables in the database.</span>
+
+<span class="sd">The classes are User, Category and Item</span>
+
+<span class="sd">The traits module is used for generating forms and views of instances of each</span>
+<span class="sd">class/object.</span>
+
+<span class="sd">A model uses Default Traits for plain views that offer no editing and</span>
+<span class="sd">a traits property for views that do.</span>
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Column</span><span class="p">,</span>
+    <span class="n">ForeignKey</span><span class="p">,</span>
+    <span class="n">Integer</span><span class="p">,</span>
+    <span class="n">String</span><span class="p">,</span>
+    <span class="n">Date</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">relationship</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.schema</span> <span class="kn">import</span> <span class="n">UniqueConstraint</span>
+<span class="kn">from</span> <span class="nn">trait</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">DateTrait</span><span class="p">,</span>
+    <span class="n">ImageTrait</span><span class="p">,</span>
+    <span class="n">ImageUploadTrait</span><span class="p">,</span>
+    <span class="n">TextTrait</span><span class="p">,</span>
+    <span class="n">TextAreaTrait</span><span class="p">,</span>
+    <span class="n">SelectTrait</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">database</span> <span class="kn">import</span> <span class="n">Base</span><span class="p">,</span> <span class="n">session</span>
+
+
+<div class="viewcode-block" id="Category"><a class="viewcode-back" href="../../catalog.html#catalog.models.Category">[docs]</a><span class="k">class</span> <span class="nc">Category</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Items in the Catalog are each assigned to a Category that pertains to</span>
+<span class="sd">    the activity or sport associated with the item.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (string):          The Category name.</span>
+<span class="sd">        id (integer):           The primary key/id</span>
+<span class="sd">        user_id (integer):      The user id of the Category&#39;s creator.</span>
+<span class="sd">        items (relationship):   Defines the list of items in the Category.</span>
+<span class="sd">        query (Query):          Shortcut for Querying the Category table</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&quot;category&quot;</span>
+
+    <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query_property</span><span class="p">()</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">80</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;user.id&#39;</span><span class="p">))</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span>
+        <span class="s">&quot;Item&quot;</span><span class="p">,</span>
+        <span class="n">backref</span><span class="o">=</span><span class="s">&quot;category&quot;</span><span class="p">,</span>
+        <span class="n">cascade</span><span class="o">=</span><span class="s">&quot;save-update, delete, delete-orphan&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c"># Find a Category by its name.</span>
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Category.findByName"><a class="viewcode-back" href="../../catalog.html#catalog.models.Category.findByName">[docs]</a>    <span class="k">def</span> <span class="nf">findByName</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Find a Category in the table by its name.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (string): The Category name to find.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A Category record from the database that has the specified name.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">category</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Category.categories"><a class="viewcode-back" href="../../catalog.html#catalog.models.Category.categories">[docs]</a>    <span class="k">def</span> <span class="nf">categories</span><span class="p">():</span>
+        <span class="sd">&#39;&#39;&#39;List of all Category names in the table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list containg the names of each Category int the table.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">all</span><span class="p">()]</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Category.defaultTraits"><a class="viewcode-back" href="../../catalog.html#catalog.models.Category.defaultTraits">[docs]</a>    <span class="k">def</span> <span class="nf">defaultTraits</span><span class="p">():</span>
+        <span class="sd">&#39;&#39;&#39;The default traits of Category</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of Trait objects describing the attributes of a Category</span>
+<span class="sd">            that can be viewed.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)]</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Category.findByID"><a class="viewcode-back" href="../../catalog.html#catalog.models.Category.findByID">[docs]</a>    <span class="k">def</span> <span class="nf">findByID</span><span class="p">(</span><span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Find a Category in the table using its id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            id (int): The primary key or id of the Category in the table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A Category object with the given id.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">category</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">creator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;The name of the user who created the Category in the Table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            string: The user name who created the Category.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span>
+
+<div class="viewcode-block" id="Category.traits"><a class="viewcode-back" href="../../catalog.html#catalog.models.Category.traits">[docs]</a>    <span class="k">def</span> <span class="nf">traits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;The attributes and values of an instance of the Category class.</span>
+
+<span class="sd">        When presenting a view to a web user, the traits are parsed and</span>
+<span class="sd">        displayed in a form or list in a format determined by the type</span>
+<span class="sd">        of each attribute&#39;s associated Trait Class.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list containing the Traits for each attribute to be displayed</span>
+<span class="sd">            in a view of a Category instance.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;creator&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">creator</span><span class="p">)</span>
+        <span class="p">]</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Serialize the properties of a Category instance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A Dictionary describing key attributes of a Category instance</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">cat</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;Category&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s">&#39;creator&#39;</span><span class="p">:</span> <span class="n">User</span><span class="o">.</span><span class="n">nameByID</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_id</span><span class="p">),</span>
+                <span class="s">&#39;Items&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">serialize</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">cat</span></div>
+
+
+<div class="viewcode-block" id="User"><a class="viewcode-back" href="../../catalog.html#catalog.models.User">[docs]</a><span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Users of the Catalog are each assigned a User record that is associated</span>
+<span class="sd">    with the Items and Categories they create, and by extension, can edit and</span>
+<span class="sd">    delete.  Their profile information is pulled from their Google+ profile.</span>
+
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (string):              The User name.</span>
+<span class="sd">        id (integer):               The primary key/id</span>
+<span class="sd">        email (string):             The User&#39;s email address.</span>
+<span class="sd">        picture (string):           The url to the user&#39;s picture in the local</span>
+<span class="sd">        filesystem or to the url of their profile picture from Google+</span>
+
+<span class="sd">        items (relationship):       Defines the list of items the User has created.</span>
+<span class="sd">        categories (relationship):  List of Categories created by the User.</span>
+<span class="sd">        query (Query):              Shortcut for Querying the User table.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&quot;user&quot;</span>
+
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">250</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">email</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">picture</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span>
+        <span class="s">&quot;Item&quot;</span><span class="p">,</span>
+        <span class="n">backref</span><span class="o">=</span><span class="s">&quot;User&quot;</span><span class="p">,</span>
+        <span class="n">cascade</span><span class="o">=</span><span class="s">&quot;save-update, delete, delete-orphan&quot;</span>
+    <span class="p">)</span>
+
+    <span class="n">categories</span> <span class="o">=</span> <span class="n">relationship</span><span class="p">(</span>
+        <span class="s">&quot;Category&quot;</span><span class="p">,</span>
+        <span class="n">backref</span><span class="o">=</span><span class="s">&quot;User&quot;</span><span class="p">,</span>
+        <span class="n">cascade</span><span class="o">=</span><span class="s">&quot;save-update, delete, delete-orphan&quot;</span>
+    <span class="p">)</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="User.nameByID"><a class="viewcode-back" href="../../catalog.html#catalog.models.User.nameByID">[docs]</a>    <span class="k">def</span> <span class="nf">nameByID</span><span class="p">(</span><span class="n">user_id</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Retrieve a user&#39;s name by their user id.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            user_id (int): The primary key of the User in the table.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            string: The name of the user associated with the given user id.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span><span class="o">.</span><span class="n">name</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="User.defaultTraits"><a class="viewcode-back" href="../../catalog.html#catalog.models.User.defaultTraits">[docs]</a>    <span class="k">def</span> <span class="nf">defaultTraits</span><span class="p">():</span>
+        <span class="sd">&#39;&#39;&#39;The attribute names for the User Class.</span>
+
+<span class="sd">        When creating the new user via a form, the default traits are used to</span>
+<span class="sd">        describe the properties that a user needs to provide information for.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list containing the Traits for each attribute to be displayed</span>
+<span class="sd">            in a form for creating an instance of the User class.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">),</span>
+            <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;email&quot;</span><span class="p">),</span>
+            <span class="n">ImageTrait</span><span class="p">(</span><span class="s">&quot;picture&quot;</span><span class="p">)</span>
+        <span class="p">]</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Serialize the properties of a User instance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A Dictionary describing key attributes of a User instance</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;User&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s">&#39;email&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">,</span>
+                <span class="s">&#39;picture&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">picture</span><span class="p">,</span>
+                <span class="s">&#39;Items&#39;</span><span class="p">:</span>  <span class="p">{[</span><span class="n">i</span><span class="o">.</span><span class="n">serialize</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">items</span><span class="p">]}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c"># Returns object data in form that&#39;s easy to serialize.</span>
+        <span class="k">return</span> <span class="n">user</span>
+
+<div class="viewcode-block" id="User.traits"><a class="viewcode-back" href="../../catalog.html#catalog.models.User.traits">[docs]</a>    <span class="k">def</span> <span class="nf">traits</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;The attributes and values of an instance of the User class.</span>
+
+<span class="sd">        When presenting a view to a web user, the traits are parsed and</span>
+<span class="sd">        displayed in a form or list in a format determined by the type</span>
+<span class="sd">        of each attribute&#39;s associated Trait Class.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list containing the Traits for each attribute to be displayed</span>
+<span class="sd">            in a view of a User instance.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;email&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">email</span><span class="p">),</span>
+            <span class="n">ImageTrait</span><span class="p">(</span><span class="s">&quot;picture&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">picture</span><span class="p">)</span>
+        <span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="Item"><a class="viewcode-back" href="../../catalog.html#catalog.models.Item">[docs]</a><span class="k">class</span> <span class="nc">Item</span><span class="p">(</span><span class="n">Base</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Items in the Catalog are each created by a User and belong to a specific</span>
+<span class="sd">    Category.</span>
+
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (string):          The Item name.</span>
+<span class="sd">        id (integer):           The primary key/id</span>
+<span class="sd">        cat_id (integer)        The primary key/id for the Item&#39;s Category</span>
+<span class="sd">        user_id (integer):      The primary key/id for the Item&#39;s creator</span>
+<span class="sd">        picture (string):       The url to the item&#39;s picture in the local</span>
+<span class="sd">        filesystem.</span>
+
+<span class="sd">        description (string):   The Item&#39;s description.</span>
+<span class="sd">        dateCreated (date):     The Date the Item was created.</span>
+<span class="sd">        query (Query):          Shortcut for Querying the Item table.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">__tablename__</span> <span class="o">=</span> <span class="s">&quot;item&quot;</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">cat_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;category.id&#39;</span><span class="p">))</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Integer</span><span class="p">,</span> <span class="n">ForeignKey</span><span class="p">(</span><span class="s">&#39;user.id&#39;</span><span class="p">))</span>
+    <span class="n">picture</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">String</span><span class="p">(</span><span class="mi">250</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">dateCreated</span> <span class="o">=</span> <span class="n">Column</span><span class="p">(</span><span class="n">Date</span><span class="p">)</span>
+    <span class="n">UniqueConstraint</span><span class="p">(</span><span class="s">&#39;cat_id&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s">&#39;name_cat_id&#39;</span><span class="p">)</span>
+
+    <span class="n">query</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">query_property</span><span class="p">()</span>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Item.defaultTraits"><a class="viewcode-back" href="../../catalog.html#catalog.models.Item.defaultTraits">[docs]</a>    <span class="k">def</span> <span class="nf">defaultTraits</span><span class="p">():</span>
+        <span class="sd">&#39;&#39;&#39;The attribute names for the Item Class.</span>
+
+<span class="sd">        When creating a new item via a form, the default traits are used to</span>
+<span class="sd">        describe the properties that define an Item in the Catalog.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Each Trait in the list describes a property of the Item to be</span>
+<span class="sd">            created.  The Trait&#39;s type changes how it is rendered when</span>
+<span class="sd">            presented to the user.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">ImageUploadTrait</span><span class="p">(</span><span class="s">&quot;picture&quot;</span><span class="p">),</span>
+            <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">),</span>
+            <span class="n">SelectTrait</span><span class="p">(</span>
+                <span class="s">&quot;category&quot;</span><span class="p">,</span>
+                <span class="n">Category</span><span class="o">.</span><span class="n">categories</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span>
+                <span class="n">Category</span><span class="o">.</span><span class="n">categories</span><span class="p">()</span>
+            <span class="p">),</span>
+            <span class="n">DateTrait</span><span class="p">(</span><span class="s">&quot;created&quot;</span><span class="p">),</span>
+            <span class="n">TextAreaTrait</span><span class="p">(</span><span class="s">&quot;description&quot;</span><span class="p">)</span>
+        <span class="p">]</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">creator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;The user name of the Item&#39;s creator.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            string: The name of the user that created the Item record.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">describe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Describe an Item by its name and the name of its Category.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            string: A descriptive string including the Item name and Category.</span>
+
+<span class="sd">        Example:</span>
+<span class="sd">            &quot;Stick (Hockey)&quot;</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot; (&quot;</span> <span class="o">+</span> <span class="n">Category</span><span class="o">.</span><span class="n">findByID</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cat_id</span><span class="p">)</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s">&quot;)&quot;</span>
+
+
+<div class="viewcode-block" id="Item.traits"><a class="viewcode-back" href="../../catalog.html#catalog.models.Item.traits">[docs]</a>    <span class="k">def</span> <span class="nf">traits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">isEdit</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;The attributes and values of an instance of the Item class.</span>
+
+<span class="sd">        When presenting a view to a web user, the traits are parsed and</span>
+<span class="sd">        displayed in a form or list in a format determined by the type</span>
+<span class="sd">        of each attribute&#39;s associated Trait Class.</span>
+
+<span class="sd">        Notes:</span>
+<span class="sd">            Traits for generating a form for view and edit. An ImageUploadTrait</span>
+<span class="sd">            is added for the edit view (specify isEdit as True).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            isEdit (Boolean): True means an edit view will be generated</span>
+<span class="sd">            from the Traits of the Item. False means that it will just display</span>
+<span class="sd">            the values of each Trait. (no HTML Form)</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list containing the Traits for each attribute to be displayed</span>
+<span class="sd">            in a view of an Item instance.</span>
+
+<span class="sd">            If isEdit is True a Trait will be included that allows the user to</span>
+<span class="sd">            upload an Image for the item.  Otherwise, the Item attributes will</span>
+<span class="sd">            be displayed as a list of property name/value.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c"># Determine the category for this item.</span>
+        <span class="n">category</span> <span class="o">=</span> <span class="n">Category</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">cat_id</span><span class="p">)</span><span class="o">.</span><span class="n">one</span><span class="p">()</span>
+
+        <span class="c"># Rendering an Edit template.</span>
+        <span class="k">if</span> <span class="n">isEdit</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">ImageTrait</span><span class="p">(</span><span class="s">&quot;picture&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">picture</span><span class="p">),</span>
+                <span class="n">ImageUploadTrait</span><span class="p">(</span><span class="s">&quot;upload&quot;</span><span class="p">),</span>
+                <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+                <span class="n">SelectTrait</span><span class="p">(</span>
+                    <span class="s">&quot;category&quot;</span><span class="p">,</span>
+                    <span class="n">category</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">Category</span><span class="o">.</span><span class="n">categories</span><span class="p">()</span>
+                <span class="p">),</span>
+                <span class="n">DateTrait</span><span class="p">(</span><span class="s">&quot;created&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dateCreated</span><span class="p">)),</span>
+                <span class="n">TextAreaTrait</span><span class="p">(</span><span class="s">&quot;description&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="c"># Rendering a View Template.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[</span>
+                <span class="n">ImageTrait</span><span class="p">(</span><span class="s">&quot;picture&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">picture</span><span class="p">),</span>
+                <span class="n">TextTrait</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+                <span class="n">SelectTrait</span><span class="p">(</span>
+                    <span class="s">&quot;category&quot;</span><span class="p">,</span>
+                    <span class="n">category</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                    <span class="n">Category</span><span class="o">.</span><span class="n">categories</span><span class="p">()</span>
+                <span class="p">),</span>
+                <span class="n">DateTrait</span><span class="p">(</span><span class="s">&quot;created&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dateCreated</span><span class="p">)),</span>
+                <span class="n">TextAreaTrait</span><span class="p">(</span><span class="s">&quot;description&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+            <span class="p">]</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Serialize the properties of a Item instance.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A Dictionary describing key attributes for an Item instance.</span>
+
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">&#39;Item&#39;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+                <span class="s">&#39;creator&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">creator</span><span class="p">,</span>
+                <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s">&#39;picture&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">picture</span><span class="p">,</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s">&#39;cat_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">cat_id</span><span class="p">,</span>
+                <span class="s">&#39;dateCreated&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dateCreated</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="n">item</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

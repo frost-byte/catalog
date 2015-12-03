@@ -1,0 +1,1344 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>catalog package &mdash; catalog  documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+    <link rel="top" title="catalog  documentation" href="index.html"/>
+        <link rel="next" title="catalog.trait package" href="catalog.trait.html"/>
+        <link rel="prev" title="Welcome to catalog’s documentation!" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> catalog
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">catalog package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="catalog.trait.html">catalog.trait package</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-catalog.auth">catalog.auth module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-catalog.database">catalog.database module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-catalog.models">catalog.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-catalog.urls">catalog.urls module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-catalog.views">catalog.views module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-catalog">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="index.html">catalog</a>
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+      
+    <li>catalog package</li>
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/catalog.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="catalog-package">
+<h1>catalog package<a class="headerlink" href="#catalog-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="catalog.trait.html">catalog.trait package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="catalog.trait.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.trait.html#module-catalog.trait.trait">catalog.trait.trait module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.trait.html#module-catalog.trait">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-catalog.auth">
+<span id="catalog-auth-module"></span><h2>catalog.auth module<a class="headerlink" href="#module-catalog.auth" title="Permalink to this headline">¶</a></h2>
+<p>This is the auth, or Authorization module for the Catalog app.
+The module provides methods for Authorizing the app to connect/disconnect
+to/from a user&#8217;s Google+ profile.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><dl class="first last docutils">
+<dt>CLIENT_ID:  The Client Secret for the Catalog App.  This file is</dt>
+<dd>generated from the app&#8217;s credentials using the Google Development Console.
+It is not included with the repository for the purpose of security.
+Running the app will require the creation of the client secret using the
+previously mentioned Development Console.  The client_secret.json file
+needs to be in the same directory as this module.</dd>
+</dl>
+</dd>
+</dl>
+<dl class="function">
+<dt id="catalog.auth.ConnectGoogle">
+<code class="descclassname">catalog.auth.</code><code class="descname">ConnectGoogle</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#ConnectGoogle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.ConnectGoogle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process the Request to the App for logging in to Google+.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>request (Request): Contains the information for requesting login</dt>
+<dd>to Google+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd><p class="first">Response: returnValues</p>
+<p class="last">Detailed Description of the possible values of the returned variable.
+Describe contents and format of returned values.
+Describe Usage.</p>
+</dd>
+<dt>Raises:</dt>
+<dd>FlowExchangeError:  The flow exchange setup establishing authorization
+with the Google+ failed.</dd>
+<dt>Examples:</dt>
+<dd>(optional) Describe how the function is used by providing examples here.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.DisconnectGoogle">
+<code class="descclassname">catalog.auth.</code><code class="descname">DisconnectGoogle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#DisconnectGoogle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.DisconnectGoogle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect from Google by Revoking access to a User&#8217;s Google Profile</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>Response: A varying response depending upon the success or failure in</dt>
+<dd>revoking the app&#8217;s usage of the logged in user&#8217;s Google Profile.</dd>
+</dl>
+</dd>
+<dt>Raises:</dt>
+<dd><dl class="first last docutils">
+<dt>TokenRevokeError: Google was unable to revoke the connection between this</dt>
+<dd>app and their Google profile.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.canAlter">
+<code class="descclassname">catalog.auth.</code><code class="descname">canAlter</code><span class="sig-paren">(</span><em>userID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#canAlter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.canAlter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Confirms that the user specified by the given user id is the one currently
+in the login_session.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>userID (int): An ID corresponding to a User record in the database.</dd>
+<dt>Returns:</dt>
+<dd>True if the specified user is also the currently authorized user in the
+login_session.  False if it is a different user.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.createResponse">
+<code class="descclassname">catalog.auth.</code><code class="descname">createResponse</code><span class="sig-paren">(</span><em>res</em>, <em>status</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#createResponse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.createResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a response to a Request to one of the App&#8217;s endpoints.</p>
+<p>When the routes for connecting/disconnecting to Google+ are called,
+this function will be used to send various responses to those requests.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>res (object): A response with information pertinent to a request for</dt>
+<dd>Connect and Disconnect to and from Google+</dd>
+<dt>status (int): Depending upon the result of processing the request, this</dt>
+<dd>will indicate whether or not the request was successful.</dd>
+</dl>
+</dd>
+<dt>Returns:</dt>
+<dd>Response: A response in json format containing the data passed in via
+the res and status arguments.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.createUser">
+<code class="descclassname">catalog.auth.</code><code class="descname">createUser</code><span class="sig-paren">(</span><em>login_session</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#createUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.createUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a User to the database using the current information stored in the
+login session.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>login_session (dict): Dictionary containing information about the current
+login session, including the user&#8217;s profile information from Google+</dd>
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>int: The user_id from the newly created record in the User table in</dt>
+<dd>the database.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.getLoginSessionState">
+<code class="descclassname">catalog.auth.</code><code class="descname">getLoginSessionState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#getLoginSessionState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.getLoginSessionState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the Login Session&#8217;s state.</p>
+<p>The State is assigned to the Login Session when a user logs in to the App.
+This is a specific string used to validate the session.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>string: The state is generated upon user login and added to the login</dt>
+<dd>session and returned.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.getSessionUserInfo">
+<code class="descclassname">catalog.auth.</code><code class="descname">getSessionUserInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#getSessionUserInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.getSessionUserInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return profile information for the user currently logged in.</p>
+<dl class="docutils">
+<dt>Note:</dt>
+<dd>The profiles for the User records generated using the populator module
+obviously won&#8217;t have valid information related to Google+.</dd>
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>dict: Basic profile information for the login_session user.</dt>
+<dd>Including:
+user_id: Their User record in the database.
+name: Their name (from their Google+ Profile)
+email: Their email (also taken from their Google+ Profile)</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.getUserID">
+<code class="descclassname">catalog.auth.</code><code class="descname">getUserID</code><span class="sig-paren">(</span><em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#getUserID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.getUserID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a User record from the Database via their User id.</p>
+<dl class="docutils">
+<dt>Note:</dt>
+<dd>Any information regarding usage or something the caller of the function
+should know when using it.</dd>
+<dt>Args:</dt>
+<dd>user_id (int): The key/primary key in the User table</dd>
+<dt>Returns:</dt>
+<dd><dl class="first last docutils">
+<dt>User: returns an instance of the models.User class populated with</dt>
+<dd>the user&#8217;s information.</dd>
+</dl>
+</dd>
+<dt>Raises:</dt>
+<dd>NoResultFound: No user was found with the given email.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.getUserInfo">
+<code class="descclassname">catalog.auth.</code><code class="descname">getUserInfo</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#getUserInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.getUserInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a User record from the Database via their User id.</p>
+<dl class="docutils">
+<dt>Note:</dt>
+<dd>Any information regarding usage or something the caller of the function
+should know when using it.</dd>
+<dt>Args:</dt>
+<dd>user_id (int): The key/primary key in the User table</dd>
+<dt>Returns:</dt>
+<dd><dl class="first docutils">
+<dt>User: returns an instance of the models.User class populated with</dt>
+<dd>the user&#8217;s information.</dd>
+</dl>
+<p class="last">If no user is found, None is returned.</p>
+</dd>
+<dt>Raises:</dt>
+<dd>NoResultFound: No user was found with the given user id.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.isActiveSession">
+<code class="descclassname">catalog.auth.</code><code class="descname">isActiveSession</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#isActiveSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.isActiveSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the current session is active by checking if a username is
+associated with the session.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>True if the session is active, otherwise False for an inactive session.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-catalog.database">
+<span id="catalog-database-module"></span><h2>catalog.database module<a class="headerlink" href="#module-catalog.database" title="Permalink to this headline">¶</a></h2>
+<p>This is the database module for the Catalog app.
+The module provides a method for initialzing the database connection/session.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><p class="first">engine:     The SQLAlchemy connection to the app&#8217;s database.</p>
+<dl class="docutils">
+<dt>DBSession:  The SQLAlchemy database session for making queries against</dt>
+<dd>the models and data conatined in the database.</dd>
+</dl>
+<p>session:    Provides a scoped session of the above session.
+Base:       The Base class of each class in the Database Model. Uses the
+scoped session to provide the query property to each class that inherits
+from it.</p>
+<p class="last">app:        The Flask App instance, provides the Database directive.</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="catalog.database.init_db">
+<code class="descclassname">catalog.database.</code><code class="descname">init_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/database.html#init_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.database.init_db" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialize the Database.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-catalog.models">
+<span id="catalog-models-module"></span><h2>catalog.models module<a class="headerlink" href="#module-catalog.models" title="Permalink to this headline">¶</a></h2>
+<p>This is the models module for the Catalog app.
+The module creates the ORM model connecting classes to tables in the database.</p>
+<p>The classes are User, Category and Item</p>
+<p>The traits module is used for generating forms and views of instances of each
+class/object.</p>
+<p>A model uses Default Traits for plain views that offer no editing and
+a traits property for views that do.</p>
+<dl class="class">
+<dt id="catalog.models.Category">
+<em class="property">class </em><code class="descclassname">catalog.models.</code><code class="descname">Category</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Items in the Catalog are each assigned to a Category that pertains to
+the activity or sport associated with the item.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd>name (string):          The Category name.
+id (integer):           The primary key/id
+user_id (integer):      The user id of the Category&#8217;s creator.
+items (relationship):   Defines the list of items in the Category.
+query (Query):          Shortcut for Querying the Category table</dd>
+</dl>
+<dl class="staticmethod">
+<dt id="catalog.models.Category.categories">
+<em class="property">static </em><code class="descname">categories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.categories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.categories" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of all Category names in the table.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A list containg the names of each Category int the table.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.creator">
+<code class="descname">creator</code><a class="headerlink" href="#catalog.models.Category.creator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The name of the user who created the Category in the Table.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>string: The user name who created the Category.</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="catalog.models.Category.defaultTraits">
+<em class="property">static </em><code class="descname">defaultTraits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.defaultTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.defaultTraits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The default traits of Category</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A list of Trait objects describing the attributes of a Category
+that can be viewed.</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="catalog.models.Category.findByID">
+<em class="property">static </em><code class="descname">findByID</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.findByID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.findByID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a Category in the table using its id.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>id (int): The primary key or id of the Category in the table.</dd>
+<dt>Returns:</dt>
+<dd>A Category object with the given id.</dd>
+</dl>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="catalog.models.Category.findByName">
+<em class="property">static </em><code class="descname">findByName</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.findByName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.findByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find a Category in the table by its name.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>name (string): The Category name to find.</dd>
+<dt>Returns:</dt>
+<dd>A Category record from the database that has the specified name.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.id">
+<code class="descname">id</code><a class="headerlink" href="#catalog.models.Category.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.items">
+<code class="descname">items</code><a class="headerlink" href="#catalog.models.Category.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.name">
+<code class="descname">name</code><a class="headerlink" href="#catalog.models.Category.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.query">
+<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x000000000537E898&gt;</em><a class="headerlink" href="#catalog.models.Category.query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.serialize">
+<code class="descname">serialize</code><a class="headerlink" href="#catalog.models.Category.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize the properties of a Category instance.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>dict: A Dictionary describing key attributes of a Category instance</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="catalog.models.Category.traits">
+<code class="descname">traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The attributes and values of an instance of the Category class.</p>
+<p>When presenting a view to a web user, the traits are parsed and
+displayed in a form or list in a format determined by the type
+of each attribute&#8217;s associated Trait Class.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A list containing the Traits for each attribute to be displayed
+in a view of a Category instance.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#catalog.models.Category.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="catalog.models.Item">
+<em class="property">class </em><code class="descclassname">catalog.models.</code><code class="descname">Item</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Item"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Item" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Items in the Catalog are each created by a User and belong to a specific
+Category.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><p class="first">name (string):          The Item name.
+id (integer):           The primary key/id
+cat_id (integer)        The primary key/id for the Item&#8217;s Category
+user_id (integer):      The primary key/id for the Item&#8217;s creator
+picture (string):       The url to the item&#8217;s picture in the local
+filesystem.</p>
+<p class="last">description (string):   The Item&#8217;s description.
+dateCreated (date):     The Date the Item was created.
+query (Query):          Shortcut for Querying the Item table.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="catalog.models.Item.User">
+<code class="descname">User</code><a class="headerlink" href="#catalog.models.Item.User" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.cat_id">
+<code class="descname">cat_id</code><a class="headerlink" href="#catalog.models.Item.cat_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.category">
+<code class="descname">category</code><a class="headerlink" href="#catalog.models.Item.category" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.creator">
+<code class="descname">creator</code><a class="headerlink" href="#catalog.models.Item.creator" title="Permalink to this definition">¶</a></dt>
+<dd><p>The user name of the Item&#8217;s creator.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>string: The name of the user that created the Item record.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.dateCreated">
+<code class="descname">dateCreated</code><a class="headerlink" href="#catalog.models.Item.dateCreated" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="catalog.models.Item.defaultTraits">
+<em class="property">static </em><code class="descname">defaultTraits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Item.defaultTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Item.defaultTraits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The attribute names for the Item Class.</p>
+<p>When creating a new item via a form, the default traits are used to
+describe the properties that define an Item in the Catalog.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>Each Trait in the list describes a property of the Item to be
+created.  The Trait&#8217;s type changes how it is rendered when
+presented to the user.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.describe">
+<code class="descname">describe</code><a class="headerlink" href="#catalog.models.Item.describe" title="Permalink to this definition">¶</a></dt>
+<dd><p>Describe an Item by its name and the name of its Category.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>string: A descriptive string including the Item name and Category.</dd>
+<dt>Example:</dt>
+<dd>&#8220;Stick (Hockey)&#8221;</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.description">
+<code class="descname">description</code><a class="headerlink" href="#catalog.models.Item.description" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.id">
+<code class="descname">id</code><a class="headerlink" href="#catalog.models.Item.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.name">
+<code class="descname">name</code><a class="headerlink" href="#catalog.models.Item.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.picture">
+<code class="descname">picture</code><a class="headerlink" href="#catalog.models.Item.picture" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.query">
+<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x000000000537ECC0&gt;</em><a class="headerlink" href="#catalog.models.Item.query" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.serialize">
+<code class="descname">serialize</code><a class="headerlink" href="#catalog.models.Item.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize the properties of a Item instance.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>dict: A Dictionary describing key attributes for an Item instance.</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="catalog.models.Item.traits">
+<code class="descname">traits</code><span class="sig-paren">(</span><em>isEdit=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Item.traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Item.traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The attributes and values of an instance of the Item class.</p>
+<p>When presenting a view to a web user, the traits are parsed and
+displayed in a form or list in a format determined by the type
+of each attribute&#8217;s associated Trait Class.</p>
+<dl class="docutils">
+<dt>Notes:</dt>
+<dd>Traits for generating a form for view and edit. An ImageUploadTrait
+is added for the edit view (specify isEdit as True).</dd>
+<dt>Args:</dt>
+<dd>isEdit (Boolean): True means an edit view will be generated
+from the Traits of the Item. False means that it will just display
+the values of each Trait. (no HTML Form)</dd>
+<dt>Returns:</dt>
+<dd><p class="first">A list containing the Traits for each attribute to be displayed
+in a view of an Item instance.</p>
+<p class="last">If isEdit is True a Trait will be included that allows the user to
+upload an Image for the item.  Otherwise, the Item attributes will
+be displayed as a list of property name/value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#catalog.models.Item.user_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="catalog.models.User">
+<em class="property">class </em><code class="descclassname">catalog.models.</code><code class="descname">User</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
+<p>Users of the Catalog are each assigned a User record that is associated
+with the Items and Categories they create, and by extension, can edit and
+delete.  Their profile information is pulled from their Google+ profile.</p>
+<dl class="docutils">
+<dt>Attributes:</dt>
+<dd><p class="first">name (string):              The User name.
+id (integer):               The primary key/id
+email (string):             The User&#8217;s email address.
+picture (string):           The url to the user&#8217;s picture in the local
+filesystem or to the url of their profile picture from Google+</p>
+<p class="last">items (relationship):       Defines the list of items the User has created.
+categories (relationship):  List of Categories created by the User.
+query (Query):              Shortcut for Querying the User table.</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="catalog.models.User.categories">
+<code class="descname">categories</code><a class="headerlink" href="#catalog.models.User.categories" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="catalog.models.User.defaultTraits">
+<em class="property">static </em><code class="descname">defaultTraits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#User.defaultTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.User.defaultTraits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The attribute names for the User Class.</p>
+<p>When creating the new user via a form, the default traits are used to
+describe the properties that a user needs to provide information for.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A list containing the Traits for each attribute to be displayed
+in a form for creating an instance of the User class.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.email">
+<code class="descname">email</code><a class="headerlink" href="#catalog.models.User.email" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.id">
+<code class="descname">id</code><a class="headerlink" href="#catalog.models.User.id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.items">
+<code class="descname">items</code><a class="headerlink" href="#catalog.models.User.items" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.name">
+<code class="descname">name</code><a class="headerlink" href="#catalog.models.User.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="catalog.models.User.nameByID">
+<em class="property">static </em><code class="descname">nameByID</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#User.nameByID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.User.nameByID" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve a user&#8217;s name by their user id.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>user_id (int): The primary key of the User in the table.</dd>
+<dt>Returns:</dt>
+<dd>string: The name of the user associated with the given user id.</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.picture">
+<code class="descname">picture</code><a class="headerlink" href="#catalog.models.User.picture" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.serialize">
+<code class="descname">serialize</code><a class="headerlink" href="#catalog.models.User.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serialize the properties of a User instance.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>dict: A Dictionary describing key attributes of a User instance</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="catalog.models.User.traits">
+<code class="descname">traits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#User.traits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.User.traits" title="Permalink to this definition">¶</a></dt>
+<dd><p>The attributes and values of an instance of the User class.</p>
+<p>When presenting a view to a web user, the traits are parsed and
+displayed in a form or list in a format determined by the type
+of each attribute&#8217;s associated Trait Class.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A list containing the Traits for each attribute to be displayed
+in a view of a User instance.</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-catalog.urls">
+<span id="catalog-urls-module"></span><h2>catalog.urls module<a class="headerlink" href="#module-catalog.urls" title="Permalink to this headline">¶</a></h2>
+<p>Generate urls for a Flask App for CRUD and list operations.</p>
+<p>This module is used to generate routes for a Flask application given:</p>
+<p>1. The lowercase name of the class that corresponds to an SQLAlchemy Data
+Model.</p>
+<ol class="arabic simple" start="2">
+<li>The id or primary key for an instance of that class in the database.</li>
+</ol>
+<dl class="class">
+<dt id="catalog.urls.Urls">
+<em class="property">class </em><code class="descclassname">catalog.urls.</code><code class="descname">Urls</code><span class="sig-paren">(</span><em>suffix</em>, <em>object_id=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/urls.html#Urls"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.urls.Urls" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="docutils">
+<dt>Generate a series of urls that are paths to routes for listing, viewing,</dt>
+<dd><p class="first">editing, deleting or creating instances of a specified class.</p>
+<dl class="last docutils">
+<dt>Notes:</dt>
+<dd>see <a class="reference external" href="http://flask.pocoo.org/docs/0.10/templating/#context-processors">http://flask.pocoo.org/docs/0.10/templating/#context-processors</a>
+for more about context processors</dd>
+<dt>Args:</dt>
+<dd><dl class="first last docutils">
+<dt>suffix (string): Lowercase name of a class in the database.</dt>
+<dd>(i.e. category, user, item)</dd>
+<dt>key (integer): A primary key value in the database that matches</dt>
+<dd>a record for the class in suffix,</dd>
+</dl>
+</dd>
+<dt>Attributes:</dt>
+<dd><dl class="first docutils">
+<dt>suffix (string): Lowercase representation of a class in the database.</dt>
+<dd>(Category, User, Item)</dd>
+<dt>key (integer): A primary key value in the database that matches</dt>
+<dd>a record for the class in suffix,</dd>
+</dl>
+<p>Each of these routes refers to an operation on a record from the database
+table that matches the value of suffix and primary key in key.</p>
+<p class="last">deleteUrl (string):     root/suffix/key/delete
+editUrl (string):       root/suffix/key/edit
+viewUrl (string):       root/suffix/key
+newUrl (string):        root/suffix/add
+listUrl (string):       root/suffix + &#8220;s&#8221;
+listString (string):    &#8220;Back to Suffix&#8221; + &#8220;s.&#8221;</p>
+</dd>
+</dl>
+</dd>
+<dt>Examples:</dt>
+<dd><p class="first">For an app with /catalog as the root path/url,</p>
+<p>urls = makeUrls(&#8216;item&#8217;, 1)
+urls would return an object with the following properties/values.</p>
+<p class="last">urls.suffix         &#8220;item&#8221;
+urls.key            1
+urls.deleteUrl      /catalog/item/1/delete
+urls.editUrl        /catalog/item/1/edit
+urls.viewUrl        /catalog/item/1
+urls.newUrl         /catalog/item/add
+urls.listUrl        /catalog/items
+urls.listString     &#8220;Back to Items.&#8221;</p>
+</dd>
+</dl>
+<dl class="attribute">
+<dt id="catalog.urls.Urls.deleteUrl">
+<code class="descname">deleteUrl</code><a class="headerlink" href="#catalog.urls.Urls.deleteUrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.urls.Urls.editUrl">
+<code class="descname">editUrl</code><a class="headerlink" href="#catalog.urls.Urls.editUrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.urls.Urls.key">
+<code class="descname">key</code><a class="headerlink" href="#catalog.urls.Urls.key" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.urls.Urls.listString">
+<code class="descname">listString</code><a class="headerlink" href="#catalog.urls.Urls.listString" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.urls.Urls.listUrl">
+<code class="descname">listUrl</code><a class="headerlink" href="#catalog.urls.Urls.listUrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.urls.Urls.newUrl">
+<code class="descname">newUrl</code><a class="headerlink" href="#catalog.urls.Urls.newUrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.urls.Urls.suffix">
+<code class="descname">suffix</code><a class="headerlink" href="#catalog.urls.Urls.suffix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.urls.Urls.viewUrl">
+<code class="descname">viewUrl</code><a class="headerlink" href="#catalog.urls.Urls.viewUrl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-catalog.views">
+<span id="catalog-views-module"></span><h2>catalog.views module<a class="headerlink" href="#module-catalog.views" title="Permalink to this headline">¶</a></h2>
+<p>This is the views module for the Catalog app.
+The module provides routes to create a RESTful api to create, read,
+update and delete records for the following elements in the Catalog:</p>
+<p>User, Category and Item</p>
+<p>There are routes to authorize a user using the OAuth2 api provided by Google
+to connect and disconnect a user via their Google+ profile.</p>
+<p>There are two endpoints provided to return the entirety of the Catalog
+in JSON or XML.</p>
+<p>The module also includes a handful of context processor&#8217;s for its flask app.
+These functions allow the jinja2 templates, which provide the views to the
+web client, with means of accessing variables and functions in the Python
+modules and code.</p>
+<dl class="function">
+<dt id="catalog.views.allowed_image">
+<code class="descclassname">catalog.views.</code><code class="descname">allowed_image</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#allowed_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.allowed_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if the specified file has the proper extension to be classified
+as an image.</p>
+<dl class="docutils">
+<dt>Note:</dt>
+<dd>From flask docs, checks that uploaded images have specific file extensions
+<a class="reference external" href="http://flask.pocoo.org/docs/0.10/patterns/fileuploads/">http://flask.pocoo.org/docs/0.10/patterns/fileuploads/</a></dd>
+<dt>Args:</dt>
+<dd>filename (string): The filename to be validated as an acceptable image type.</dd>
+<dt>Returns:</dt>
+<dd>True if the file is a proper image file, based upon its extension.
+False if it is not considered a valid image type.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.canalter_processor">
+<code class="descclassname">catalog.views.</code><code class="descname">canalter_processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#canalter_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.canalter_processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refer to <code class="xref py py-func docutils literal"><span class="pre">canAlter()</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.catalogJSON">
+<code class="descclassname">catalog.views.</code><code class="descname">catalogJSON</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#catalogJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.catalogJSON" title="Permalink to this definition">¶</a></dt>
+<dd><p>JSON endpoint that returns information about the entire Catalog.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A GET request returns the Catalog&#8217;s information in JSON</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.catalogXML">
+<code class="descclassname">catalog.views.</code><code class="descname">catalogXML</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#catalogXML"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.catalogXML" title="Permalink to this definition">¶</a></dt>
+<dd><p>XML endpoint that returns information about the entire Catalog.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A GET request returns the Catalog&#8217;s information in XML</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.delItem">
+<code class="descclassname">catalog.views.</code><code class="descname">delItem</code><span class="sig-paren">(</span><em>item_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#delItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.delItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the view for Deleting an Item in a Category.</p>
+<p>Requires a user to be authenticated and to have created the item.</p>
+<dl class="docutils">
+<dt>Notes:</dt>
+<dd>The actual deletion operation, when a POST request is sent, is
+performed by the deleteItem function.</dd>
+<dt>Args:</dt>
+<dd><p class="first">category_name (string): The Category name of the Item to delete.</p>
+<p class="last">item_name (string):     The name of the Item to delete.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>A GET request presents the user with choices for deleting the Item or
+canceling the operation.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.deleteCategory">
+<code class="descclassname">catalog.views.</code><code class="descname">deleteCategory</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#deleteCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.deleteCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow an Authorized User to delete a new Category or Process the
+deletion of a Category.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): The primary key of the category.</dd>
+<dt>Returns:</dt>
+<dd><p class="first">For a GET operation returns a View querying whether the user wants to
+delete the Category or cancel and go back to viewing it.</p>
+<p class="last">A successful POST request deletes the Category and redirects to the
+list of Categories.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.deleteItem">
+<code class="descclassname">catalog.views.</code><code class="descname">deleteItem</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#deleteItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.deleteItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete an Item selected by its primary key/id.</p>
+<p>Requires a user to be authenticated and to have created the item.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): The primary key of the Item to delete.</dd>
+<dt>Returns:</dt>
+<dd>A GET request presents the user with choices for deleting the Item or
+canceling the operation.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.deleteUser">
+<code class="descclassname">catalog.views.</code><code class="descname">deleteUser</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#deleteUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.deleteUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Present the Web User with a Delete View for the their User account.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): An ID corresponding to a User record in the database.</dd>
+<dt>Returns:</dt>
+<dd><p class="first">For a GET operation returns a Web View containing buttons for
+canceling or submitting the delete user request.</p>
+<p class="last">A successful POST request would delete the User&#8217;s record, sign them out
+and revoke the app&#8217;s authorization to use their Google profile</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.editCatItem">
+<code class="descclassname">catalog.views.</code><code class="descname">editCatItem</code><span class="sig-paren">(</span><em>category_name</em>, <em>item_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#editCatItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.editCatItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit an Item in a Category.</p>
+<p>Requires a user to be authenticated and to have created the item.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd><p class="first">category_name (string): The Category of the Item to edit.</p>
+<p class="last">item_name (string): The name of the Item to Edit.</p>
+</dd>
+<dt>Returns:</dt>
+<dd><p class="first">A GET request presents the user with a form for editing an Item.</p>
+<p class="last">A POST request processes the user&#8217;s input from the form and updates the
+item.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.editCategory">
+<code class="descclassname">catalog.views.</code><code class="descname">editCategory</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#editCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.editCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow an Authorized User to edit a new Category or Process the form for
+editing a Category.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): The primary key of the category.</dd>
+<dt>Returns:</dt>
+<dd><p class="first">For a GET operation returns a Web View containing a form for altering
+data for the category.</p>
+<p class="last">A successful POST request directs presents a View of the new Category.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.editItem">
+<code class="descclassname">catalog.views.</code><code class="descname">editItem</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#editItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.editItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Edit an Item in a Category.</p>
+<p>Requires a user to be authenticated and to have created the item.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): The primary key of the Item to Edit.</dd>
+<dt>Returns:</dt>
+<dd><p class="first">A GET request presents the user with a form for editing an Item.</p>
+<p class="last">A POST request processes the user&#8217;s input from the form and updates the
+item.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.editUser">
+<code class="descclassname">catalog.views.</code><code class="descname">editUser</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#editUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.editUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Present the Web User with an Edit View for the their User account.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): An ID corresponding to a User record in the database.</dd>
+<dt>Returns:</dt>
+<dd><p class="first">For a GET operation returns a Web View containing a form for editing
+data for the user.</p>
+<p class="last">A successful POST request directs presents the updated Record view.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.gconnect">
+<code class="descclassname">catalog.views.</code><code class="descname">gconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#gconnect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.gconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refer to <code class="xref py py-func docutils literal"><span class="pre">ConnectGoogle()</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.gdisconnect">
+<code class="descclassname">catalog.views.</code><code class="descname">gdisconnect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#gdisconnect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.gdisconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refer to <code class="xref py py-func docutils literal"><span class="pre">DisconnectGoogle()</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.getcategories_processor">
+<code class="descclassname">catalog.views.</code><code class="descname">getcategories_processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#getcategories_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.getcategories_processor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.getplural_processor">
+<code class="descclassname">catalog.views.</code><code class="descname">getplural_processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#getplural_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.getplural_processor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.getsessionuserinfo_processor">
+<code class="descclassname">catalog.views.</code><code class="descname">getsessionuserinfo_processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#getsessionuserinfo_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.getsessionuserinfo_processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refer to <code class="xref py py-func docutils literal"><span class="pre">getSessionUserInfo()</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.hasattr_processor">
+<code class="descclassname">catalog.views.</code><code class="descname">hasattr_processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#hasattr_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.hasattr_processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provide templates with the ability to check if a python object contains
+the specified attribute</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>o (object): The object to check.
+attr (string): The name of the attribute to look for in object, o.</dd>
+<dt>Returns:</dt>
+<dd>True if object o has the attribute.
+False if there is no attribute with the value of attr in object o.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.isactivesession_processor">
+<code class="descclassname">catalog.views.</code><code class="descname">isactivesession_processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#isactivesession_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.isactivesession_processor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Refer to <code class="xref py py-func docutils literal"><span class="pre">isActiveSession()</span></code></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.itemJSON">
+<code class="descclassname">catalog.views.</code><code class="descname">itemJSON</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#itemJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.itemJSON" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return information about a Catalog Item in JSON.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): The primary key of the item to retrieve.</dd>
+<dt>Returns:</dt>
+<dd>A GET request returns information about an item in JSON</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.listCategory">
+<code class="descclassname">catalog.views.</code><code class="descname">listCategory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#listCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.listCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>A View containing the list of Categories.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>Presents the user with a list of all user Categories</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.listCategoryItem">
+<code class="descclassname">catalog.views.</code><code class="descname">listCategoryItem</code><span class="sig-paren">(</span><em>category_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#listCategoryItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.listCategoryItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all Items in a category.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>category_name (string): The category of items to be viewed.</dd>
+<dt>Returns:</dt>
+<dd>A GET request presents the user with the list of all items belonging to
+the specified category.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.listItem">
+<code class="descclassname">catalog.views.</code><code class="descname">listItem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#listItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.listItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>List all Items in the catalog.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>A GET request presents the user with the list of all catalog items.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.listUser">
+<code class="descclassname">catalog.views.</code><code class="descname">listUser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#listUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.listUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Present the Web User with an Edit View for the their User account.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>Presents the user with a list of all user Names</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.makeurls_processor">
+<code class="descclassname">catalog.views.</code><code class="descname">makeurls_processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#makeurls_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.makeurls_processor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.newCategory">
+<code class="descclassname">catalog.views.</code><code class="descname">newCategory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#newCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.newCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Allow an Authorized User to add a new Category or Process the form for
+adding a new Category.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><p class="first">For a GET operation returns a Web View containing a form for entering
+data for the new user.</p>
+<p class="last">A successful POST request directs presents a View of the new Category.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.newItem">
+<code class="descclassname">catalog.views.</code><code class="descname">newItem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#newItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.newItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>This route is used behind the scenes to view an item.  It forwards
+the request on to viewCatItem.  Requires a user to be authenticated.</p>
+<dl class="docutils">
+<dt>Notes:</dt>
+<dd>This route could be changed to reflect which category it will be in.</dd>
+<dt>Returns:</dt>
+<dd><p class="first">A GET request presents the user with a form for creating a new Item.</p>
+<p class="last">A POST request processes the user&#8217;s input from the form and adds the
+new item.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.newUser">
+<code class="descclassname">catalog.views.</code><code class="descname">newUser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#newUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.newUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Present an Authorized Web User with a View for adding a new user.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd><p class="first">For a GET operation returns a Web View containing a form for entering
+data for the new user.</p>
+<p class="last">A successful POST request directs presents a View of the new Record.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.processImageUpload">
+<code class="descclassname">catalog.views.</code><code class="descname">processImageUpload</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#processImageUpload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.processImageUpload" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process an uploaded image.  If it&#8217;s a valid file type, then save the file
+and return the local url.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>image (file): A file passed via a request that was submitted via a Web Form.</dd>
+<dt>Returns:</dt>
+<dd>The local path to the file for the image, this provides a url that can
+be referred to in a database record.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.viewCatItem">
+<code class="descclassname">catalog.views.</code><code class="descname">viewCatItem</code><span class="sig-paren">(</span><em>category_name</em>, <em>item_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#viewCatItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.viewCatItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Present a view of an item that belongs to a specific Category</p>
+<dl class="docutils">
+<dt>Note:</dt>
+<dd>This route is typically redirected to behind the scenes.  Which
+allows for a legible URL to be seen by the user.  The item record
+already contains it&#8217;s category id.</dd>
+<dt>Returns:</dt>
+<dd>A Web view containing information about an item, including its Category
+in the URL displayed in the browser.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.viewCategory">
+<code class="descclassname">catalog.views.</code><code class="descname">viewCategory</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#viewCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.viewCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>A View of a specific Category&#8217;s record.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): The primary key of the category.</dd>
+<dt>Returns:</dt>
+<dd>Presents the user with a list of all Categories</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.viewItem">
+<code class="descclassname">catalog.views.</code><code class="descname">viewItem</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#viewItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.viewItem" title="Permalink to this definition">¶</a></dt>
+<dd><p>This route is used behind the scenes to view an item.  It forwards
+the request on to viewCatItem.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): The primary key of the item.</dd>
+<dt>Returns:</dt>
+<dd>The result returned from viewCatItem</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.views.viewUser">
+<code class="descclassname">catalog.views.</code><code class="descname">viewUser</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#viewUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.viewUser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Present the Web User with a View for the Item with the id equal to key.</p>
+<dl class="docutils">
+<dt>Args:</dt>
+<dd>key (int): An ID corresponding to a User record in the database.</dd>
+<dt>Returns:</dt>
+<dd>The updated View in the User&#8217;s browser that corresponds to the
+requested user.</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-catalog">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-catalog" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="catalog.trait.html" class="btn btn-neutral float-right" title="catalog.trait package" accesskey="n">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to catalog’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Author.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
