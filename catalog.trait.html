@@ -161,40 +161,53 @@ The asInputElement method is used for creating html forms from the trait&#8217;s
 <dd><p>Bases: <a class="reference internal" href="#catalog.trait.trait.Trait" title="catalog.trait.trait.Trait"><code class="xref py py-class docutils literal"><span class="pre">catalog.trait.trait.Trait</span></code></a></p>
 <p>A Trait for a property that is best represented as a date that includes
 the year, month and day.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd>inputTemplate (string): Template for Generating an html &#8216;date&#8217; input.
-name (string):          The label or property name.
-value (string):         The date value associated with the property.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>inputTemplate</strong> (<em>string</em>) &#8211; Template for Generating an html &#8216;date&#8217; input.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The label or property name.</li>
+<li><strong>value</strong> (<em>string</em>) &#8211; The date value associated with the property.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="catalog.trait.trait.DateTrait.asInputElement">
 <code class="descname">asInputElement</code><span class="sig-paren">(</span><em>formName</em>, <em>withValue=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#DateTrait.asInputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.DateTrait.asInputElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render as an HTML date input element.</p>
 <p>Provides a calender like functionality or manually inputting the
 year, month and day.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">formName (string):      The HTML form&#8217;s name attribute.
-withValue (Boolean):    A Date Trait always presents a date value,</p>
-<blockquote class="last">
-<div>either a default that is today&#8217;s date, or one passed in.</div></blockquote>
-</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: Formatted HTML table row containing two table data</dt>
-<dd>elements. One for the property name as a label and another that
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>formName</strong> (<em>string</em>) &#8211; The HTML form&#8217;s name attribute.</li>
+<li><strong>withValue</strong> (<em>Boolean</em>) &#8211; A Date Trait always presents a date value,
+either a default that is today&#8217;s date, or one passed in.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Formatted HTML table row containing two table data
+elements. One for the property name as a label and another that
 contains the Date input set to today&#8217;s date or the date passed
-during the creation of the object.</dd>
-</dl>
-</dd>
-</dl>
+during the creation of the object.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="catalog.trait.trait.DateTrait.asOutputElement">
 <code class="descname">asOutputElement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#DateTrait.asOutputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.DateTrait.asOutputElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Refer to <a href="#id1"><span class="problematic" id="id2">:py:method:`~Trait.asOutputElement`</span></a></p>
+<dd><p>Refer to <a class="reference internal" href="#catalog.trait.trait.Trait.asOutputElement" title="catalog.trait.trait.Trait.asOutputElement"><code class="xref py py-meth docutils literal"><span class="pre">asOutputElement()</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -206,10 +219,16 @@ during the creation of the object.</dd>
 <dt id="catalog.trait.trait.DateTrait.isImage">
 <code class="descname">isImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#DateTrait.isImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.DateTrait.isImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does this Trait refer to an Image element?</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Boolean: A Date input element is not an image, so False.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Date input element is not an image, so False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -219,41 +238,52 @@ during the creation of the object.</dd>
 <em class="property">class </em><code class="descclassname">catalog.trait.trait.</code><code class="descname">ImageTrait</code><span class="sig-paren">(</span><em>name</em>, <em>url=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#ImageTrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.ImageTrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#catalog.trait.trait.Trait" title="catalog.trait.trait.Trait"><code class="xref py py-class docutils literal"><span class="pre">catalog.trait.trait.Trait</span></code></a></p>
 <p>A Trait that represents an HTML image element.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><p class="first">inputType (string):     This will be a &#8216;text&#8217; input element.
-inputTemplate (string): Generate&#8217;s an html input of type &#8216;text&#8217;
-name (string):          The property name for the element. Used</p>
-<blockquote>
-<div>to retrieve data from the form in a request.</div></blockquote>
-<p class="last">url (string):           The url associated with the image.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>inputType</strong> (<em>string</em>) &#8211; This will be a &#8216;text&#8217; input element.</li>
+<li><strong>inputTemplate</strong> (<em>string</em>) &#8211; Generate&#8217;s an html input of type &#8216;text&#8217;</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The property name for the element. Used
+to retrieve data from the form in a request.</li>
+<li><strong>url</strong> (<em>string</em>) &#8211; The url associated with the image.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="catalog.trait.trait.ImageTrait.asInputElement">
 <code class="descname">asInputElement</code><span class="sig-paren">(</span><em>formName</em>, <em>withValue=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#ImageTrait.asInputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.ImageTrait.asInputElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render the Trait as a text input in as part of an HTML form.
 Manually enter the URL for an image, as opposed to uploading it.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">formName (string):      The HTML form&#8217;s name attribute.
-withValue (Boolean):    A form for a new object will not have any</p>
-<blockquote class="last">
-<div>values.  But a form that is for editing an existing object will.</div></blockquote>
-</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: The formatted output of the combination of the</dt>
-<dd>inputTemplate and traitTemplate.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>formName</strong> (<em>string</em>) &#8211; The HTML form&#8217;s name attribute.</li>
+<li><strong>withValue</strong> (<em>Boolean</em>) &#8211; A form for a new object will not have any
+values.  But a form that is for editing an existing object will.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The formatted output of the combination of the inputTemplate
+and traitTemplate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="catalog.trait.trait.ImageTrait.asOutputElement">
 <code class="descname">asOutputElement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#ImageTrait.asOutputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.ImageTrait.asOutputElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Refer to <a href="#id3"><span class="problematic" id="id4">:py:method:`~Trait.asOutputElement`</span></a></p>
+<dd><p>Refer to <a class="reference internal" href="#catalog.trait.trait.Trait.asOutputElement" title="catalog.trait.trait.Trait.asOutputElement"><code class="xref py py-meth docutils literal"><span class="pre">asOutputElement()</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -265,10 +295,16 @@ withValue (Boolean):    A form for a new object will not have any</p>
 <dt id="catalog.trait.trait.ImageTrait.isImage">
 <code class="descname">isImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#ImageTrait.isImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.ImageTrait.isImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does this Trait refer to an Image element?</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Boolean: This will be an image element, so True.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">This will be an image element, so True.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -283,54 +319,70 @@ withValue (Boolean):    A form for a new object will not have any</p>
 <em class="property">class </em><code class="descclassname">catalog.trait.trait.</code><code class="descname">ImageUploadTrait</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#ImageUploadTrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.ImageUploadTrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#catalog.trait.trait.Trait" title="catalog.trait.trait.Trait"><code class="xref py py-class docutils literal"><span class="pre">catalog.trait.trait.Trait</span></code></a></p>
 <p>A Trait that represents an HTML element for uploading a image file.</p>
-<dl class="docutils">
-<dt>Notes:</dt>
-<dd>This could be generalized into just an UploadTrait and apply to
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This could be generalized into just an UploadTrait and apply to
 files of any type. This Trait is only used for Input.  An
-ImageTrait should be used for outputting an image.</dd>
-<dt>Attributes:</dt>
-<dd><p class="first">inputType (string):     This will be a &#8216;text&#8217; input element.
-inputTemplate (string): Generate&#8217;s an html input of type &#8216;text&#8217;
-name (string):          The property name for the element. Used</p>
-<blockquote class="last">
-<div>to retrieve data from the form in a request.</div></blockquote>
-</dd>
-</dl>
+ImageTrait should be used for outputting an image.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>inputType</strong> (<em>string</em>) &#8211; This will be a &#8216;text&#8217; input element.</li>
+<li><strong>inputTemplate</strong> (<em>string</em>) &#8211; Generate&#8217;s an html input of type &#8216;text&#8217;</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The property name for the element. Used
+to retrieve data from the form in a request.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="catalog.trait.trait.ImageUploadTrait.asInputElement">
 <code class="descname">asInputElement</code><span class="sig-paren">(</span><em>formName</em>, <em>withValue=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#ImageUploadTrait.asInputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.ImageUploadTrait.asInputElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render as a file upload element in an HTML form.</p>
 <p>Prompts the user to choose a file on their system to upload.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">formName (string):      The HTML form&#8217;s name attribute.
-withValue (Boolean):    A form for a new object will not have any</p>
-<blockquote class="last">
-<div>values.  But a form that is for editing an existing object will.</div></blockquote>
-</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: Formatted HTML table row containing two table data elements</dt>
-<dd>containing the property name in a button and an empty
-text element that will hold the file&#8217;s name after the user
-uploads an image file.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>formName</strong> (<em>string</em>) &#8211; The HTML form&#8217;s name attribute.</li>
+<li><strong>withValue</strong> (<em>Boolean</em>) &#8211; A form for a new object will not have any
+values.  But a form that is for editing an existing object will.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Formatted HTML table row containing two table data elements
+containing the property name in a button and an empty text element
+that will hold the file&#8217;s name after the user uploads an image
+file.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="catalog.trait.trait.ImageUploadTrait.asOutputElement">
 <code class="descname">asOutputElement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#ImageUploadTrait.asOutputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.ImageUploadTrait.asOutputElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>An Image Upload element would not be presented as an Image.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: An HTML comment describing the Output Usage for</dt>
-<dd>ImageUploadTrait</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">An HTML comment describing the Output Usage for
+ImageUploadTrait</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -342,11 +394,17 @@ uploads an image file.</dd>
 <dt id="catalog.trait.trait.ImageUploadTrait.isImage">
 <code class="descname">isImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#ImageUploadTrait.isImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.ImageUploadTrait.isImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does this Trait refer to an Image element?</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Boolean: This is not displayed as an image but as a file upload
-input, so False.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">This is not displayed as an image but as a file upload
+input, so False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -355,24 +413,26 @@ input, so False.</dd>
 <dt id="catalog.trait.trait.SelectTrait">
 <em class="property">class </em><code class="descclassname">catalog.trait.trait.</code><code class="descname">SelectTrait</code><span class="sig-paren">(</span><em>name</em>, <em>value</em>, <em>options</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#SelectTrait"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.SelectTrait" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="#catalog.trait.trait.Trait" title="catalog.trait.trait.Trait"><code class="xref py py-class docutils literal"><span class="pre">catalog.trait.trait.Trait</span></code></a></p>
-<p>A Trait for a property that is best represented by a a Select Element
+<p>A Trait for a property that is best represented by a Select Element
 with a Dropdown list of different options to choose from.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><p class="first">selectTemplate (string):    Generate&#8217;s an html &#8216;select&#8217; input
-optionTemplate (string):    A template string that represents one</p>
-<blockquote>
-<div>option element contained in a select element.</div></blockquote>
-<p>name (string):              The label or property name.
-value (string):             The string value of the currently selected</p>
-<blockquote>
-<div>option.</div></blockquote>
-<dl class="last docutils">
-<dt>options (list):             A list of strings describing the value for</dt>
-<dd>each option displayed in the drop down list of the select element.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>selectTemplate</strong> (<em>string</em>) &#8211; Generate&#8217;s an html &#8216;select&#8217; input.</li>
+<li><strong>optionTemplate</strong> (<em>string</em>) &#8211; A template string that represents one
+option element contained in a select element.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The label or property name.</li>
+<li><strong>value</strong> (<em>string</em>) &#8211; The string value of the currently selected
+option.</li>
+<li><strong>options</strong> (<em>list</em>) &#8211; A list of strings describing the value for
+each option displayed in the drop down list of the select element.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="catalog.trait.trait.SelectTrait.asInputElement">
 <code class="descname">asInputElement</code><span class="sig-paren">(</span><em>formName</em>, <em>withValue=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#SelectTrait.asInputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.SelectTrait.asInputElement" title="Permalink to this definition">¶</a></dt>
@@ -380,38 +440,50 @@ value (string):             The string value of the currently selected</p>
 form.</p>
 <p>Provides an dropdown list of options to choose from return the selected
 value as part of a form in a Request.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">formName (string):      The HTML form&#8217;s name attribute.
-withValue (Boolean):    A form for a new object will not have any</p>
-<blockquote class="last">
-<div>values.  But a form that is for editing an existing object will.</div></blockquote>
-</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: Formatted HTML table row containing two table data</dt>
-<dd>elements. One for the property name as a label and another that
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>formName</strong> (<em>string</em>) &#8211; The HTML form&#8217;s name attribute.</li>
+<li><strong>withValue</strong> (<em>Boolean</em>) &#8211; A form for a new object will not have any
+values.  But a form that is for editing an existing object will.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Formatted HTML table row containing two table data
+elements. One for the property name as a label and another that
 contains the the Select with a dropdown list of options to choose
-from.</dd>
-</dl>
-</dd>
-</dl>
+from.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="catalog.trait.trait.SelectTrait.asOutputElement">
 <code class="descname">asOutputElement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#SelectTrait.asOutputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.SelectTrait.asOutputElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Refer to <a href="#id5"><span class="problematic" id="id6">:py:method:`~Trait.asOutputElement`</span></a></p>
+<dd><p>Refer to <a class="reference internal" href="#catalog.trait.trait.Trait.asOutputElement" title="catalog.trait.trait.Trait.asOutputElement"><code class="xref py py-meth docutils literal"><span class="pre">asOutputElement()</span></code></a></p>
 </dd></dl>
 
 <dl class="method">
 <dt id="catalog.trait.trait.SelectTrait.isImage">
 <code class="descname">isImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#SelectTrait.isImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.SelectTrait.isImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does this Trait refer to an Image element?</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Boolean: A Select element is not an image, so False.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Select element is not an image, so False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -432,39 +504,49 @@ from.</dd>
 <dd><p>Bases: <a class="reference internal" href="#catalog.trait.trait.Trait" title="catalog.trait.trait.Trait"><code class="xref py py-class docutils literal"><span class="pre">catalog.trait.trait.Trait</span></code></a></p>
 <p>A Trait for a multi-line text property that is rendered as a TextArea
 HTML element.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd>inputTemplate (string):     Generate&#8217;s an html &#8216;textarea&#8217; input
-name (string):              The label or property name.
-value (string):             The value contained in the textarea.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>inputTemplate</strong> (<em>string</em>) &#8211; Generate&#8217;s an html &#8216;textarea&#8217; input.</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The label or property name.</li>
+<li><strong>value</strong> (<em>string</em>) &#8211; The value contained in the textarea.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="catalog.trait.trait.TextAreaTrait.asInputElement">
 <code class="descname">asInputElement</code><span class="sig-paren">(</span><em>formName</em>, <em>withValue=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#TextAreaTrait.asInputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.TextAreaTrait.asInputElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render as a textarea element in an HTML form.</p>
 <p>Provides an area for a longer text description of a property.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">formName (string):      The HTML form&#8217;s name attribute.
-withValue (Boolean):    A form for a new object will not have any</p>
-<blockquote class="last">
-<div>values.  But a form that is for editing an existing object will.</div></blockquote>
-</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: Formatted HTML table row containing two table data</dt>
-<dd>elements. One for the property name as a label and another that
-contains the Trait&#8217;s value (or nothing) in a textarea HTML
-element.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>formName</strong> (<em>string</em>) &#8211; The HTML form&#8217;s name attribute.</li>
+<li><strong>withValue</strong> (<em>Boolean</em>) &#8211; True builds a form for creating a new object
+that will not have any values.  False, a form that is for
+editing an existing object will.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return string:</th><td class="field-body"><p class="first last">HTML that defines a table row containing two table data
+elements. One for the property name as a label and another that
+contains the Trait&#8217;s value (or nothing) in a textarea HTML element.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="catalog.trait.trait.TextAreaTrait.asOutputElement">
 <code class="descname">asOutputElement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#TextAreaTrait.asOutputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.TextAreaTrait.asOutputElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Refer to <a href="#id7"><span class="problematic" id="id8">:py:method:`~Trait.asOutputElement`</span></a></p>
+<dd><p>Refer to <a class="reference internal" href="#catalog.trait.trait.Trait.asOutputElement" title="catalog.trait.trait.Trait.asOutputElement"><code class="xref py py-meth docutils literal"><span class="pre">asOutputElement()</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -476,10 +558,16 @@ element.</dd>
 <dt id="catalog.trait.trait.TextAreaTrait.isImage">
 <code class="descname">isImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#TextAreaTrait.isImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.TextAreaTrait.isImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does this Trait refer to an Image element?</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Boolean: A TextArea is not an image, so False.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A TextArea is not an image, so False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -490,37 +578,50 @@ element.</dd>
 <dd><p>Bases: <a class="reference internal" href="#catalog.trait.trait.Trait" title="catalog.trait.trait.Trait"><code class="xref py py-class docutils literal"><span class="pre">catalog.trait.trait.Trait</span></code></a></p>
 <p>A Trait for a property that can be represented as a Text input or
 unalterable string value in an html element.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd>inputType (string):         This will be a &#8216;text&#8217; input element.
-inputTemplate (string):     Generate&#8217;s an html input of type &#8216;text&#8217;
-name (string):              The property name or label
-value (string):             The value associated with the property.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>inputType</strong> (<em>string</em>) &#8211; This will be a &#8216;text&#8217; input element.</li>
+<li><strong>inputTemplate</strong> (<em>string</em>) &#8211; Generate&#8217;s an html input of type &#8216;text&#8217;</li>
+<li><strong>name</strong> (<em>string</em>) &#8211; The property name or label</li>
+<li><strong>value</strong> (<em>string</em>) &#8211; The value associated with the property.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="catalog.trait.trait.TextTrait.asInputElement">
 <code class="descname">asInputElement</code><span class="sig-paren">(</span><em>formName</em>, <em>withValue=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#TextTrait.asInputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.TextTrait.asInputElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render the Trait as a text input in as part of an HTML form.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">formName (string):      The HTML form&#8217;s name attribute.
-withValue (Boolean):    A form for a new object will not have any</p>
-<blockquote class="last">
-<div>values.  But a form that is for editing an existing object will.</div></blockquote>
-</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: The formatted output of the combination of the</dt>
-<dd>inputTemplate and traitTemplate.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>formName</strong> (<em>string</em>) &#8211; The HTML form&#8217;s name attribute.</li>
+<li><strong>withValue</strong> (<em>Boolean</em>) &#8211; A form for a new object will not have any
+values.  But a form that is for editing an existing object will.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The formatted output of the combination of the
+inputTemplate and traitTemplate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="catalog.trait.trait.TextTrait.asOutputElement">
 <code class="descname">asOutputElement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#TextTrait.asOutputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.TextTrait.asOutputElement" title="Permalink to this definition">¶</a></dt>
-<dd><p>Refer to <a href="#id9"><span class="problematic" id="id10">:py:method:`~Trait.asOutputElement`</span></a></p>
+<dd><p>Refer to <a class="reference internal" href="#catalog.trait.trait.Trait.asOutputElement" title="catalog.trait.trait.Trait.asOutputElement"><code class="xref py py-meth docutils literal"><span class="pre">asOutputElement()</span></code></a></p>
 </dd></dl>
 
 <dl class="attribute">
@@ -532,10 +633,16 @@ withValue (Boolean):    A form for a new object will not have any</p>
 <dt id="catalog.trait.trait.TextTrait.isImage">
 <code class="descname">isImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#TextTrait.isImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.TextTrait.isImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does this Trait refer to an Image element?</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Boolean: A text input is not an image, so False.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A text input is not an image, so False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -546,48 +653,58 @@ withValue (Boolean):    A form for a new object will not have any</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
 <p>Abstract Base Class that defines the Interface and a few attributes of
 all Derived Traits.</p>
-<dl class="docutils">
-<dt>Notes:</dt>
-<dd>When asInputElement is called for a Trait, and the generated HTML Form
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">When asInputElement is called for a Trait, and the generated HTML Form
 is processed as part of a Request, then the Trait&#8217;s name is used
-as a key to retrieve it&#8217;s value from the Request&#8217;s form.</dd>
-<dt>Attributes:</dt>
-<dd><p class="first">inputType (string):         The html input type of the trait..
-inputTemplate (string):     Input Template used when the trait can</p>
-<blockquote>
-<div>receive input.</div></blockquote>
-<dl class="last docutils">
-<dt>outputTemplate (string):    The output template when the trait is only</dt>
-<dd>viewed.</dd>
-<dt>traitTemplate (string):     The base template that the input or output</dt>
-<dd>templates are applied.  It represents an HTML table row with two
+as a key to retrieve it&#8217;s value from the Request&#8217;s form.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>inputType</strong> (<em>string</em>) &#8211; The html input type of the trait.</li>
+<li><strong>inputTemplate</strong> (<em>string</em>) &#8211; Input Template used when the trait can
+receive input.</li>
+<li><strong>outputTemplate</strong> (<em>string</em>) &#8211; The output template when the trait is only
+viewed.</li>
+<li><strong>traitTemplate</strong> (<em>str</em>) &#8211; The base template applied to the input or
+output templates.  It represents an HTML table row with two
 table data elements.  One for the Trait&#8217;s property name and the 
-other for it&#8217;s value.</dd>
-</dl>
-</dd>
-</dl>
+other for it&#8217;s value.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <dl class="method">
 <dt id="catalog.trait.trait.Trait.asInputElement">
 <code class="descname">asInputElement</code><span class="sig-paren">(</span><em>formName</em>, <em>withValue=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#Trait.asInputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.Trait.asInputElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render the Trait as an HTML element as part of a form that receives
 input.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>formName (string):      The HTML form&#8217;s name attribute.</dt>
-<dd>Each trait&#8217;s html element is added to a table outside it&#8217;s
-form.  This argument binds the Trait&#8217;s element to the form.</dd>
-<dt>withValue (Boolean):    A form for a new object will not have any</dt>
-<dd>values.  But a form that is for editing an existing object will.</dd>
-</dl>
-</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: The formatted output of the combination of the</dt>
-<dd>inputTemplate and traitTemplate.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>formName</strong> (<em>string</em>) &#8211; The HTML form&#8217;s name attribute.
+Each trait&#8217;s html element is added to a table outside it&#8217;s
+form.  This argument binds the Trait&#8217;s element to the form.</li>
+<li><strong>withValue</strong> (<em>Boolean</em>) &#8211; A form for a new object will not have any
+values.  But a form that is for editing an existing object will.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The formatted output of the combination of the
+inputTemplate and traitTemplate.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -595,14 +712,17 @@ form.  This argument binds the Trait&#8217;s element to the form.</dd>
 <code class="descname">asOutputElement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#Trait.asOutputElement"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.Trait.asOutputElement" title="Permalink to this definition">¶</a></dt>
 <dd><p>Render the Trait as an HTML element as a view that does not receive
 any input.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: The formatted output of the combination of the</dt>
-<dd>outputTemplate and traitTemplate.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The formatted output of the combination of the
+outputTemplate and traitTemplate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
@@ -619,10 +739,16 @@ any input.</p>
 <dt id="catalog.trait.trait.Trait.isImage">
 <code class="descname">isImage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/trait/trait.html#Trait.isImage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.trait.trait.Trait.isImage" title="Permalink to this definition">¶</a></dt>
 <dd><p>Does this Trait refer to an Image element?</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Boolean: True if the Trait applies to an Image, otherwise False.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the Trait applies to an Image, otherwise False.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Boolean</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">

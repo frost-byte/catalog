@@ -270,6 +270,44 @@ login session, including the user&#8217;s profile information from Google+</dd>
 </dd></dl>
 
 <dl class="function">
+<dt id="catalog.auth.csrf_protect">
+<code class="descclassname">catalog.auth.</code><code class="descname">csrf_protect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#csrf_protect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.csrf_protect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Protect form submissions using a CSRF token.</p>
+<p>If the token is found and validated, then the request will proceed.</p>
+<dl class="docutils">
+<dt>Notes:</dt>
+<dd><p class="first">This function is applied to a POST request before it is processed by
+any of the routes that would receive a POST.</p>
+<p class="last">The only POST request that can be made for an unauthenticated user is
+to connect to their Google+ profile.</p>
+</dd>
+<dt>Returns:</dt>
+<dd>In the event that a token is invalid the user will be sent a notice.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.generate_csrf_token">
+<code class="descclassname">catalog.auth.</code><code class="descname">generate_csrf_token</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#generate_csrf_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.generate_csrf_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate A CSRF token for the User&#8217;s login session</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>string: Returns a the csrf_token for the currently logged in user.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="catalog.auth.generate_random_string">
+<code class="descclassname">catalog.auth.</code><code class="descname">generate_random_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#generate_random_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.generate_random_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 16 character long string containing randomly generated
+characters.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>string: The Randomized string.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="catalog.auth.getLoginSessionState">
 <code class="descclassname">catalog.auth.</code><code class="descname">getLoginSessionState</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#getLoginSessionState"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.getLoginSessionState" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the Login Session&#8217;s state.</p>
@@ -480,7 +518,7 @@ that can be viewed.</dd>
 
 <dl class="attribute">
 <dt id="catalog.models.Category.query">
-<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x000000000537E898&gt;</em><a class="headerlink" href="#catalog.models.Category.query" title="Permalink to this definition">¶</a></dt>
+<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x0000000005398EF0&gt;</em><a class="headerlink" href="#catalog.models.Category.query" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -611,7 +649,7 @@ presented to the user.</dd>
 
 <dl class="attribute">
 <dt id="catalog.models.Item.query">
-<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x000000000537ECC0&gt;</em><a class="headerlink" href="#catalog.models.Item.query" title="Permalink to this definition">¶</a></dt>
+<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x00000000053AE358&gt;</em><a class="headerlink" href="#catalog.models.Item.query" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">

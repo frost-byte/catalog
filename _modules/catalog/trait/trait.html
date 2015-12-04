@@ -142,22 +142,21 @@
     <span class="sd">&#39;&#39;&#39;Abstract Base Class that defines the Interface and a few attributes of</span>
 <span class="sd">    all Derived Traits.</span>
 
-<span class="sd">    Notes:</span>
+<span class="sd">    .. note::</span>
 <span class="sd">        When asInputElement is called for a Trait, and the generated HTML Form</span>
 <span class="sd">        is processed as part of a Request, then the Trait&#39;s name is used</span>
 <span class="sd">        as a key to retrieve it&#39;s value from the Request&#39;s form.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        inputType (string):         The html input type of the trait..</span>
-<span class="sd">        inputTemplate (string):     Input Template used when the trait can</span>
-<span class="sd">            receive input.</span>
-<span class="sd">        outputTemplate (string):    The output template when the trait is only</span>
-<span class="sd">            viewed.</span>
+<span class="sd">    :param string inputType: The html input type of the trait.</span>
+<span class="sd">    :param string inputTemplate: Input Template used when the trait can</span>
+<span class="sd">        receive input.</span>
+<span class="sd">    :param string outputTemplate: The output template when the trait is only</span>
+<span class="sd">        viewed.</span>
 
-<span class="sd">        traitTemplate (string):     The base template that the input or output</span>
-<span class="sd">            templates are applied.  It represents an HTML table row with two</span>
-<span class="sd">            table data elements.  One for the Trait&#39;s property name and the </span>
-<span class="sd">            other for it&#39;s value.</span>
+<span class="sd">    :param str traitTemplate: The base template applied to the input or</span>
+<span class="sd">        output templates.  It represents an HTML table row with two</span>
+<span class="sd">        table data elements.  One for the Trait&#39;s property name and the </span>
+<span class="sd">        other for it&#39;s value.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">inputType</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
     <span class="n">inputTemplate</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
@@ -179,8 +178,9 @@
 <div class="viewcode-block" id="Trait.isImage"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.Trait.isImage">[docs]</a>    <span class="k">def</span> <span class="nf">isImage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Does this Trait refer to an Image element?</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Boolean: True if the Trait applies to an Image, otherwise False.</span>
+<span class="sd">        :returns: True if the Trait applies to an Image, otherwise False.</span>
+<span class="sd">        :rtype: Boolean</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">pass</span></div>
 
@@ -190,17 +190,17 @@
         <span class="sd">&#39;&#39;&#39;Render the Trait as an HTML element as part of a form that receives</span>
 <span class="sd">        input.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            formName (string):      The HTML form&#39;s name attribute.</span>
-<span class="sd">                Each trait&#39;s html element is added to a table outside it&#39;s</span>
-<span class="sd">                form.  This argument binds the Trait&#39;s element to the form.</span>
+<span class="sd">        :param string formName: The HTML form&#39;s name attribute.</span>
+<span class="sd">            Each trait&#39;s html element is added to a table outside it&#39;s</span>
+<span class="sd">            form.  This argument binds the Trait&#39;s element to the form.</span>
 
-<span class="sd">            withValue (Boolean):    A form for a new object will not have any</span>
-<span class="sd">                values.  But a form that is for editing an existing object will.</span>
+<span class="sd">        :param Boolean withValue: A form for a new object will not have any</span>
+<span class="sd">            values.  But a form that is for editing an existing object will.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            string: The formatted output of the combination of the</span>
-<span class="sd">                inputTemplate and traitTemplate.</span>
+<span class="sd">        :returns: The formatted output of the combination of the</span>
+<span class="sd">            inputTemplate and traitTemplate.</span>
+<span class="sd">        :rtype: string</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">pass</span></div>
 
@@ -210,9 +210,10 @@
         <span class="sd">&#39;&#39;&#39;Render the Trait as an HTML element as a view that does not receive</span>
 <span class="sd">        any input.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            string: The formatted output of the combination of the</span>
-<span class="sd">                outputTemplate and traitTemplate.</span>
+<span class="sd">        :returns: The formatted output of the combination of the</span>
+<span class="sd">            outputTemplate and traitTemplate.</span>
+<span class="sd">        :rtype: string</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">pass</span></div></div>
 
@@ -221,11 +222,10 @@
     <span class="sd">&#39;&#39;&#39;A Trait for a property that can be represented as a Text input or</span>
 <span class="sd">    unalterable string value in an html element.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        inputType (string):         This will be a &#39;text&#39; input element.</span>
-<span class="sd">        inputTemplate (string):     Generate&#39;s an html input of type &#39;text&#39;</span>
-<span class="sd">        name (string):              The property name or label</span>
-<span class="sd">        value (string):             The value associated with the property.</span>
+<span class="sd">    :param string inputType: This will be a &#39;text&#39; input element.</span>
+<span class="sd">    :param string inputTemplate: Generate&#39;s an html input of type &#39;text&#39;</span>
+<span class="sd">    :param string name: The property name or label</span>
+<span class="sd">    :param string value: The value associated with the property.</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
 
@@ -240,8 +240,9 @@
 <div class="viewcode-block" id="TextTrait.isImage"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.TextTrait.isImage">[docs]</a>    <span class="k">def</span> <span class="nf">isImage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Does this Trait refer to an Image element?</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Boolean: A text input is not an image, so False.</span>
+<span class="sd">        :returns: A text input is not an image, so False.</span>
+<span class="sd">        :rtype: Boolean</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">False</span></div>
 
@@ -249,14 +250,14 @@
 <div class="viewcode-block" id="TextTrait.asInputElement"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.TextTrait.asInputElement">[docs]</a>    <span class="k">def</span> <span class="nf">asInputElement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formName</span><span class="p">,</span> <span class="n">withValue</span> <span class="o">=</span> <span class="bp">False</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Render the Trait as a text input in as part of an HTML form.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            formName (string):      The HTML form&#39;s name attribute.</span>
-<span class="sd">            withValue (Boolean):    A form for a new object will not have any</span>
-<span class="sd">                values.  But a form that is for editing an existing object will.</span>
+<span class="sd">        :param string formName: The HTML form&#39;s name attribute.</span>
+<span class="sd">        :param Boolean withValue: A form for a new object will not have any</span>
+<span class="sd">            values.  But a form that is for editing an existing object will.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            string: The formatted output of the combination of the</span>
-<span class="sd">                inputTemplate and traitTemplate.</span>
+<span class="sd">        :returns: The formatted output of the combination of the</span>
+<span class="sd">            inputTemplate and traitTemplate.</span>
+<span class="sd">        :rtype: string</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">value</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
 
@@ -277,19 +278,18 @@
 
 
 <div class="viewcode-block" id="TextTrait.asOutputElement"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.TextTrait.asOutputElement">[docs]</a>    <span class="k">def</span> <span class="nf">asOutputElement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Refer to :py:method:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Refer to :py:meth:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">traitTemplate</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ImageTrait"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.ImageTrait">[docs]</a><span class="k">class</span> <span class="nc">ImageTrait</span><span class="p">(</span><span class="n">Trait</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;A Trait that represents an HTML image element.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        inputType (string):     This will be a &#39;text&#39; input element.</span>
-<span class="sd">        inputTemplate (string): Generate&#39;s an html input of type &#39;text&#39;</span>
-<span class="sd">        name (string):          The property name for the element. Used</span>
-<span class="sd">            to retrieve data from the form in a request.</span>
-<span class="sd">        url (string):           The url associated with the image.</span>
+<span class="sd">    :param string inputType: This will be a &#39;text&#39; input element.</span>
+<span class="sd">    :param string inputTemplate: Generate&#39;s an html input of type &#39;text&#39;</span>
+<span class="sd">    :param string name: The property name for the element. Used</span>
+<span class="sd">        to retrieve data from the form in a request.</span>
+<span class="sd">    :param string url: The url associated with the image.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">inputTemplate</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;&lt;input type=&quot;{0}&quot; name=&quot;{1}&quot; form=&quot;{2}&quot; value=&quot;{3}&quot;&gt;&#39;&#39;&#39;</span>
@@ -299,16 +299,14 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">url</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create an ImageTrait given it&#39;s properties name and url.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            name (string): The name of the property for the label and key in</span>
-<span class="sd">                the form contained in the request.</span>
+<span class="sd">        :param string name: The name of the property for the label and key in</span>
+<span class="sd">            the form contained in the request.</span>
+<span class="sd">        :param string url: Optional value that specifies the url of the image</span>
+<span class="sd">            in the local file system or on the web.</span>
+<span class="sd">        :returns: An ImageTrait containing information associated with a</span>
+<span class="sd">            property.</span>
+<span class="sd">        :rtype: ImageTrait</span>
 
-<span class="sd">            url (string): Optional value that specifies the url of the image</span>
-<span class="sd">                in the local file system or on the web.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            ImageTrait: An ImageTrait containing information associated with a</span>
-<span class="sd">                property.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
@@ -317,8 +315,9 @@
 <div class="viewcode-block" id="ImageTrait.isImage"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.ImageTrait.isImage">[docs]</a>    <span class="k">def</span> <span class="nf">isImage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Does this Trait refer to an Image element?</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Boolean: This will be an image element, so True.</span>
+<span class="sd">        :returns: This will be an image element, so True.</span>
+<span class="sd">        :rtype: Boolean</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">True</span></div>
 
@@ -327,14 +326,13 @@
         <span class="sd">&#39;&#39;&#39;Render the Trait as a text input in as part of an HTML form.</span>
 <span class="sd">        Manually enter the URL for an image, as opposed to uploading it.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            formName (string):      The HTML form&#39;s name attribute.</span>
-<span class="sd">            withValue (Boolean):    A form for a new object will not have any</span>
-<span class="sd">                values.  But a form that is for editing an existing object will.</span>
+<span class="sd">        :param string formName: The HTML form&#39;s name attribute.</span>
+<span class="sd">        :param Boolean withValue: A form for a new object will not have any</span>
+<span class="sd">            values.  But a form that is for editing an existing object will.</span>
+<span class="sd">        :returns: The formatted output of the combination of the inputTemplate</span>
+<span class="sd">            and traitTemplate.</span>
+<span class="sd">        :rtype: string</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            string: The formatted output of the combination of the</span>
-<span class="sd">                inputTemplate and traitTemplate.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">value</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
 
@@ -354,23 +352,22 @@
 
 
 <div class="viewcode-block" id="ImageTrait.asOutputElement"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.ImageTrait.asOutputElement">[docs]</a>    <span class="k">def</span> <span class="nf">asOutputElement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Refer to :py:method:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Refer to :py:meth:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputTemplate</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span></div></div>
 
 
 <div class="viewcode-block" id="ImageUploadTrait"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.ImageUploadTrait">[docs]</a><span class="k">class</span> <span class="nc">ImageUploadTrait</span><span class="p">(</span><span class="n">Trait</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;A Trait that represents an HTML element for uploading a image file.</span>
 
-<span class="sd">    Notes:</span>
+<span class="sd">    .. note::</span>
 <span class="sd">        This could be generalized into just an UploadTrait and apply to</span>
 <span class="sd">        files of any type. This Trait is only used for Input.  An</span>
 <span class="sd">        ImageTrait should be used for outputting an image.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        inputType (string):     This will be a &#39;text&#39; input element.</span>
-<span class="sd">        inputTemplate (string): Generate&#39;s an html input of type &#39;text&#39;</span>
-<span class="sd">        name (string):          The property name for the element. Used</span>
-<span class="sd">            to retrieve data from the form in a request.</span>
+<span class="sd">    :param string inputType: This will be a &#39;text&#39; input element.</span>
+<span class="sd">    :param string inputTemplate: Generate&#39;s an html input of type &#39;text&#39;</span>
+<span class="sd">    :param string name: The property name for the element. Used</span>
+<span class="sd">        to retrieve data from the form in a request.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">inputTemplate</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;&lt;input type=&quot;{0}&quot; name=&quot;{1}&quot; form=&quot;{2}&quot;&gt;&#39;&#39;&#39;</span>
 
@@ -381,8 +378,9 @@
 <span class="sd">            name (string): The name of the property/label and key in</span>
 <span class="sd">                the form contained in the request.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Trait: An ImageUploadTrait</span>
+<span class="sd">        :returns: An ImageUploadTrait</span>
+<span class="sd">        :rtype: Trait</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
@@ -390,9 +388,10 @@
 <div class="viewcode-block" id="ImageUploadTrait.isImage"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.ImageUploadTrait.isImage">[docs]</a>    <span class="k">def</span> <span class="nf">isImage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Does this Trait refer to an Image element?</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Boolean: This is not displayed as an image but as a file upload</span>
+<span class="sd">        :returns: This is not displayed as an image but as a file upload</span>
 <span class="sd">            input, so False.</span>
+<span class="sd">        :rtype: Boolean</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">False</span></div>
 
@@ -402,16 +401,15 @@
 
 <span class="sd">        Prompts the user to choose a file on their system to upload.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            formName (string):      The HTML form&#39;s name attribute.</span>
-<span class="sd">            withValue (Boolean):    A form for a new object will not have any</span>
-<span class="sd">                values.  But a form that is for editing an existing object will.</span>
+<span class="sd">        :param string formName: The HTML form&#39;s name attribute.</span>
+<span class="sd">        :param Boolean withValue: A form for a new object will not have any</span>
+<span class="sd">            values.  But a form that is for editing an existing object will.</span>
+<span class="sd">        :returns: Formatted HTML table row containing two table data elements</span>
+<span class="sd">            containing the property name in a button and an empty text element</span>
+<span class="sd">            that will hold the file&#39;s name after the user uploads an image</span>
+<span class="sd">            file.</span>
+<span class="sd">        :rtype: string</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            string: Formatted HTML table row containing two table data elements</span>
-<span class="sd">                containing the property name in a button and an empty</span>
-<span class="sd">                text element that will hold the file&#39;s name after the user</span>
-<span class="sd">                uploads an image file.</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
 
@@ -428,9 +426,10 @@
 <div class="viewcode-block" id="ImageUploadTrait.asOutputElement"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.ImageUploadTrait.asOutputElement">[docs]</a>    <span class="k">def</span> <span class="nf">asOutputElement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;An Image Upload element would not be presented as an Image.</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            string: An HTML comment describing the Output Usage for</span>
-<span class="sd">                ImageUploadTrait</span>
+<span class="sd">        :returns: An HTML comment describing the Output Usage for</span>
+<span class="sd">            ImageUploadTrait</span>
+<span class="sd">        :rtype: string</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="s">&quot;&lt;--! ImageUploadTrait not used for output --&gt;&quot;</span></div></div>
 
@@ -439,11 +438,12 @@
     <span class="sd">&#39;&#39;&#39;A Trait for a multi-line text property that is rendered as a TextArea</span>
 <span class="sd">    HTML element.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        inputTemplate (string):     Generate&#39;s an html &#39;textarea&#39; input</span>
-<span class="sd">        name (string):              The label or property name.</span>
-<span class="sd">        value (string):             The value contained in the textarea.</span>
-
+<span class="sd">    :param inputTemplate: Generate&#39;s an html &#39;textarea&#39; input.</span>
+<span class="sd">    :param name: The label or property name.</span>
+<span class="sd">    :param value: The value contained in the textarea.</span>
+<span class="sd">    :type inputTemplate: string</span>
+<span class="sd">    :type name: string</span>
+<span class="sd">    :type value: string</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">inputTemplate</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;&lt;textarea name=&quot;{0}&quot; form=&quot;{1}&quot;&gt;{2}&lt;/textarea&gt;&#39;&#39;&#39;</span>
@@ -451,16 +451,14 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="s">&quot;&quot;</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a TextAreaTrait given it&#39;s property name and value.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            name (string): The name of the property for the label and key in</span>
-<span class="sd">                the form contained in the request.</span>
+<span class="sd">        :param str name: The name of the property for the label and key in</span>
+<span class="sd">            the form contained in the request.</span>
+<span class="sd">        :param str value: The value containing either an empty string or</span>
+<span class="sd">            long/detailed description of something.</span>
+<span class="sd">        :returns: A TextAreaTrait containing information associated with a</span>
+<span class="sd">            property.</span>
+<span class="sd">        :rtype: TextAreaTrait</span>
 
-<span class="sd">            value (string): The value containing either an empty string or</span>
-<span class="sd">                long/detailed description of something.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Trait: A TextAreaTrait containing information associated with a</span>
-<span class="sd">                property.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
@@ -469,8 +467,9 @@
 <div class="viewcode-block" id="TextAreaTrait.isImage"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.TextAreaTrait.isImage">[docs]</a>    <span class="k">def</span> <span class="nf">isImage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Does this Trait refer to an Image element?</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Boolean: A TextArea is not an image, so False.</span>
+<span class="sd">        :returns: A TextArea is not an image, so False.</span>
+<span class="sd">        :rtype: Boolean</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">False</span></div>
 
@@ -480,16 +479,15 @@
 
 <span class="sd">        Provides an area for a longer text description of a property.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            formName (string):      The HTML form&#39;s name attribute.</span>
-<span class="sd">            withValue (Boolean):    A form for a new object will not have any</span>
-<span class="sd">                values.  But a form that is for editing an existing object will.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            string: Formatted HTML table row containing two table data</span>
-<span class="sd">                elements. One for the property name as a label and another that</span>
-<span class="sd">                contains the Trait&#39;s value (or nothing) in a textarea HTML</span>
-<span class="sd">                element.</span>
+<span class="sd">        :param formName: The HTML form&#39;s name attribute.</span>
+<span class="sd">        :param withValue: True builds a form for creating a new object</span>
+<span class="sd">            that will not have any values.  False, a form that is for</span>
+<span class="sd">            editing an existing object will.</span>
+<span class="sd">        :type formName: string</span>
+<span class="sd">        :type withValue: Boolean</span>
+<span class="sd">        :return string: HTML that defines a table row containing two table data</span>
+<span class="sd">            elements. One for the property name as a label and another that</span>
+<span class="sd">            contains the Trait&#39;s value (or nothing) in a textarea HTML element.</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">value</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
@@ -508,24 +506,23 @@
 
 
 <div class="viewcode-block" id="TextAreaTrait.asOutputElement"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.TextAreaTrait.asOutputElement">[docs]</a>    <span class="k">def</span> <span class="nf">asOutputElement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Refer to :py:method:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Refer to :py:meth:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">traitTemplate</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div></div>
 
 
 
 <div class="viewcode-block" id="SelectTrait"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.SelectTrait">[docs]</a><span class="k">class</span> <span class="nc">SelectTrait</span><span class="p">(</span><span class="n">Trait</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;A Trait for a property that is best represented by a a Select Element</span>
+    <span class="sd">&#39;&#39;&#39;A Trait for a property that is best represented by a Select Element</span>
 <span class="sd">    with a Dropdown list of different options to choose from.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        selectTemplate (string):    Generate&#39;s an html &#39;select&#39; input</span>
-<span class="sd">        optionTemplate (string):    A template string that represents one</span>
-<span class="sd">            option element contained in a select element.</span>
-<span class="sd">        name (string):              The label or property name.</span>
-<span class="sd">        value (string):             The string value of the currently selected</span>
-<span class="sd">            option.</span>
-<span class="sd">        options (list):             A list of strings describing the value for</span>
-<span class="sd">            each option displayed in the drop down list of the select element.</span>
+<span class="sd">    :param string selectTemplate: Generate&#39;s an html &#39;select&#39; input.</span>
+<span class="sd">    :param string optionTemplate: A template string that represents one</span>
+<span class="sd">        option element contained in a select element.</span>
+<span class="sd">    :param string name: The label or property name.</span>
+<span class="sd">    :param string value: The string value of the currently selected</span>
+<span class="sd">        option.</span>
+<span class="sd">    :param list options: A list of strings describing the value for</span>
+<span class="sd">        each option displayed in the drop down list of the select element.</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">selectTemplate</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;&lt;select name=&quot;{0}&quot; form=&quot;{1}&quot;&gt;{2}</span>
@@ -537,16 +534,13 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">options</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create a SelectTrait given it&#39;s property name and value.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            name (string): The name of the property for the label and key in</span>
-<span class="sd">                the form contained in the request.</span>
-
-<span class="sd">            value (string): The value containing either an empty string or</span>
-<span class="sd">                long/detailed description of something.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Trait: A SelectTrait containing options, possibly including a</span>
-<span class="sd">                currently selected option, for a property.</span>
+<span class="sd">        :param string name: The name of the property for the label and key in</span>
+<span class="sd">            the form contained in the request.</span>
+<span class="sd">        :param string value: The value containing either an empty string or</span>
+<span class="sd">            long/detailed description of something.</span>
+<span class="sd">        :returns: A SelectTrait containing options, possibly including a</span>
+<span class="sd">            currently selected option, for a property.</span>
+<span class="sd">        :rtype: Trait</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
@@ -557,8 +551,9 @@
 <div class="viewcode-block" id="SelectTrait.isImage"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.SelectTrait.isImage">[docs]</a>    <span class="k">def</span> <span class="nf">isImage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Does this Trait refer to an Image element?</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Boolean: A Select element is not an image, so False.</span>
+<span class="sd">        :returns: A Select element is not an image, so False.</span>
+<span class="sd">        :rtype: Boolean</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">False</span></div>
 
@@ -570,16 +565,14 @@
 <span class="sd">        Provides an dropdown list of options to choose from return the selected</span>
 <span class="sd">        value as part of a form in a Request.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            formName (string):      The HTML form&#39;s name attribute.</span>
-<span class="sd">            withValue (Boolean):    A form for a new object will not have any</span>
-<span class="sd">                values.  But a form that is for editing an existing object will.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            string: Formatted HTML table row containing two table data</span>
-<span class="sd">                elements. One for the property name as a label and another that</span>
-<span class="sd">                contains the the Select with a dropdown list of options to choose</span>
-<span class="sd">                from.</span>
+<span class="sd">        :param string formName: The HTML form&#39;s name attribute.</span>
+<span class="sd">        :param Boolean withValue: A form for a new object will not have any</span>
+<span class="sd">            values.  But a form that is for editing an existing object will.</span>
+<span class="sd">        :returns: Formatted HTML table row containing two table data</span>
+<span class="sd">            elements. One for the property name as a label and another that</span>
+<span class="sd">            contains the the Select with a dropdown list of options to choose</span>
+<span class="sd">            from.</span>
+<span class="sd">        :rtype: string</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">options</span> <span class="o">=</span> <span class="s">&quot;&quot;</span>
@@ -611,7 +604,7 @@
 
 
 <div class="viewcode-block" id="SelectTrait.asOutputElement"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.SelectTrait.asOutputElement">[docs]</a>    <span class="k">def</span> <span class="nf">asOutputElement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Refer to :py:method:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Refer to :py:meth:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">traitTemplate</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div></div>
 
 
@@ -619,10 +612,9 @@
     <span class="sd">&#39;&#39;&#39;A Trait for a property that is best represented as a date that includes</span>
 <span class="sd">    the year, month and day.</span>
 
-<span class="sd">    Attributes:</span>
-<span class="sd">        inputTemplate (string): Template for Generating an html &#39;date&#39; input.</span>
-<span class="sd">        name (string):          The label or property name.</span>
-<span class="sd">        value (string):         The date value associated with the property.</span>
+<span class="sd">    :param string inputTemplate: Template for Generating an html &#39;date&#39; input.</span>
+<span class="sd">    :param string name: The label or property name.</span>
+<span class="sd">    :param string value: The date value associated with the property.</span>
 
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">inputTemplate</span> <span class="o">=</span> <span class="s">&#39;&#39;&#39;&lt;input type=&quot;date&quot; name=&quot;{0}&quot; form=&quot;{1}&quot; value=&quot;{2}&quot;&gt;&#39;&#39;&#39;</span>
@@ -631,15 +623,12 @@
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">today</span><span class="p">())):</span>
         <span class="sd">&#39;&#39;&#39;Create a DateTrait given it&#39;s property name and value as a Date.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            name (string): The name of the property for the label and key in</span>
-<span class="sd">                the form contained in the request.</span>
-
-<span class="sd">            value (string): A Date</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            Trait: A DateTrait containing options, possibly including a</span>
-<span class="sd">                currently selected option, for a property.</span>
+<span class="sd">        :param string name: The name of the property for the label and key in</span>
+<span class="sd">            the form contained in the request.</span>
+<span class="sd">        :param string value: A Date</span>
+<span class="sd">        :returns: A DateTrait containing options, possibly including a</span>
+<span class="sd">            currently selected option, for a property.</span>
+<span class="sd">        :rtype: Trait</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">inputType</span> <span class="o">=</span> <span class="s">&quot;date&quot;</span>
@@ -650,8 +639,9 @@
 <div class="viewcode-block" id="DateTrait.isImage"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.DateTrait.isImage">[docs]</a>    <span class="k">def</span> <span class="nf">isImage</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Does this Trait refer to an Image element?</span>
 
-<span class="sd">        Returns:</span>
-<span class="sd">            Boolean: A Date input element is not an image, so False.</span>
+<span class="sd">        :returns: A Date input element is not an image, so False.</span>
+<span class="sd">        :rtype: Boolean</span>
+
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">False</span></div>
 
@@ -662,16 +652,14 @@
 <span class="sd">        Provides a calender like functionality or manually inputting the</span>
 <span class="sd">        year, month and day.</span>
 
-<span class="sd">        Args:</span>
-<span class="sd">            formName (string):      The HTML form&#39;s name attribute.</span>
-<span class="sd">            withValue (Boolean):    A Date Trait always presents a date value,</span>
-<span class="sd">                either a default that is today&#39;s date, or one passed in.</span>
-
-<span class="sd">        Returns:</span>
-<span class="sd">            string: Formatted HTML table row containing two table data</span>
-<span class="sd">                elements. One for the property name as a label and another that</span>
-<span class="sd">                contains the Date input set to today&#39;s date or the date passed</span>
-<span class="sd">                during the creation of the object.</span>
+<span class="sd">        :param string formName: The HTML form&#39;s name attribute.</span>
+<span class="sd">        :param Boolean withValue: A Date Trait always presents a date value,</span>
+<span class="sd">            either a default that is today&#39;s date, or one passed in.</span>
+<span class="sd">        :returns: Formatted HTML table row containing two table data</span>
+<span class="sd">            elements. One for the property name as a label and another that</span>
+<span class="sd">            contains the Date input set to today&#39;s date or the date passed</span>
+<span class="sd">            during the creation of the object.</span>
+<span class="sd">        :rtype: string</span>
 
 <span class="sd">        &#39;&#39;&#39;</span>
 
@@ -688,7 +676,7 @@
 
 
 <div class="viewcode-block" id="DateTrait.asOutputElement"><a class="viewcode-back" href="../../../catalog.trait.html#catalog.trait.trait.DateTrait.asOutputElement">[docs]</a>    <span class="k">def</span> <span class="nf">asOutputElement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Refer to :py:method:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Refer to :py:meth:`~Trait.asOutputElement`&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">traitTemplate</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">title</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">)</span></div></div>
 </pre></div>
 
