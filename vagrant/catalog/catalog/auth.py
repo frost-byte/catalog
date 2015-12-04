@@ -126,7 +126,7 @@ def getUserInfo(user_id):
         user_id (int): The key/primary key in the User table
 
     Returns:
-        User: returns an instance of the models.User class populated with
+        models.User: returns an instance of the models.User class populated with
             the user's information.
 
         If no user is found, None is returned.
@@ -155,7 +155,7 @@ def getUserID(email):
         user_id (int): The key/primary key in the User table
 
     Returns:
-        User: returns an instance of the models.User class populated with
+        models.User: returns an instance of the models.User class populated with
             the user's information.
 
     Raises:

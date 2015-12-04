@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # catalog documentation build configuration file, created by
-# sphinx-quickstart on Wed Dec 02 14:15:04 2015.
+# sphinx-quickstart on Thu Dec 03 23:31:29 2015.
 #
 # This file is execfile()d with the current directory set to its
 # containing dir.
@@ -22,6 +22,7 @@ import shlex
 #sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath("../vagrant/catalog"))
 sys.path.insert(0, os.path.abspath("../vagrant/catalgo/trait"))
+
 # -- General configuration ------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
@@ -34,6 +35,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -54,10 +56,6 @@ master_doc = 'index'
 project = u'catalog'
 copyright = u'2015, Author'
 author = u'Author'
-
-#autodoc_mock_imports= [
-#    'flask.json', 'json',
-#]
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

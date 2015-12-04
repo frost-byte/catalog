@@ -99,10 +99,10 @@ Open a browser page to [localhost:5000](localhost:5000)
 The following api endpoints have been provided for the Catalog app.
 
 __JSON__<br>
-[localhost:5000/catalog/JSON](localhost:5000/catalog/JSON)
+[localhost:5000/catalog/JSON](http://localhost:5000/catalog/JSON)
 
 __XML__<br>
-[localhost:5000/catalog/XML](localhost:5000/catalog/XML)
+[localhost:5000/catalog/XML](http://localhost:5000/catalog/XML)
 
 
 #### The Catalog APP
