@@ -11,6 +11,14 @@ Subpackages
 Submodules
 ----------
 
+catalog.app module
+------------------
+
+.. automodule:: catalog.app
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 catalog.auth module
 -------------------
 
@@ -34,7 +42,6 @@ catalog.models module
     :members:
     :undoc-members:
     :show-inheritance:
-
 
 catalog.urls module
 -------------------

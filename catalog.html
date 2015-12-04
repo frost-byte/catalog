@@ -84,6 +84,7 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-catalog.app">catalog.app module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-catalog.auth">catalog.auth module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-catalog.database">catalog.database module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-catalog.models">catalog.models module</a></li>
@@ -154,66 +155,90 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
+<div class="section" id="module-catalog.app">
+<span id="catalog-app-module"></span><h2>catalog.app module<a class="headerlink" href="#module-catalog.app" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="catalog.app.ModelsEncoder">
+<em class="property">class </em><code class="descclassname">catalog.app.</code><code class="descname">ModelsEncoder</code><span class="sig-paren">(</span><em>skipkeys=False</em>, <em>ensure_ascii=True</em>, <em>check_circular=True</em>, <em>allow_nan=True</em>, <em>sort_keys=False</em>, <em>indent=None</em>, <em>separators=None</em>, <em>encoding='utf-8'</em>, <em>default=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/app.html#ModelsEncoder"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.app.ModelsEncoder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">flask.json.JSONEncoder</span></code></p>
+<dl class="method">
+<dt id="catalog.app.ModelsEncoder.default">
+<code class="descname">default</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/app.html#ModelsEncoder.default"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.app.ModelsEncoder.default" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-catalog.auth">
 <span id="catalog-auth-module"></span><h2>catalog.auth module<a class="headerlink" href="#module-catalog.auth" title="Permalink to this headline">¶</a></h2>
 <p>This is the auth, or Authorization module for the Catalog app.
 The module provides methods for Authorizing the app to connect/disconnect
 to/from a user&#8217;s Google+ profile.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><dl class="first last docutils">
-<dt>CLIENT_ID:  The Client Secret for the Catalog App.  This file is</dt>
-<dd>generated from the app&#8217;s credentials using the Google Development Console.
+<dl class="attribute">
+<dt id="catalog.auth.CLIENT_ID">
+<code class="descclassname">catalog.auth.</code><code class="descname">CLIENT_ID</code><a class="headerlink" href="#catalog.auth.CLIENT_ID" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Client Secret for the Catalog App.  This file is
+generated from the app&#8217;s credentials using the Google Development Console.
 It is not included with the repository for the purpose of security.
 Running the app will require the creation of the client secret using the
 previously mentioned Development Console.  The client_secret.json file
-needs to be in the same directory as this module.</dd>
-</dl>
-</dd>
-</dl>
+needs to be in the same directory as this module.</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="catalog.auth.ConnectGoogle">
 <code class="descclassname">catalog.auth.</code><code class="descname">ConnectGoogle</code><span class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#ConnectGoogle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.ConnectGoogle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process the Request to the App for logging in to Google+.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>request (Request): Contains the information for requesting login</dt>
-<dd>to Google+</dd>
-</dl>
-</dd>
-<dt>Returns:</dt>
-<dd><p class="first">Response: returnValues</p>
-<p class="last">Detailed Description of the possible values of the returned variable.
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><p class="first"><strong>request</strong> (<em>Request</em>) &#8211; Contains the information for requesting login
+to Google+</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><p>returnValues</p>
+<p>Detailed Description of the possible values of the returned variable.
 Describe contents and format of returned values.
 Describe Usage.</p>
-</dd>
-<dt>Raises:</dt>
-<dd>FlowExchangeError:  The flow exchange setup establishing authorization
-with the Google+ failed.</dd>
-<dt>Examples:</dt>
-<dd>(optional) Describe how the function is used by providing examples here.</dd>
-</dl>
+</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">Response</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><ul class="first last simple">
+<li><code class="xref py py-exc docutils literal"><span class="pre">FlowExchangeError</span></code> &#8211;
+The flow exchange setup establishing authorization</li>
+<li>with the Google+ failed.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<p>(optional) Describe how the function is used by providing examples here.</p>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.auth.DisconnectGoogle">
 <code class="descclassname">catalog.auth.</code><code class="descname">DisconnectGoogle</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#DisconnectGoogle"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.DisconnectGoogle" title="Permalink to this definition">¶</a></dt>
 <dd><p>Disconnect from Google by Revoking access to a User&#8217;s Google Profile</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>Response: A varying response depending upon the success or failure in</dt>
-<dd>revoking the app&#8217;s usage of the logged in user&#8217;s Google Profile.</dd>
-</dl>
-</dd>
-<dt>Raises:</dt>
-<dd><dl class="first last docutils">
-<dt>TokenRevokeError: Google was unable to revoke the connection between this</dt>
-<dd>app and their Google profile.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A varying response depending upon the success or failure in
+revoking the app&#8217;s usage of the logged in user&#8217;s Google Profile.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Response</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">TokenRevokeError</span></code> &#8211;
+Google was unable to revoke the connection between this
+app and their Google profile.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -221,13 +246,17 @@ with the Google+ failed.</dd>
 <code class="descclassname">catalog.auth.</code><code class="descname">canAlter</code><span class="sig-paren">(</span><em>userID</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#canAlter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.canAlter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Confirms that the user specified by the given user id is the one currently
 in the login_session.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>userID (int): An ID corresponding to a User record in the database.</dd>
-<dt>Returns:</dt>
-<dd>True if the specified user is also the currently authorized user in the
-login_session.  False if it is a different user.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>userID</strong> (<em>int</em>) &#8211; An ID corresponding to a User record in the database.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the specified user is also the currently authorized user in the
+login_session.  False if it is a different user.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -236,19 +265,27 @@ login_session.  False if it is a different user.</dd>
 <dd><p>Create a response to a Request to one of the App&#8217;s endpoints.</p>
 <p>When the routes for connecting/disconnecting to Google+ are called,
 this function will be used to send various responses to those requests.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><dl class="first last docutils">
-<dt>res (object): A response with information pertinent to a request for</dt>
-<dd>Connect and Disconnect to and from Google+</dd>
-<dt>status (int): Depending upon the result of processing the request, this</dt>
-<dd>will indicate whether or not the request was successful.</dd>
-</dl>
-</dd>
-<dt>Returns:</dt>
-<dd>Response: A response in json format containing the data passed in via
-the res and status arguments.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>res</strong> (<em>object</em>) &#8211; A response with information pertinent to a request for
+Connect and Disconnect to and from Google+</li>
+<li><strong>status</strong> (<em>int</em>) &#8211; Depending upon the result of processing the request, this
+will indicate whether or not the request was successful.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A response in json format containing the data passed in via
+the res and status arguments.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Response</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -256,17 +293,25 @@ the res and status arguments.</dd>
 <code class="descclassname">catalog.auth.</code><code class="descname">createUser</code><span class="sig-paren">(</span><em>login_session</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#createUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.createUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add a User to the database using the current information stored in the
 login session.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>login_session (dict): Dictionary containing information about the current
-login session, including the user&#8217;s profile information from Google+</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>int: The user_id from the newly created record in the User table in</dt>
-<dd>the database.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>login_session</strong> (<em>dict</em>) &#8211; Dictionary containing information about the current</li>
+<li><strong>session, including the user's profile information from Google+</strong> (<em>login</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The user_id from the newly created record in the User table in
+the database.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -274,26 +319,35 @@ login session, including the user&#8217;s profile information from Google+</dd>
 <code class="descclassname">catalog.auth.</code><code class="descname">csrf_protect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#csrf_protect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.csrf_protect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Protect form submissions using a CSRF token.</p>
 <p>If the token is found and validated, then the request will proceed.</p>
-<dl class="docutils">
-<dt>Notes:</dt>
-<dd><p class="first">This function is applied to a POST request before it is processed by
+<p class="rubric">Notes</p>
+<p>This function is applied to a POST request before it is processed by
 any of the routes that would receive a POST.</p>
-<p class="last">The only POST request that can be made for an unauthenticated user is
+<p>The only POST request that can be made for an unauthenticated user is
 to connect to their Google+ profile.</p>
-</dd>
-<dt>Returns:</dt>
-<dd>In the event that a token is invalid the user will be sent a notice.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">In the event that a token is invalid the user will be sent a notice.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.auth.generate_csrf_token">
 <code class="descclassname">catalog.auth.</code><code class="descname">generate_csrf_token</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#generate_csrf_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.generate_csrf_token" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate A CSRF token for the User&#8217;s login session</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>string: Returns a the csrf_token for the currently logged in user.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Returns a the csrf_token for the currently logged in user.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -301,10 +355,16 @@ to connect to their Google+ profile.</p>
 <code class="descclassname">catalog.auth.</code><code class="descname">generate_random_string</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#generate_random_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.generate_random_string" title="Permalink to this definition">¶</a></dt>
 <dd><p>Create a 16 character long string containing randomly generated
 characters.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>string: The Randomized string.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The Randomized string.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -313,77 +373,100 @@ characters.</p>
 <dd><p>Retrieve the Login Session&#8217;s state.</p>
 <p>The State is assigned to the Login Session when a user logs in to the App.
 This is a specific string used to validate the session.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>string: The state is generated upon user login and added to the login</dt>
-<dd>session and returned.</dd>
-</dl>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The state is generated upon user login and added to the login
+session and returned.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.auth.getSessionUserInfo">
 <code class="descclassname">catalog.auth.</code><code class="descname">getSessionUserInfo</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#getSessionUserInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.getSessionUserInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return profile information for the user currently logged in.</p>
-<dl class="docutils">
-<dt>Note:</dt>
-<dd>The profiles for the User records generated using the populator module
-obviously won&#8217;t have valid information related to Google+.</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>dict: Basic profile information for the login_session user.</dt>
-<dd>Including:
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The profiles for the User records generated using the populator module
+obviously won&#8217;t have valid information related to Google+.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Basic profile information for the login_session user.
+Including:
 user_id: Their User record in the database.
 name: Their name (from their Google+ Profile)
-email: Their email (also taken from their Google+ Profile)</dd>
-</dl>
-</dd>
-</dl>
+email: Their email (also taken from their Google+ Profile)</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.auth.getUserID">
 <code class="descclassname">catalog.auth.</code><code class="descname">getUserID</code><span class="sig-paren">(</span><em>email</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#getUserID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.getUserID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a User record from the Database via their User id.</p>
-<dl class="docutils">
-<dt>Note:</dt>
-<dd>Any information regarding usage or something the caller of the function
-should know when using it.</dd>
-<dt>Args:</dt>
-<dd>user_id (int): The key/primary key in the User table</dd>
-<dt>Returns:</dt>
-<dd><dl class="first last docutils">
-<dt>User: returns an instance of the models.User class populated with</dt>
-<dd>the user&#8217;s information.</dd>
-</dl>
-</dd>
-<dt>Raises:</dt>
-<dd>NoResultFound: No user was found with the given email.</dd>
-</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Any information regarding usage or something the caller of the function
+should know when using it.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> (<em>int</em>) &#8211; The key/primary key in the User table</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">returns an instance of the models.User class populated with
+the user&#8217;s information.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#catalog.models.User" title="catalog.models.User">models.User</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">NoResultFound</span></code> &#8211;
+No user was found with the given email.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.auth.getUserInfo">
 <code class="descclassname">catalog.auth.</code><code class="descname">getUserInfo</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#getUserInfo"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.getUserInfo" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a User record from the Database via their User id.</p>
-<dl class="docutils">
-<dt>Note:</dt>
-<dd>Any information regarding usage or something the caller of the function
-should know when using it.</dd>
-<dt>Args:</dt>
-<dd>user_id (int): The key/primary key in the User table</dd>
-<dt>Returns:</dt>
-<dd><dl class="first docutils">
-<dt>User: returns an instance of the models.User class populated with</dt>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Any information regarding usage or something the caller of the function
+should know when using it.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> (<em>int</em>) &#8211; The key/primary key in the User table</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="docutils">
+<dt>returns an instance of the models.User class populated with</dt>
 <dd>the user&#8217;s information.</dd>
 </dl>
-<p class="last">If no user is found, None is returned.</p>
-</dd>
-<dt>Raises:</dt>
-<dd>NoResultFound: No user was found with the given user id.</dd>
-</dl>
+<p>If no user is found, None is returned.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#catalog.models.User" title="catalog.models.User">models.User</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body"><code class="xref py py-exc docutils literal"><span class="pre">NoResultFound</span></code> &#8211;
+No user was found with the given user id.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -391,10 +474,14 @@ should know when using it.</dd>
 <code class="descclassname">catalog.auth.</code><code class="descname">isActiveSession</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/auth.html#isActiveSession"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.auth.isActiveSession" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if the current session is active by checking if a username is
 associated with the session.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>True if the session is active, otherwise False for an inactive session.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">True if the session is active, otherwise False for an inactive session.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
@@ -402,20 +489,47 @@ associated with the session.</p>
 <span id="catalog-database-module"></span><h2>catalog.database module<a class="headerlink" href="#module-catalog.database" title="Permalink to this headline">¶</a></h2>
 <p>This is the database module for the Catalog app.
 The module provides a method for initialzing the database connection/session.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><p class="first">engine:     The SQLAlchemy connection to the app&#8217;s database.</p>
-<dl class="docutils">
-<dt>DBSession:  The SQLAlchemy database session for making queries against</dt>
-<dd>the models and data conatined in the database.</dd>
-</dl>
-<p>session:    Provides a scoped session of the above session.
-Base:       The Base class of each class in the Database Model. Uses the
-scoped session to provide the query property to each class that inherits
-from it.</p>
-<p class="last">app:        The Flask App instance, provides the Database directive.</p>
-</dd>
-</dl>
+<dl class="attribute">
+<dt id="catalog.database.engine">
+<code class="descclassname">catalog.database.</code><code class="descname">engine</code><a class="headerlink" href="#catalog.database.engine" title="Permalink to this definition">¶</a></dt>
+<dd><p>The SQLAlchemy connection to the app&#8217;s database.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.database.DBSession">
+<code class="descclassname">catalog.database.</code><code class="descname">DBSession</code><a class="headerlink" href="#catalog.database.DBSession" title="Permalink to this definition">¶</a></dt>
+<dd><p>The SQLAlchemy database session for making queries against
+the models and data conatined in the database.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.database.session">
+<code class="descclassname">catalog.database.</code><code class="descname">session</code><a class="headerlink" href="#catalog.database.session" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a scoped session of the above session.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.database.Base">
+<code class="descclassname">catalog.database.</code><code class="descname">Base</code><a class="headerlink" href="#catalog.database.Base" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Base class of each class in the Database Model. Uses the</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">scoped session to provide the query property to each class that inherits</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">from it.</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.database.app">
+<code class="descclassname">catalog.database.</code><code class="descname">app</code><a class="headerlink" href="#catalog.database.app" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Flask App instance, provides the Database directive.</p>
+</dd></dl>
+
 <dl class="function">
 <dt id="catalog.database.init_db">
 <code class="descclassname">catalog.database.</code><code class="descname">init_db</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/database.html#init_db"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.database.init_db" title="Permalink to this definition">¶</a></dt>
@@ -438,97 +552,152 @@ a traits property for views that do.</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
 <p>Items in the Catalog are each assigned to a Category that pertains to
 the activity or sport associated with the item.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd>name (string):          The Category name.
-id (integer):           The primary key/id
-user_id (integer):      The user id of the Category&#8217;s creator.
-items (relationship):   Defines the list of items in the Category.
-query (Query):          Shortcut for Querying the Category table</dd>
-</dl>
+<dl class="attribute">
+<dt id="catalog.models.Category.name">
+<code class="descname">name</code><a class="headerlink" href="#catalog.models.Category.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>string</em></p>
+<p>The Category name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.id">
+<code class="descname">id</code><a class="headerlink" href="#catalog.models.Category.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>integer</em></p>
+<p>The primary key/id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#catalog.models.Category.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>integer</em></p>
+<p>The user id of the Category&#8217;s creator.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.items">
+<code class="descname">items</code><a class="headerlink" href="#catalog.models.Category.items" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>relationship</em></p>
+<p>Defines the list of items in the Category.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Category.query">
+<code class="descname">query</code><a class="headerlink" href="#catalog.models.Category.query" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Query</em></p>
+<p>Shortcut for Querying the Category table</p>
+</dd></dl>
+
 <dl class="staticmethod">
 <dt id="catalog.models.Category.categories">
 <em class="property">static </em><code class="descname">categories</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.categories"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.categories" title="Permalink to this definition">¶</a></dt>
 <dd><p>List of all Category names in the table.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A list containg the names of each Category int the table.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list containg the names of each Category int the table.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="catalog.models.Category.creator">
 <code class="descname">creator</code><a class="headerlink" href="#catalog.models.Category.creator" title="Permalink to this definition">¶</a></dt>
 <dd><p>The name of the user who created the Category in the Table.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>string: The user name who created the Category.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The user name who created the Category.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="catalog.models.Category.defaultTraits">
 <em class="property">static </em><code class="descname">defaultTraits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.defaultTraits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.defaultTraits" title="Permalink to this definition">¶</a></dt>
 <dd><p>The default traits of Category</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A list of Trait objects describing the attributes of a Category
-that can be viewed.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of Trait objects describing the attributes of a Category
+that can be viewed.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="catalog.models.Category.findByID">
 <em class="property">static </em><code class="descname">findByID</code><span class="sig-paren">(</span><em>id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.findByID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.findByID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a Category in the table using its id.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>id (int): The primary key or id of the Category in the table.</dd>
-<dt>Returns:</dt>
-<dd>A Category object with the given id.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>id</strong> (<em>int</em>) &#8211; The primary key or id of the Category in the table.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Category object with the given id.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="staticmethod">
 <dt id="catalog.models.Category.findByName">
 <em class="property">static </em><code class="descname">findByName</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#Category.findByName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.Category.findByName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find a Category in the table by its name.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>name (string): The Category name to find.</dd>
-<dt>Returns:</dt>
-<dd>A Category record from the database that has the specified name.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>string</em>) &#8211; The Category name to find.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A Category record from the database that has the specified name.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Category.id">
-<code class="descname">id</code><a class="headerlink" href="#catalog.models.Category.id" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">id</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Category.items">
-<code class="descname">items</code><a class="headerlink" href="#catalog.models.Category.items" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">items</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Category.name">
-<code class="descname">name</code><a class="headerlink" href="#catalog.models.Category.name" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">name</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Category.query">
-<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x0000000005398EF0&gt;</em><a class="headerlink" href="#catalog.models.Category.query" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object&gt;</em></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="catalog.models.Category.serialize">
 <code class="descname">serialize</code><a class="headerlink" href="#catalog.models.Category.serialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Serialize the properties of a Category instance.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>dict: A Dictionary describing key attributes of a Category instance</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Dictionary describing key attributes of a Category instance</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -538,16 +707,20 @@ that can be viewed.</dd>
 <p>When presenting a view to a web user, the traits are parsed and
 displayed in a form or list in a format determined by the type
 of each attribute&#8217;s associated Trait Class.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A list containing the Traits for each attribute to be displayed
-in a view of a Category instance.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list containing the Traits for each attribute to be displayed
+in a view of a Category instance.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Category.user_id">
-<code class="descname">user_id</code><a class="headerlink" href="#catalog.models.Category.user_id" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">user_id</code></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -558,27 +731,74 @@ in a view of a Category instance.</dd>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">sqlalchemy.ext.declarative.api.Base</span></code></p>
 <p>Items in the Catalog are each created by a User and belong to a specific
 Category.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><p class="first">name (string):          The Item name.
-id (integer):           The primary key/id
-cat_id (integer)        The primary key/id for the Item&#8217;s Category
-user_id (integer):      The primary key/id for the Item&#8217;s creator
-picture (string):       The url to the item&#8217;s picture in the local
-filesystem.</p>
-<p class="last">description (string):   The Item&#8217;s description.
-dateCreated (date):     The Date the Item was created.
-query (Query):          Shortcut for Querying the Item table.</p>
-</dd>
-</dl>
+<dl class="attribute">
+<dt id="catalog.models.Item.name">
+<code class="descname">name</code><a class="headerlink" href="#catalog.models.Item.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>string</em></p>
+<p>The Item name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.id">
+<code class="descname">id</code><a class="headerlink" href="#catalog.models.Item.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>integer</em></p>
+<p>The primary key/id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.cat_id">
+<code class="descname">cat_id</code><a class="headerlink" href="#catalog.models.Item.cat_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>integer</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.user_id">
+<code class="descname">user_id</code><a class="headerlink" href="#catalog.models.Item.user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>integer</em></p>
+<p>The primary key/id for the Item&#8217;s creator</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.picture">
+<code class="descname">picture</code><a class="headerlink" href="#catalog.models.Item.picture" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>string</em></p>
+<p>The url to the item&#8217;s picture in the local</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">filesystem.</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.description">
+<code class="descname">description</code><a class="headerlink" href="#catalog.models.Item.description" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>string</em></p>
+<p>The Item&#8217;s description.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.dateCreated">
+<code class="descname">dateCreated</code><a class="headerlink" href="#catalog.models.Item.dateCreated" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>date</em></p>
+<p>The Date the Item was created.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.Item.query">
+<code class="descname">query</code><a class="headerlink" href="#catalog.models.Item.query" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Query</em></p>
+<p>Shortcut for Querying the Item table.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="catalog.models.Item.User">
 <code class="descname">User</code><a class="headerlink" href="#catalog.models.Item.User" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Item.cat_id">
-<code class="descname">cat_id</code><a class="headerlink" href="#catalog.models.Item.cat_id" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">cat_id</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
@@ -590,15 +810,21 @@ query (Query):          Shortcut for Querying the Item table.</p>
 <dt id="catalog.models.Item.creator">
 <code class="descname">creator</code><a class="headerlink" href="#catalog.models.Item.creator" title="Permalink to this definition">¶</a></dt>
 <dd><p>The user name of the Item&#8217;s creator.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>string: The name of the user that created the Item record.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">The name of the user that created the Item record.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Item.dateCreated">
-<code class="descname">dateCreated</code><a class="headerlink" href="#catalog.models.Item.dateCreated" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">dateCreated</code></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -607,59 +833,75 @@ query (Query):          Shortcut for Querying the Item table.</p>
 <dd><p>The attribute names for the Item Class.</p>
 <p>When creating a new item via a form, the default traits are used to
 describe the properties that define an Item in the Catalog.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Each Trait in the list describes a property of the Item to be
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Each Trait in the list describes a property of the Item to be
 created.  The Trait&#8217;s type changes how it is rendered when
-presented to the user.</dd>
-</dl>
+presented to the user.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
 <dt id="catalog.models.Item.describe">
 <code class="descname">describe</code><a class="headerlink" href="#catalog.models.Item.describe" title="Permalink to this definition">¶</a></dt>
 <dd><p>Describe an Item by its name and the name of its Category.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>string: A descriptive string including the Item name and Category.</dd>
-<dt>Example:</dt>
-<dd>&#8220;Stick (Hockey)&#8221;</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A descriptive string including the Item name and Category.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Example</p>
+<p>&#8220;Stick (Hockey)&#8221;</p>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Item.description">
-<code class="descname">description</code><a class="headerlink" href="#catalog.models.Item.description" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">description</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Item.id">
-<code class="descname">id</code><a class="headerlink" href="#catalog.models.Item.id" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">id</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Item.name">
-<code class="descname">name</code><a class="headerlink" href="#catalog.models.Item.name" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">name</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Item.picture">
-<code class="descname">picture</code><a class="headerlink" href="#catalog.models.Item.picture" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">picture</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Item.query">
-<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x00000000053AE358&gt;</em><a class="headerlink" href="#catalog.models.Item.query" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">query</code><em class="property"> = &lt;sqlalchemy.orm.query.Query object at 0x00000000054E4DD8&gt;</em></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="catalog.models.Item.serialize">
 <code class="descname">serialize</code><a class="headerlink" href="#catalog.models.Item.serialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Serialize the properties of a Item instance.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>dict: A Dictionary describing key attributes for an Item instance.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Dictionary describing key attributes for an Item instance.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -669,27 +911,35 @@ presented to the user.</dd>
 <p>When presenting a view to a web user, the traits are parsed and
 displayed in a form or list in a format determined by the type
 of each attribute&#8217;s associated Trait Class.</p>
-<dl class="docutils">
-<dt>Notes:</dt>
-<dd>Traits for generating a form for view and edit. An ImageUploadTrait
-is added for the edit view (specify isEdit as True).</dd>
-<dt>Args:</dt>
-<dd>isEdit (Boolean): True means an edit view will be generated
-from the Traits of the Item. False means that it will just display
-the values of each Trait. (no HTML Form)</dd>
-<dt>Returns:</dt>
-<dd><p class="first">A list containing the Traits for each attribute to be displayed
+<p class="rubric">Notes</p>
+<p>Traits for generating a form for view and edit. An ImageUploadTrait
+is added for the edit view (specify isEdit as True).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>isEdit</strong> (<em>Boolean</em>) &#8211; True means an edit view will be generated</li>
+<li><strong>the Traits of the Item. False means that it will just display</strong> (<em>from</em>) &#8211; </li>
+<li><strong>values of each Trait.</strong> (<em>the</em>) &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>A list containing the Traits for each attribute to be displayed
 in a view of an Item instance.</p>
-<p class="last">If isEdit is True a Trait will be included that allows the user to
+<p>If isEdit is True a Trait will be included that allows the user to
 upload an Image for the item.  Otherwise, the Item attributes will
 be displayed as a list of property name/value.</p>
-</dd>
-</dl>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.Item.user_id">
-<code class="descname">user_id</code><a class="headerlink" href="#catalog.models.Item.user_id" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">user_id</code></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -701,21 +951,63 @@ be displayed as a list of property name/value.</p>
 <p>Users of the Catalog are each assigned a User record that is associated
 with the Items and Categories they create, and by extension, can edit and
 delete.  Their profile information is pulled from their Google+ profile.</p>
-<dl class="docutils">
-<dt>Attributes:</dt>
-<dd><p class="first">name (string):              The User name.
-id (integer):               The primary key/id
-email (string):             The User&#8217;s email address.
-picture (string):           The url to the user&#8217;s picture in the local
-filesystem or to the url of their profile picture from Google+</p>
-<p class="last">items (relationship):       Defines the list of items the User has created.
-categories (relationship):  List of Categories created by the User.
-query (Query):              Shortcut for Querying the User table.</p>
-</dd>
-</dl>
+<dl class="attribute">
+<dt id="catalog.models.User.name">
+<code class="descname">name</code><a class="headerlink" href="#catalog.models.User.name" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>string</em></p>
+<p>The User name.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.id">
+<code class="descname">id</code><a class="headerlink" href="#catalog.models.User.id" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>integer</em></p>
+<p>The primary key/id</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.email">
+<code class="descname">email</code><a class="headerlink" href="#catalog.models.User.email" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>string</em></p>
+<p>The User&#8217;s email address.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.picture">
+<code class="descname">picture</code><a class="headerlink" href="#catalog.models.User.picture" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>string</em></p>
+<p>The url to the user&#8217;s picture in the local</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">filesystem or to the url of their profile picture from Google+</code></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.items">
+<code class="descname">items</code><a class="headerlink" href="#catalog.models.User.items" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>relationship</em></p>
+<p>Defines the list of items the User has created.</p>
+</dd></dl>
+
 <dl class="attribute">
 <dt id="catalog.models.User.categories">
 <code class="descname">categories</code><a class="headerlink" href="#catalog.models.User.categories" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>relationship</em></p>
+<p>List of Categories created by the User.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="catalog.models.User.query">
+<code class="descname">query</code><a class="headerlink" href="#catalog.models.User.query" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>Query</em></p>
+<p>Shortcut for Querying the User table.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt>
+<code class="descname">categories</code></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
@@ -724,58 +1016,74 @@ query (Query):              Shortcut for Querying the User table.</p>
 <dd><p>The attribute names for the User Class.</p>
 <p>When creating the new user via a form, the default traits are used to
 describe the properties that a user needs to provide information for.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A list containing the Traits for each attribute to be displayed
-in a form for creating an instance of the User class.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list containing the Traits for each attribute to be displayed
+in a form for creating an instance of the User class.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.User.email">
-<code class="descname">email</code><a class="headerlink" href="#catalog.models.User.email" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">email</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.User.id">
-<code class="descname">id</code><a class="headerlink" href="#catalog.models.User.id" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">id</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.User.items">
-<code class="descname">items</code><a class="headerlink" href="#catalog.models.User.items" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">items</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.User.name">
-<code class="descname">name</code><a class="headerlink" href="#catalog.models.User.name" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">name</code></dt>
 <dd></dd></dl>
 
 <dl class="staticmethod">
 <dt id="catalog.models.User.nameByID">
 <em class="property">static </em><code class="descname">nameByID</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/models.html#User.nameByID"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.models.User.nameByID" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve a user&#8217;s name by their user id.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>user_id (int): The primary key of the User in the table.</dd>
-<dt>Returns:</dt>
-<dd>string: The name of the user associated with the given user id.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> (<em>int</em>) &#8211; The primary key of the User in the table.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The name of the user associated with the given user id.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">string</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="attribute">
-<dt id="catalog.models.User.picture">
-<code class="descname">picture</code><a class="headerlink" href="#catalog.models.User.picture" title="Permalink to this definition">¶</a></dt>
+<dt>
+<code class="descname">picture</code></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="catalog.models.User.serialize">
 <code class="descname">serialize</code><a class="headerlink" href="#catalog.models.User.serialize" title="Permalink to this definition">¶</a></dt>
 <dd><p>Serialize the properties of a User instance.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>dict: A Dictionary describing key attributes of a User instance</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Dictionary describing key attributes of a User instance</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -785,11 +1093,15 @@ in a form for creating an instance of the User class.</dd>
 <p>When presenting a view to a web user, the traits are parsed and
 displayed in a form or list in a format determined by the type
 of each attribute&#8217;s associated Trait Class.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A list containing the Traits for each attribute to be displayed
-in a view of a User instance.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list containing the Traits for each attribute to be displayed
+in a view of a User instance.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -841,11 +1153,12 @@ listString (string):    &#8220;Back to Suffix&#8221; + &#8220;s.&#8221;</p>
 </dd>
 </dl>
 </dd>
-<dt>Examples:</dt>
-<dd><p class="first">For an app with /catalog as the root path/url,</p>
+</dl>
+<p class="rubric">Examples</p>
+<p>For an app with /catalog as the root path/url,</p>
 <p>urls = makeUrls(&#8216;item&#8217;, 1)
 urls would return an object with the following properties/values.</p>
-<p class="last">urls.suffix         &#8220;item&#8221;
+<p>urls.suffix         &#8220;item&#8221;
 urls.key            1
 urls.deleteUrl      /catalog/item/1/delete
 urls.editUrl        /catalog/item/1/edit
@@ -853,8 +1166,6 @@ urls.viewUrl        /catalog/item/1
 urls.newUrl         /catalog/item/add
 urls.listUrl        /catalog/items
 urls.listString     &#8220;Back to Items.&#8221;</p>
-</dd>
-</dl>
 <dl class="attribute">
 <dt id="catalog.urls.Urls.deleteUrl">
 <code class="descname">deleteUrl</code><a class="headerlink" href="#catalog.urls.Urls.deleteUrl" title="Permalink to this definition">¶</a></dt>
@@ -917,16 +1228,22 @@ modules and code.</p>
 <code class="descclassname">catalog.views.</code><code class="descname">allowed_image</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#allowed_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.allowed_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Determine if the specified file has the proper extension to be classified
 as an image.</p>
-<dl class="docutils">
-<dt>Note:</dt>
-<dd>From flask docs, checks that uploaded images have specific file extensions
-<a class="reference external" href="http://flask.pocoo.org/docs/0.10/patterns/fileuploads/">http://flask.pocoo.org/docs/0.10/patterns/fileuploads/</a></dd>
-<dt>Args:</dt>
-<dd>filename (string): The filename to be validated as an acceptable image type.</dd>
-<dt>Returns:</dt>
-<dd>True if the file is a proper image file, based upon its extension.
-False if it is not considered a valid image type.</dd>
-</dl>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">From flask docs, checks that uploaded images have specific file extensions
+<a class="reference external" href="http://flask.pocoo.org/docs/0.10/patterns/fileuploads/">http://flask.pocoo.org/docs/0.10/patterns/fileuploads/</a></p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>string</em>) &#8211; The filename to be validated as an acceptable image type.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True if the file is a proper image file, based upon its extension.
+False if it is not considered a valid image type.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -939,20 +1256,28 @@ False if it is not considered a valid image type.</dd>
 <dt id="catalog.views.catalogJSON">
 <code class="descclassname">catalog.views.</code><code class="descname">catalogJSON</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#catalogJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.catalogJSON" title="Permalink to this definition">¶</a></dt>
 <dd><p>JSON endpoint that returns information about the entire Catalog.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A GET request returns the Catalog&#8217;s information in JSON</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A GET request returns the Catalog&#8217;s information in JSON</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.catalogXML">
 <code class="descclassname">catalog.views.</code><code class="descname">catalogXML</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#catalogXML"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.catalogXML" title="Permalink to this definition">¶</a></dt>
 <dd><p>XML endpoint that returns information about the entire Catalog.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A GET request returns the Catalog&#8217;s information in XML</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A GET request returns the Catalog&#8217;s information in XML</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -960,18 +1285,25 @@ False if it is not considered a valid image type.</dd>
 <code class="descclassname">catalog.views.</code><code class="descname">delItem</code><span class="sig-paren">(</span><em>item_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#delItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.delItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Retrieve the view for Deleting an Item in a Category.</p>
 <p>Requires a user to be authenticated and to have created the item.</p>
-<dl class="docutils">
-<dt>Notes:</dt>
-<dd>The actual deletion operation, when a POST request is sent, is
-performed by the deleteItem function.</dd>
-<dt>Args:</dt>
-<dd><p class="first">category_name (string): The Category name of the Item to delete.</p>
-<p class="last">item_name (string):     The name of the Item to delete.</p>
-</dd>
-<dt>Returns:</dt>
-<dd>A GET request presents the user with choices for deleting the Item or
-canceling the operation.</dd>
-</dl>
+<p class="rubric">Notes</p>
+<p>The actual deletion operation, when a POST request is sent, is
+performed by the deleteItem function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>category_name</strong> (<em>string</em>) &#8211; The Category name of the Item to delete.</li>
+<li><strong>item_name</strong> (<em>string</em>) &#8211; The name of the Item to delete.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">A GET request presents the user with choices for deleting the Item or
+canceling the operation.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -979,16 +1311,19 @@ canceling the operation.</dd>
 <code class="descclassname">catalog.views.</code><code class="descname">deleteCategory</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#deleteCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.deleteCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allow an Authorized User to delete a new Category or Process the
 deletion of a Category.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): The primary key of the category.</dd>
-<dt>Returns:</dt>
-<dd><p class="first">For a GET operation returns a View querying whether the user wants to
-delete the Category or cancel and go back to viewing it.</p>
-<p class="last">A successful POST request deletes the Category and redirects to the
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; The primary key of the category.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">For a GET operation returns a View querying whether the user wants to
+delete the Category or cancel and go back to viewing it.<p>A successful POST request deletes the Category and redirects to the
 list of Categories.</p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -996,29 +1331,36 @@ list of Categories.</p>
 <code class="descclassname">catalog.views.</code><code class="descname">deleteItem</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#deleteItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.deleteItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete an Item selected by its primary key/id.</p>
 <p>Requires a user to be authenticated and to have created the item.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): The primary key of the Item to delete.</dd>
-<dt>Returns:</dt>
-<dd>A GET request presents the user with choices for deleting the Item or
-canceling the operation.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; The primary key of the Item to delete.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A GET request presents the user with choices for deleting the Item or
+canceling the operation.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.deleteUser">
 <code class="descclassname">catalog.views.</code><code class="descname">deleteUser</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#deleteUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.deleteUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Present the Web User with a Delete View for the their User account.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): An ID corresponding to a User record in the database.</dd>
-<dt>Returns:</dt>
-<dd><p class="first">For a GET operation returns a Web View containing buttons for
-canceling or submitting the delete user request.</p>
-<p class="last">A successful POST request would delete the User&#8217;s record, sign them out
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; An ID corresponding to a User record in the database.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">For a GET operation returns a Web View containing buttons for
+canceling or submitting the delete user request.<p>A successful POST request would delete the User&#8217;s record, sign them out
 and revoke the app&#8217;s authorization to use their Google profile</p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1026,17 +1368,24 @@ and revoke the app&#8217;s authorization to use their Google profile</p>
 <code class="descclassname">catalog.views.</code><code class="descname">editCatItem</code><span class="sig-paren">(</span><em>category_name</em>, <em>item_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#editCatItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.editCatItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edit an Item in a Category.</p>
 <p>Requires a user to be authenticated and to have created the item.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd><p class="first">category_name (string): The Category of the Item to edit.</p>
-<p class="last">item_name (string): The name of the Item to Edit.</p>
-</dd>
-<dt>Returns:</dt>
-<dd><p class="first">A GET request presents the user with a form for editing an Item.</p>
-<p class="last">A POST request processes the user&#8217;s input from the form and updates the
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>category_name</strong> (<em>string</em>) &#8211; The Category of the Item to edit.</li>
+<li><strong>item_name</strong> (<em>string</em>) &#8211; The name of the Item to Edit.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><p>A GET request presents the user with a form for editing an Item.</p>
+<p>A POST request processes the user&#8217;s input from the form and updates the
 item.</p>
-</dd>
-</dl>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1044,15 +1393,18 @@ item.</p>
 <code class="descclassname">catalog.views.</code><code class="descname">editCategory</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#editCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.editCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allow an Authorized User to edit a new Category or Process the form for
 editing a Category.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): The primary key of the category.</dd>
-<dt>Returns:</dt>
-<dd><p class="first">For a GET operation returns a Web View containing a form for altering
-data for the category.</p>
-<p class="last">A successful POST request directs presents a View of the new Category.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; The primary key of the category.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">For a GET operation returns a Web View containing a form for altering
+data for the category.<p>A successful POST request directs presents a View of the new Category.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1060,30 +1412,36 @@ data for the category.</p>
 <code class="descclassname">catalog.views.</code><code class="descname">editItem</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#editItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.editItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Edit an Item in a Category.</p>
 <p>Requires a user to be authenticated and to have created the item.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): The primary key of the Item to Edit.</dd>
-<dt>Returns:</dt>
-<dd><p class="first">A GET request presents the user with a form for editing an Item.</p>
-<p class="last">A POST request processes the user&#8217;s input from the form and updates the
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; The primary key of the Item to Edit.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A GET request presents the user with a form for editing an Item.<p>A POST request processes the user&#8217;s input from the form and updates the
 item.</p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.editUser">
 <code class="descclassname">catalog.views.</code><code class="descname">editUser</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#editUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.editUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Present the Web User with an Edit View for the their User account.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): An ID corresponding to a User record in the database.</dd>
-<dt>Returns:</dt>
-<dd><p class="first">For a GET operation returns a Web View containing a form for editing
-data for the user.</p>
-<p class="last">A successful POST request directs presents the updated Record view.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; An ID corresponding to a User record in the database.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">For a GET operation returns a Web View containing a form for editing
+data for the user.<p>A successful POST request directs presents the updated Record view.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1119,14 +1477,22 @@ data for the user.</p>
 <code class="descclassname">catalog.views.</code><code class="descname">hasattr_processor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#hasattr_processor"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.hasattr_processor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provide templates with the ability to check if a python object contains
 the specified attribute</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>o (object): The object to check.
-attr (string): The name of the attribute to look for in object, o.</dd>
-<dt>Returns:</dt>
-<dd>True if object o has the attribute.
-False if there is no attribute with the value of attr in object o.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>o</strong> (<em>object</em>) &#8211; The object to check.</li>
+<li><strong>attr</strong> (<em>string</em>) &#8211; The name of the attribute to look for in object, o.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">True if object o has the attribute.
+False if there is no attribute with the value of attr in object o.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1139,55 +1505,75 @@ False if there is no attribute with the value of attr in object o.</dd>
 <dt id="catalog.views.itemJSON">
 <code class="descclassname">catalog.views.</code><code class="descname">itemJSON</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#itemJSON"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.itemJSON" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return information about a Catalog Item in JSON.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): The primary key of the item to retrieve.</dd>
-<dt>Returns:</dt>
-<dd>A GET request returns information about an item in JSON</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; The primary key of the item to retrieve.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A GET request returns information about an item in JSON</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.listCategory">
 <code class="descclassname">catalog.views.</code><code class="descname">listCategory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#listCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.listCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>A View containing the list of Categories.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Presents the user with a list of all user Categories</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Presents the user with a list of all user Categories</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.listCategoryItem">
 <code class="descclassname">catalog.views.</code><code class="descname">listCategoryItem</code><span class="sig-paren">(</span><em>category_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#listCategoryItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.listCategoryItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>List all Items in a category.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>category_name (string): The category of items to be viewed.</dd>
-<dt>Returns:</dt>
-<dd>A GET request presents the user with the list of all items belonging to
-the specified category.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>category_name</strong> (<em>string</em>) &#8211; The category of items to be viewed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A GET request presents the user with the list of all items belonging to
+the specified category.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.listItem">
 <code class="descclassname">catalog.views.</code><code class="descname">listItem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#listItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.listItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>List all Items in the catalog.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A GET request presents the user with the list of all catalog items.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A GET request presents the user with the list of all catalog items.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.listUser">
 <code class="descclassname">catalog.views.</code><code class="descname">listUser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#listUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.listUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Present the Web User with an Edit View for the their User account.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>Presents the user with a list of all user Names</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Presents the user with a list of all user Names</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1200,13 +1586,16 @@ the specified category.</dd>
 <code class="descclassname">catalog.views.</code><code class="descname">newCategory</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#newCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.newCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>Allow an Authorized User to add a new Category or Process the form for
 adding a new Category.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd><p class="first">For a GET operation returns a Web View containing a form for entering
-data for the new user.</p>
-<p class="last">A successful POST request directs presents a View of the new Category.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">For a GET operation returns a Web View containing a form for entering
+data for the new user.<p>A successful POST request directs presents a View of the new Category.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1214,28 +1603,34 @@ data for the new user.</p>
 <code class="descclassname">catalog.views.</code><code class="descname">newItem</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#newItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.newItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>This route is used behind the scenes to view an item.  It forwards
 the request on to viewCatItem.  Requires a user to be authenticated.</p>
-<dl class="docutils">
-<dt>Notes:</dt>
-<dd>This route could be changed to reflect which category it will be in.</dd>
-<dt>Returns:</dt>
-<dd><p class="first">A GET request presents the user with a form for creating a new Item.</p>
-<p class="last">A POST request processes the user&#8217;s input from the form and adds the
+<p class="rubric">Notes</p>
+<p>This route could be changed to reflect which category it will be in.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A GET request presents the user with a form for creating a new Item.<p>A POST request processes the user&#8217;s input from the form and adds the
 new item.</p>
-</dd>
-</dl>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.newUser">
 <code class="descclassname">catalog.views.</code><code class="descname">newUser</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#newUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.newUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Present an Authorized Web User with a View for adding a new user.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd><p class="first">For a GET operation returns a Web View containing a form for entering
-data for the new user.</p>
-<p class="last">A successful POST request directs presents a View of the new Record.</p>
-</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">For a GET operation returns a Web View containing a form for entering
+data for the new user.<p>A successful POST request directs presents a View of the new Record.</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1243,40 +1638,54 @@ data for the new user.</p>
 <code class="descclassname">catalog.views.</code><code class="descname">processImageUpload</code><span class="sig-paren">(</span><em>image</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#processImageUpload"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.processImageUpload" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process an uploaded image.  If it&#8217;s a valid file type, then save the file
 and return the local url.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>image (file): A file passed via a request that was submitted via a Web Form.</dd>
-<dt>Returns:</dt>
-<dd>The local path to the file for the image, this provides a url that can
-be referred to in a database record.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>image</strong> (<em>file</em>) &#8211; A file passed via a request that was submitted via a Web Form.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The local path to the file for the image, this provides a url that can
+be referred to in a database record.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.viewCatItem">
 <code class="descclassname">catalog.views.</code><code class="descname">viewCatItem</code><span class="sig-paren">(</span><em>category_name</em>, <em>item_name</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#viewCatItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.viewCatItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Present a view of an item that belongs to a specific Category</p>
-<dl class="docutils">
-<dt>Note:</dt>
-<dd>This route is typically redirected to behind the scenes.  Which
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">This route is typically redirected to behind the scenes.  Which
 allows for a legible URL to be seen by the user.  The item record
-already contains it&#8217;s category id.</dd>
-<dt>Returns:</dt>
-<dd>A Web view containing information about an item, including its Category
-in the URL displayed in the browser.</dd>
-</dl>
+already contains it&#8217;s category id.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A Web view containing information about an item, including its Category
+in the URL displayed in the browser.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.viewCategory">
 <code class="descclassname">catalog.views.</code><code class="descname">viewCategory</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#viewCategory"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.viewCategory" title="Permalink to this definition">¶</a></dt>
 <dd><p>A View of a specific Category&#8217;s record.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): The primary key of the category.</dd>
-<dt>Returns:</dt>
-<dd>Presents the user with a list of all Categories</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; The primary key of the category.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Presents the user with a list of all Categories</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -1284,25 +1693,33 @@ in the URL displayed in the browser.</dd>
 <code class="descclassname">catalog.views.</code><code class="descname">viewItem</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#viewItem"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.viewItem" title="Permalink to this definition">¶</a></dt>
 <dd><p>This route is used behind the scenes to view an item.  It forwards
 the request on to viewCatItem.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): The primary key of the item.</dd>
-<dt>Returns:</dt>
-<dd>The result returned from viewCatItem</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; The primary key of the item.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The result returned from viewCatItem</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="catalog.views.viewUser">
 <code class="descclassname">catalog.views.</code><code class="descname">viewUser</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/catalog/views.html#viewUser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#catalog.views.viewUser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Present the Web User with a View for the Item with the id equal to key.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>key (int): An ID corresponding to a User record in the database.</dd>
-<dt>Returns:</dt>
-<dd>The updated View in the User&#8217;s browser that corresponds to the
-requested user.</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>int</em>) &#8211; An ID corresponding to a User record in the database.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The updated View in the User&#8217;s browser that corresponds to the
+requested user.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
